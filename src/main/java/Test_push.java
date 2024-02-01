@@ -3,6 +3,7 @@ public class Test_push {
         System.out.println("Test push");
         System.out.println("Test push");
         System.out.println("Test push");
+        System.out.println("Test push");
     }
 
 }
