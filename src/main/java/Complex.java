@@ -1,4 +1,4 @@
-public class Complex {
+public class Complex extends Vector2D{
   private double realPart;
   private double imaginaryPart;
 
