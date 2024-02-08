@@ -9,6 +9,7 @@ public class JuliaTransform extends Transform2D{
     this.sign = sign;
   }
 
+
   @Override
   public Vector2D transform(Vector2D point) {
     // Beregner z - c
