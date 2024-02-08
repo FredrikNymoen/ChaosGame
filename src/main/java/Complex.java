@@ -12,4 +12,11 @@ public class Complex extends Vector2D{
     double i = Math.sqrt(imaginaryPart);
     return new Complex(r, i);
   }
+
+  public double getRealPart() {
+    return realPart;
+  }
+  public double getImaginaryPart() {
+    return imaginaryPart;
+  }
 }
