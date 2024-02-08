@@ -1,22 +1,13 @@
 public class Complex extends Vector2D{
-  private double realPart;
-  private double imaginaryPart;
 
   public Complex(double realPart, double imaginaryPart) {
-    this.realPart = realPart;
-    this.imaginaryPart = imaginaryPart;
+    super(realPart, imaginaryPart);
   }
 
   public Complex sqrt() {
-    double r = Math.sqrt(realPart);
-    double i = Math.sqrt(imaginaryPart);
+    double realpart = Math.sqrt(getX0());
+    double x1 = Math.sqrt(imaginaryPart);
     return new Complex(r, i);
   }
 
-  public double getRealPart() {
-    return realPart;
-  }
-  public double getImaginaryPart() {
-    return imaginaryPart;
-  }
 }
