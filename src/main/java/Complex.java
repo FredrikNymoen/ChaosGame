@@ -8,13 +8,8 @@ public class Complex extends Vector2D{
   }
 
   public Complex sqrt() {
-    double radius = Math.hypot(realPart, imaginaryPart);
-    double theta = Math.atan2(imaginaryPart, realPart) / 2.0;
-
-    double sqrtRadius = Math.sqrt(radius);
-    double real = sqrtRadius * Math.cos(theta);
-    double imaginary = sqrtRadius * Math.sin(theta);
-
-    return new Complex(real, imaginary);
+    double r = Math.sqrt(realPart);
+    double i = Math.sqrt(imaginaryPart);
+    return new Complex(r, i);
   }
 }
