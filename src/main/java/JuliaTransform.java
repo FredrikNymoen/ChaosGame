@@ -11,10 +11,8 @@ public class JuliaTransform extends Transform2D{
 
   @Override
   public Vector2D transform(Vector2D point) {
-    // Konverterer this.point til et komplekst tall c
-    Vector2D c = new Vector2D(this.point.getX0(), this.point.getX1());
     // Beregner z - c
-    Vector2D zMinusC = point.subtract(c);
+    Vector2D zMinusC = point.subtract(this.point);
     // Beregner kvadratroten av det komplekse tallet, avhengig av sign
     Complex z = new Complex(zMinusC.getX0(), zMinusC.getX1()).sqrt();
     if (this.sign < 0) {
