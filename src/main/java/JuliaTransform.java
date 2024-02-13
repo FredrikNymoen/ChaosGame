@@ -1,12 +1,12 @@
 import java.util.Vector;
 
-public class JuliaTransform extends Transform2D{
+public class JuliaTransform implements Transform2D{
   private Complex point;
   private int sign;
 
   public JuliaTransform(Complex point, int sign) {
     this.point = point;
-    this.sign = sign;
+    this.sign = (int) Math.signum(sign);
   }
 
 
@@ -15,7 +15,7 @@ public class JuliaTransform extends Transform2D{
     // Beregner z - c
     Vector2D zMinusC = point.subtract(this.point);
     // Beregner kvadratroten av det komplekse tallet, avhengig av sign
-    Complex z = new Complex(zMinusC.getX0(), zMinusC.getX1()).sqrt();
+    Complex z = (new Complex(zMinusC.getX0(), zMinusC.getX1())).sqrt();
     if (this.sign < 0) {
       // Hvis sign er negativ, bruk den andre kvadratroten
       z = new Complex(-z.getX0(), -z.getX1());

@@ -1,4 +1,4 @@
-public class AffineTransform2D extends Transform2D{
+public class AffineTransform2D implements Transform2D{
   private Matrix2x2 matrix;
   private Vector2D vector;
 
