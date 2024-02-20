@@ -1,3 +1,7 @@
+package transformations;
+
+import mathcore.Vector2D;
+
 /**
  * An interface for 2D transformations.
  *

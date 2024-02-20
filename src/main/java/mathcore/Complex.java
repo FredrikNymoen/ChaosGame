@@ -1,6 +1,7 @@
+package mathcore;
 
 /**
- * Complex class is used to represent complex numbers and perform sqrt operation on them.
+ * mathcore.Complex class is used to represent complex numbers and perform sqrt operation on them.
  *
  * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0
@@ -8,7 +9,7 @@
 public class Complex extends Vector2D {
 
   /**
-   * Constructor for Complex.
+   * Constructor for mathcore.Complex.
    *
    * @param realpart       the real part of the complex number
    * @param imaginarypart  the imaginary part of the complex number
