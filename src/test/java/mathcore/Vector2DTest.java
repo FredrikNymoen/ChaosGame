@@ -2,8 +2,6 @@ package mathcore;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import mathcore.Vector2D;
-
 /**
  * Test class for mathcore.Vector2D
  *

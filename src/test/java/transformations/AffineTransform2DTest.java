@@ -6,7 +6,6 @@ import mathcore.Matrix2x2;
 import mathcore.Vector2D;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import transformations.AffineTransform2D;
 
 /**
  * Test class for transformations.AffineTransform2D
