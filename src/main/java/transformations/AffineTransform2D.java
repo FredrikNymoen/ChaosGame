@@ -1,16 +1,21 @@
+package transformations;
+
+import mathcore.Matrix2x2;
+import mathcore.Vector2D;
+
 /**
- * AffineTransform2D class is responsible for the affine transformation of a 2D vector on the form x -> Ax + b.
+ * transformations.AffineTransform2D class is responsible for the affine transformation of a 2D vector on the form x -> Ax + b.
  *
  * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0
  */
 
-public class AffineTransform2D implements Transform2D{
+public class AffineTransform2D implements Transform2D {
   private Matrix2x2 matrix;
   private Vector2D vector;
 
   /**
-   * Constructor for AffineTransform2D.
+   * Constructor for transformations.AffineTransform2D.
    *
    * @param matrix the matrix
    * @param vector the vector

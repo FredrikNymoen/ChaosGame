@@ -1,10 +1,9 @@
-import static org.junit.jupiter.api.Assertions.*;
-
+import mathcore.Complex;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Test class for Complex
+ * Test class for mathcore.Complex
  *
  * @author Amund Larsen & Fredrik Nymoen
  * @version v.1.0.0
@@ -24,7 +23,7 @@ class ComplexTest {
   }
 
   /**
-   * Positive test for the sqrt method in the Complex class.
+   * Positive test for the sqrt method in the mathcore.Complex class.
    */
   @Test
   void positiveSqrt() {
@@ -34,7 +33,7 @@ class ComplexTest {
   }
 
   /**
-   * Negative test for the sqrt method in the Complex class.
+   * Negative test for the sqrt method in the mathcore.Complex class.
    */
   @Test
   void negativeSqrt() {

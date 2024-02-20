@@ -1,7 +1,9 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import mathcore.Vector2D;
+
 /**
- * Test class for Vector2D
+ * Test class for mathcore.Vector2D
  *
  * @author Amund Larsen & Fredrik Nymoen
  *
@@ -23,7 +25,7 @@ class Vector2DTest {
   }
 
   /**
-   * Tests the getX0 method in the Vector2D class.
+   * Tests the getX0 method in the mathcore.Vector2D class.
    */
 
   @org.junit.jupiter.api.Test
@@ -32,7 +34,7 @@ class Vector2DTest {
   }
 
   /**
-   * Tests the getX1 method in the Vector2D class.
+   * Tests the getX1 method in the mathcore.Vector2D class.
    */
 
   @org.junit.jupiter.api.Test
@@ -41,7 +43,7 @@ class Vector2DTest {
   }
 
   /**
-   * Tests the add method in the Vector2D class with a positive test.
+   * Tests the add method in the mathcore.Vector2D class with a positive test.
    * The test makes an additional vector and adds it to the original vector.
    * Then it checks if the result is as expected. For both X0 and X1.
    */
@@ -55,7 +57,7 @@ class Vector2DTest {
   }
 
   /**
-   * Tests the add method in the Vector2D class with a negative test.
+   * Tests the add method in the mathcore.Vector2D class with a negative test.
    * The test makes an additional vector and adds it to the original vector.
    * Then it checks if the result is not as expected. For both X0 and X1.
    */
@@ -69,7 +71,7 @@ class Vector2DTest {
   }
 
   /**
-   * Tests the subtract method in the Vector2D class with a positive test.
+   * Tests the subtract method in the mathcore.Vector2D class with a positive test.
    * The test makes an additional vector and subtracts it from the original vector.
    * Then it checks if the result is as expected. For both X0 and X1.
    */
@@ -83,7 +85,7 @@ class Vector2DTest {
   }
 
   /**
-   * Tests the subtract method in the Vector2D class with a negative test.
+   * Tests the subtract method in the mathcore.Vector2D class with a negative test.
    * The test makes an additional vector and subtracts it from the original vector.
    * Then it checks if the result is not as expected. For both X0 and X1.
    */

@@ -1,17 +1,21 @@
-import java.util.Vector;
+package transformations;
+
+import mathcore.Complex;
+import mathcore.Vector2D;
+
 /**
- * JuliaTransform class is responsible for transforming a Vector2D point on the form z -> ±sqrt(z - c).
+ * transformations.JuliaTransform class is responsible for transforming a mathcore.Vector2D point on the form z -> ±sqrt(z - c).
  *
  * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0
  */
 
-public class JuliaTransform implements Transform2D{
+public class JuliaTransform implements Transform2D {
   private Complex point;
   private int sign;
 
   /**
-   * Constructor for JuliaTransform.
+   * Constructor for transformations.JuliaTransform.
    *
    * @param point the complex point
    * @param sign  determines the sign of the square root
@@ -38,7 +42,7 @@ public class JuliaTransform implements Transform2D{
       // Hvis sign er negativ, bruk den andre kvadratroten
       z = new Complex(-z.getX0(), -z.getX1());
     }
-    // Returnerer resultatet som en Vector2D
+    // Returnerer resultatet som en mathcore.Vector2D
     return new Vector2D(z.getX0(), z.getX1());
   }
 
