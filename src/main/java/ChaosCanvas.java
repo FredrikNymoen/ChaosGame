@@ -18,7 +18,11 @@ public class ChaosCanvas {
     canvas = new int[width][height];
   }
   public int getPixel(Vector2D point) {
-    return canvas[(int) point.getX0()][(int) point.getX1()];
+    Matrix2x2 matrix = new Matrix2x2(0, (height - 1) / (minCoords.getX1() - maxCoords.getX1()), (width - 1) / (maxCoords.getX0() - minCoords.getX0()), 0);
+    Vector2D vector = new Vector2D(((height - 1) * maxCoords.getX1()) / (maxCoords.getX1() - minCoords.getX1()), ((width - 1) * minCoords.getX0()) / (minCoords.getX0() - maxCoords.getX0()));
+    transformCoordsToIndices = new AffineTransform2D(matrix, vector);
+    Vector2D indices = transformCoordsToIndices.transform(point);
+    return canvas[(int) indices.getX0()][(int) indices.getX1()];
   }
 
   public void putPixel(Vector2D point){
@@ -33,6 +37,10 @@ public class ChaosCanvas {
     return canvas;
   }
   public void clear(){
-    canvas = new int[width][height];
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        canvas[i][j] = 0;
+      }
+    }
   }
 }
