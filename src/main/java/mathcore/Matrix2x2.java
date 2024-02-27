@@ -40,4 +40,17 @@ public class Matrix2x2 {
     double newY = a10 * vector.getX0() + a11 * vector.getX1();
     return new Vector2D(newX, newY);
   }
+  public double geta00() {
+    return a00;
+  }
+  public double geta01() {
+    return a01;
+  }
+  public double geta10() {
+    return a10;
+  }
+  public double geta11() {
+    return a11;
+  }
+
 }

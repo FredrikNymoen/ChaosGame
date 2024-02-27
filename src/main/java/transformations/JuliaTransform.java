@@ -45,4 +45,8 @@ public class JuliaTransform implements Transform2D {
     // Returnerer resultatet som en mathcore.Vector2D
     return new Vector2D(z.getX0(), z.getX1());
   }
+
+  public Complex getPoint() {
+    return point;
+  }
 }
