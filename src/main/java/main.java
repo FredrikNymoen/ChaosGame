@@ -2,17 +2,62 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import mathcore.Matrix2x2;
+import mathcore.Vector2D;
+import transformations.AffineTransform2D;
+import transformations.Transform2D;
 
 public class main {
 
   public static void main(String[] args) {
-    File file = new File("file.csv");
+
+    ChaosGameDescription description;
+    ChaosGameFileHandler fileHandler = new ChaosGameFileHandler();
+
+    /*File file = new File("file.csv");
     String path = file.getAbsolutePath();
     try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(path))) {
       writer.write("Hello, orld!\n");
       writer.write("Hello, World!\n");
     } catch (Exception e) {
       System.out.println(e.getMessage());
+    }*/
+
+    Vector2D minCoordsVector = new Vector2D(0, 0);
+    Vector2D maxCoordsVector = new Vector2D(1, 1);
+
+    Matrix2x2 transformationMatrix = new Matrix2x2(0.5, 0, 0, 0.5);
+    Vector2D transformationVector1 = new Vector2D(0, 0);
+    Vector2D transformationVector2 = new Vector2D(0.25, 0.5);
+    Vector2D transformationVector3 = new Vector2D(0.5, 0);
+
+    AffineTransform2D transformation1 = new AffineTransform2D(transformationMatrix, transformationVector1);
+    AffineTransform2D transformation2 = new AffineTransform2D(transformationMatrix, transformationVector2);
+    AffineTransform2D transformation3 = new AffineTransform2D(transformationMatrix, transformationVector3);
+    List<Transform2D> transforms = new ArrayList<>();
+    transforms.add(transformation1);
+    transforms.add(transformation2);
+    transforms.add(transformation3);
+
+    description = new ChaosGameDescription(transforms, minCoordsVector, maxCoordsVector);
+    fileHandler.writeToFile(description, "file.csv");
+
+    description = fileHandler.readFromFile("file.csv");
+    System.out.println(description.getTransforms().size());
+
+    ChaosGame game = new ChaosGame(description, 100, 100);
+    game.runSteps(100000);
+    int[][] canvasArray = game.getCanvas().getCanvasArray();
+    for (int i = 0; i < canvasArray.length; i++) {
+      for (int j = 0; j < canvasArray[i].length; j++) {
+        System.out.print(canvasArray[i][j]);
+      }
+      System.out.println();
     }
+
+
   }
+
 }

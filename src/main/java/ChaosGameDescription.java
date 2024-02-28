@@ -13,6 +13,9 @@ public class ChaosGameDescription {
     this.maxCoords = maxCoords;
     this.transforms = transforms;
   }
+  public ChaosGameDescription(List<Transform2D> transforms) {
+    this.transforms = transforms;
+  }
   public List<Transform2D> getTransforms() {
     return transforms;
   }
