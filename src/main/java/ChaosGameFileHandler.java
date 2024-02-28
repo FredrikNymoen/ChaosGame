@@ -36,6 +36,7 @@ public class ChaosGameFileHandler {
         Vector2D maxCoordsVector = new Vector2D(maxX0, maxX1);
 
         while ((line = reader.readLine()) != null) {
+          System.out.println(line);
           transformationValues = line.split(", ");
           double a00 = Double.parseDouble(transformationValues[0]);
           double a01 = Double.parseDouble(transformationValues[1]);
@@ -75,9 +76,9 @@ public class ChaosGameFileHandler {
       if (description.getTransforms().get(0) instanceof AffineTransform2D) {
         writer.write("Affine2D\n");
         writer.write(
-            description.getMinCoords().getX0() + "," + description.getMinCoords().getX1() + "\n");
+            description.getMinCoords().getX0() + ", " + description.getMinCoords().getX1() + "\n");
         writer.write(
-            description.getMaxCoords().getX0() + "," + description.getMaxCoords().getX1() + "\n");
+            description.getMaxCoords().getX0() + ", " + description.getMaxCoords().getX1() + "\n");
 
         for (Transform2D transformation : description.getTransforms()) {
           Matrix2x2 matrix = ((AffineTransform2D) transformation).getMatrix();

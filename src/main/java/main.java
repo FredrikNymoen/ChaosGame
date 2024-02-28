@@ -48,16 +48,18 @@ public class main {
     System.out.println(description.getTransforms().size());
 
     ChaosGame game = new ChaosGame(description, 100, 100);
-    game.runSteps(100000);
+    game.runSteps(1000000);
     int[][] canvasArray = game.getCanvas().getCanvasArray();
     for (int i = 0; i < canvasArray.length; i++) {
       for (int j = 0; j < canvasArray[i].length; j++) {
-        System.out.print(canvasArray[i][j]);
+        if (canvasArray[i][j] == 0) {
+          System.out.print(" ");
+        } else {
+          System.out.print("X");
+        }
       }
       System.out.println();
     }
-
-
   }
 
 }
