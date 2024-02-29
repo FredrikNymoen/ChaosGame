@@ -15,7 +15,7 @@ public class ChaosCanvas {
     this.height = height;
     this.minCoords = minCoords;
     this.maxCoords = maxCoords;
-    canvas = new int[width][height];
+    canvas = new int[height][width];
   }
   public int getPixel(Vector2D point) {
     Matrix2x2 matrix = new Matrix2x2(0, (height - 1) / (minCoords.getX1() - maxCoords.getX1()), (width - 1) / (maxCoords.getX0() - minCoords.getX0()), 0);
@@ -30,6 +30,7 @@ public class ChaosCanvas {
     Vector2D vector = new Vector2D(((height - 1) * maxCoords.getX1()) / (maxCoords.getX1() - minCoords.getX1()), ((width - 1) * minCoords.getX0()) / (minCoords.getX0() - maxCoords.getX0()));
     transformCoordsToIndices = new AffineTransform2D(matrix, vector);
     Vector2D indices = transformCoordsToIndices.transform(point);
+
     canvas[(int) indices.getX0()][(int) indices.getX1()] = 1;
   }
 

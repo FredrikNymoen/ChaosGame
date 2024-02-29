@@ -1,7 +1,3 @@
-import java.io.BufferedWriter;
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import mathcore.Matrix2x2;
@@ -9,7 +5,7 @@ import mathcore.Vector2D;
 import transformations.AffineTransform2D;
 import transformations.Transform2D;
 
-public class main {
+public class Main {
 
   public static void main(String[] args) {
 
@@ -37,8 +33,8 @@ public class main {
 
     description = fileHandler.readFromFile("file.csv");
 
-    ChaosGame game = new ChaosGame(description, 150, 50);
-    game.runSteps(1000);
+    ChaosGame game = new ChaosGame(description, 160, 10);
+    game.runSteps(15000);
     int[][] canvasArray = game.getCanvas().getCanvasArray();
     for (int i = 0; i < canvasArray.length; i++) {
       for (int j = 0; j < canvasArray[i].length; j++) {
@@ -51,5 +47,4 @@ public class main {
       System.out.println();
     }
   }
-
 }
