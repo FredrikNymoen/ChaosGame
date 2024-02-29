@@ -26,7 +26,7 @@ public class main {
     }*/
 
     Vector2D minCoordsVector = new Vector2D(0, 0);
-    Vector2D maxCoordsVector = new Vector2D(1, 1);
+    Vector2D maxCoordsVector = new Vector2D(1, 5);
 
     Matrix2x2 transformationMatrix = new Matrix2x2(0.5, 0, 0, 0.5);
     Vector2D transformationVector1 = new Vector2D(0, 0);
@@ -47,8 +47,8 @@ public class main {
     description = fileHandler.readFromFile("file.csv");
     System.out.println(description.getTransforms().size());
 
-    ChaosGame game = new ChaosGame(description, 100, 100);
-    game.runSteps(1000000);
+    ChaosGame game = new ChaosGame(description, 150, 150);
+    game.runSteps(1500000);
     int[][] canvasArray = game.getCanvas().getCanvasArray();
     for (int i = 0; i < canvasArray.length; i++) {
       for (int j = 0; j < canvasArray[i].length; j++) {
