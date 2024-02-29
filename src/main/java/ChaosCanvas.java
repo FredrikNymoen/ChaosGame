@@ -17,6 +17,7 @@ public class ChaosCanvas {
     this.maxCoords = maxCoords;
     canvas = new int[height][width];
     //rett endelig
+    //spnnende
   }
   public int getPixel(Vector2D point) {
     Matrix2x2 matrix = new Matrix2x2(0, (height - 1) / (minCoords.getX1() - maxCoords.getX1()), (width - 1) / (maxCoords.getX0() - minCoords.getX0()), 0);
