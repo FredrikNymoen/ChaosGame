@@ -62,6 +62,11 @@ public class Main {
   }
 
   public void gameLoop(){
-    System.out.println("Do you want ");
+    boolean gameActive = true;
+    while(gameActive){
+      System.out.println("Do you want ");
+      gameActive = false;
+    }
+
   }
 }
