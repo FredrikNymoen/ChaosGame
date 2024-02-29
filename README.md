@@ -16,8 +16,8 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 ```
 cd existing_repo
 git remote add origin https://gitlab.stud.idi.ntnu.no/aflarsen/prog_2_prosjekt.git
-git branch -M main
-git push -uf origin main
+git branch -M Main
+git push -uf origin Main
 ```
 
 ## Integrate with your tools

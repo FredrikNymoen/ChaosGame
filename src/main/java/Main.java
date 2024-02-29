@@ -12,15 +12,6 @@ public class Main {
     ChaosGameDescription description;
     ChaosGameFileHandler fileHandler = new ChaosGameFileHandler();
 
-    /*File file = new File("file.csv");
-    String path = file.getAbsolutePath();
-    try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(path))) {
-      writer.write("Hello, orld!\n");
-      writer.write("Hello, World!\n");
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
-    }*/
-
     Vector2D minCoordsVector = new Vector2D(0, 0);
     Vector2D maxCoordsVector = new Vector2D(1, 5);
 
