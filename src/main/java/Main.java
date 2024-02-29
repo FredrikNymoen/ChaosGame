@@ -1,8 +1,10 @@
 import java.util.ArrayList;
 import java.util.List;
+import mathcore.Complex;
 import mathcore.Matrix2x2;
 import mathcore.Vector2D;
 import transformations.AffineTransform2D;
+import transformations.JuliaTransform;
 import transformations.Transform2D;
 
 public class Main {
@@ -23,28 +25,43 @@ public class Main {
     AffineTransform2D transformation1 = new AffineTransform2D(transformationMatrix, transformationVector1);
     AffineTransform2D transformation2 = new AffineTransform2D(transformationMatrix, transformationVector2);
     AffineTransform2D transformation3 = new AffineTransform2D(transformationMatrix, transformationVector3);
-    List<Transform2D> transforms = new ArrayList<>();
-    transforms.add(transformation1);
-    transforms.add(transformation2);
-    transforms.add(transformation3);
+    List<Transform2D> affineTransforms = new ArrayList<>();
+    affineTransforms.add(transformation1);
+    affineTransforms.add(transformation2);
+    affineTransforms.add(transformation3);
 
-    description = new ChaosGameDescription(transforms, minCoordsVector, maxCoordsVector);
+    Complex transformationVector4 = new Complex(-0.74543, 0.11301);
+    JuliaTransform transformation4 = new JuliaTransform(transformationVector4, 1);
+    List<Transform2D> juliaTransforms = new ArrayList<>();
+    juliaTransforms.add(transformation4);
+
+    /*description = new ChaosGameDescription(affineTransforms, minCoordsVector, maxCoordsVector);
+    fileHandler.writeToFile(description, "file.csv");
+
+    description = fileHandler.readFromFile("file.csv");*/
+
+    description = new ChaosGameDescription(juliaTransforms, minCoordsVector, maxCoordsVector);
     fileHandler.writeToFile(description, "file.csv");
 
     description = fileHandler.readFromFile("file.csv");
 
     ChaosGame game = new ChaosGame(description, 150, 150);
     game.runSteps(1500000);
+
     int[][] canvasArray = game.getCanvas().getCanvasArray();
     for (int i = 0; i < canvasArray.length; i++) {
       for (int j = 0; j < canvasArray[i].length; j++) {
         if (canvasArray[i][j] == 0) {
           System.out.print(" ");
         } else {
-          System.out.print("X");
+          System.out.print("■");
         }
       }
       System.out.println();
     }
+  }
+
+  public void gameLoop(){
+    System.out.println("Do you want ");
   }
 }
