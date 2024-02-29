@@ -31,7 +31,7 @@ public class ChaosCanvas {
     transformCoordsToIndices = new AffineTransform2D(matrix, vector);
     Vector2D indices = transformCoordsToIndices.transform(point);
 
-    canvas[(int) indices.getX0()][(int) indices.getX1()] = 1;
+    canvas[(int) indices.getX0()] [(int) indices.getX1()] = 1;
   }
 
   public int[][] getCanvasArray(){
