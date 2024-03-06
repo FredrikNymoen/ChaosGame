@@ -31,4 +31,13 @@ public class Complex extends Vector2D {
     return new Complex(realPart, imaginaryPart);
   }
 
+  public Complex multiply(int sign) {
+    return new Complex(sign * getX0(), sign * getX1());
+  }
+
+  @Override
+  public Complex subtract(Vector2D other) {
+    return new Complex(getX0() - other.getX0(), getX1() - other.getX1());
+  }
+
 }
