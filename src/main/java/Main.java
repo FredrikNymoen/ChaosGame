@@ -42,20 +42,20 @@ public class Main {
 
 
 
-    /*description = new ChaosGameDescription(affineTransforms, minCoordsVector, maxCoordsVector);
-    fileHandler.writeToFile(description, "file.csv");
-
-    description = fileHandler.readFromFile("file.csv");*/
-
-    description = new ChaosGameDescription(juliaTransforms, minCoordsVector, maxCoordsVector);
+    description = new ChaosGameDescription(affineTransforms, minCoordsVector, maxCoordsVector);
     fileHandler.writeToFile(description, "file.csv");
 
     description = fileHandler.readFromFile("file.csv");
 
+    /*description = new ChaosGameDescription(juliaTransforms, minCoordsVector, maxCoordsVector);
+    fileHandler.writeToFile(description, "file.csv");
 
-    ChaosGame game = new ChaosGame(description, 150,
-        50);
-    game.runSteps(15000);
+    description = fileHandler.readFromFile("file.csv");*/
+
+
+    ChaosGame game = new ChaosGame(description, 300,
+        100);
+    game.runSteps(150000);
 
     int[][] canvasArray = game.getCanvas().getCanvasArray();
     for (int i = 0; i < canvasArray.length; i++) {
