@@ -34,16 +34,11 @@ public class JuliaTransform implements Transform2D {
    */
   @Override
   public Vector2D transform(Vector2D point) {
+    Complex z = new Complex(point.getX0(), point.getX1());
     // Beregner z - c
-    Vector2D zMinusC = point.subtract(this.point);
-    // Beregner kvadratroten av det komplekse tallet, avhengig av sign
-    Complex z = (new Complex(zMinusC.getX0(), zMinusC.getX1())).sqrt();
-    if (this.sign < 0) {
-      // Hvis sign er negativ, bruk den andre kvadratroten
-      z = new Complex(-z.getX0(), -z.getX1());
-    }
-    // Returnerer resultatet som en mathcore.Vector2D
-    return new Vector2D(z.getX0(), z.getX1());
+    Complex result = z.subtract(this.point).sqrt().multiply(sign);
+    //System.out.println(result.getX0() + " " + result.getX1());
+    return new Vector2D(result.getX0(), result.getX1());
   }
 
   public Complex getPoint() {
