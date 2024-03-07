@@ -15,11 +15,19 @@ public class Main {
     ChaosGameDescription description;
     ChaosGameFileHandler fileHandler = new ChaosGameFileHandler();
 
+    //barnsley
     Vector2D minCoordsVector = new Vector2D(-2, -2);
     Vector2D maxCoordsVector = new Vector2D(10, 10);
+
+    //affine
+    /*Vector2D minCoordsVector = new Vector2D(0, 0);
+    Vector2D maxCoordsVector = new Vector2D(1, 1);*/
+
+    //julia
     /*Vector2D minCoordsVector = new Vector2D(-1.6, -1);
     Vector2D maxCoordsVector = new Vector2D(1.6, 1);*/
 
+    //sierpinski
     /*Matrix2x2 transformationMatrix = new Matrix2x2(0.5, 0, 0, 0.5);
     Vector2D transformationVector1 = new Vector2D(0, 0);
     Vector2D transformationVector2 = new Vector2D(0.25, 0.5);
@@ -56,7 +64,8 @@ public class Main {
 //last test of the day
 
 
-    /*Complex transformationVector4 = new Complex(-0.74543, 0.11301);
+    //Complex transformationVector4 = new Complex(-0.74543, 0.11301);
+    /*Complex transformationVector4 = new Complex(0.285, 0.01);
     JuliaTransform transformation4 = new JuliaTransform(transformationVector4, 1);
     List<Transform2D> juliaTransforms = new ArrayList<>();
     juliaTransforms.add(transformation4);*/
@@ -73,7 +82,7 @@ public class Main {
     description = fileHandler.readFromFile("file.csv");*/
 
 
-    ChaosGame game = new ChaosGame(description, 300,
+    ChaosGame game = new ChaosGame(description, 250,
         100);
     game.runSteps(10000000);
 
