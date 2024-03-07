@@ -7,7 +7,6 @@ public class ChaosGameDescription {
   private Vector2D minCoords;
   private Vector2D maxCoords;
   private List<Transform2D> transforms;
-
   public ChaosGameDescription(List<Transform2D> transforms, Vector2D minCoords, Vector2D maxCoords) {
     this.minCoords = minCoords;
     this.maxCoords = maxCoords;

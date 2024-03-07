@@ -28,19 +28,6 @@ public class ChaosGame {
   }
 
   public void display(){
-    /*int[][] canvasArray = getCanvas().getCanvasArray();
-    for (int i = 0; i < canvasArray.length; i++) {
-      for (int j = 0; j < canvasArray[i].length; j++) {
-        if (getCanvas().getPixel(currentPoint) == 0) {
-          System.out.print(" ");
-        } else {
-          //System.out.print("■");
-          System.out.print("X");
-        }
-      }
-      System.out.println();
-    }*/
-
     int[][] canvasArray = getCanvas().getCanvasArray();
     for (int i = 0; i < canvasArray.length; i++) {
       for (int j = 0; j < canvasArray[i].length; j++) {
