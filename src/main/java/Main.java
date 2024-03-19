@@ -8,7 +8,25 @@ import transformations.AffineTransform2D;
 import transformations.JuliaTransform;
 import transformations.Transform2D;
 
+/**
+ * Main entry point for the Chaos Game application.
+ * This class sets up and executes the Chaos Game, allowing for different configurations
+ * based on affine and Julia transformations. It illustrates how fractal patterns can emerge
+ * from simple rules applied repeatedly. The main method sets up the game, runs it for a
+ * specified number of iterations, and prints the resulting pattern to the console.
+ */
 public class Main {
+
+  /**
+   * Sets up and executes the Chaos Game. This main method allows for running different
+   * configurations of the game, based on the provided transformations. It demonstrates
+   * the creation of fractal patterns using both affine transformations and Julia sets.
+   * The process involves creating a game description, running the game, and then printing
+   * the final canvas to the console. Additionally, it includes an example of reading and
+   * writing the game configuration to and from a file.
+   *
+   * @param args Command line arguments, not used in this application.
+   */
 
   public static void main(String[] args) {
 
@@ -30,7 +48,6 @@ public class Main {
     affineTransforms.add(transformation1);
     affineTransforms.add(transformation2);
     affineTransforms.add(transformation3);
-//last test of the day
 
 
 
@@ -69,6 +86,12 @@ public class Main {
       System.out.println();
     }
   }
+
+  /**
+   * Provides a loop for the Chaos Game to continually ask the user for the number of
+   * iterations to run. The loop continues until the user decides to stop the game.
+   * This method demonstrates how to create an interactive loop for running the Chaos Game.
+   */
 
   public void gameLoop(){
     boolean gameActive = true;

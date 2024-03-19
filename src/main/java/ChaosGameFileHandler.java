@@ -12,7 +12,22 @@ import transformations.AffineTransform2D;
 import transformations.JuliaTransform;
 import transformations.Transform2D;
 
+/**
+ * A class that handles reading and writing to files for the ChaosGameDescription class.
+ * This class provides methods to serialize the configuration of a Chaos Game into
+ * file and to deserialize it back into an object.
+ */
 public class ChaosGameFileHandler {
+
+  /**
+   * Reads a ChaosGameDescription from a specified file. This method parses the file
+   * assumed to be in a custom format that lists transformations and boundary coordinates
+   * for the Chaos Game. The file can describe different types of transformations based
+   * on its first line.
+   *
+   * @param path The path to the file containing the Chaos Game configuration.
+   * @return A new ChaosGameDescription object initialized with the parameters read from the file.
+   */
 
   ChaosGameDescription readFromFile(String path) {
     File file = new File(path);
@@ -78,6 +93,15 @@ public class ChaosGameFileHandler {
 
     return description;
   }
+
+  /**
+   * Writes a given ChaosGameDescription to a specified file. This method serializes the
+   * Chaos Game configuration into a custom format, allowing it to be read and reconstructed
+   * later. The format includes information on transformations and boundary coordinates.
+   *
+   * @param description The ChaosGameDescription object to be written to the file.
+   * @param path The path where the file will be created or overwritten.
+   */
 
   void writeToFile(ChaosGameDescription description, String path) {
     File file = new File(path);
