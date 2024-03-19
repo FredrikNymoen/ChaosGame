@@ -8,27 +8,35 @@ import transformations.AffineTransform2D;
 import transformations.JuliaTransform;
 import transformations.Transform2D;
 
+/**
+ * Main entry point for the Chaos Game application.
+ * This class sets up and executes the Chaos Game, allowing for different configurations
+ * based on affine and Julia transformations. It illustrates how fractal patterns can emerge
+ * from simple rules applied repeatedly. The main method sets up the game, runs it for a
+ * specified number of iterations, and prints the resulting pattern to the console.
+ */
 public class Main {
+
+  /**
+   * Sets up and executes the Chaos Game. This main method allows for running different
+   * configurations of the game, based on the provided transformations. It demonstrates
+   * the creation of fractal patterns using both affine transformations and Julia sets.
+   * The process involves creating a game description, running the game, and then printing
+   * the final canvas to the console. Additionally, it includes an example of reading and
+   * writing the game configuration to and from a file.
+   *
+   * @param args Command line arguments, not used in this application.
+   */
 
   public static void main(String[] args) {
 
     ChaosGameDescription description;
     ChaosGameFileHandler fileHandler = new ChaosGameFileHandler();
 
-    //barnsley
-    Vector2D minCoordsVector = new Vector2D(-2, -2);
-    Vector2D maxCoordsVector = new Vector2D(10, 10);
+    Vector2D minCoordsVector = new Vector2D(0, 0);
+    Vector2D maxCoordsVector = new Vector2D(1, 1);
 
-    //affine
-    /*Vector2D minCoordsVector = new Vector2D(0, 0);
-    Vector2D maxCoordsVector = new Vector2D(1, 1);*/
-
-    //julia
-    /*Vector2D minCoordsVector = new Vector2D(-1.6, -1);
-    Vector2D maxCoordsVector = new Vector2D(1.6, 1);*/
-
-    //sierpinski
-    /*Matrix2x2 transformationMatrix = new Matrix2x2(0.5, 0, 0, 0.5);
+    Matrix2x2 transformationMatrix = new Matrix2x2(0.5, 0, 0, 0.5);
     Vector2D transformationVector1 = new Vector2D(0, 0);
     Vector2D transformationVector2 = new Vector2D(0.25, 0.5);
     Vector2D transformationVector3 = new Vector2D(0.5, 0);
@@ -39,54 +47,51 @@ public class Main {
     List<Transform2D> affineTransforms = new ArrayList<>();
     affineTransforms.add(transformation1);
     affineTransforms.add(transformation2);
-    affineTransforms.add(transformation3);*/
-
-    Matrix2x2 transformationMatrix1 = new Matrix2x2(0, 0, 0, 0.16);
-    Matrix2x2 transformationMatrix2 = new Matrix2x2(0.85, 0.04, -0.04, 0.85);
-    Matrix2x2 transformationMatrix3 = new Matrix2x2(0.2, -0.26, 0.23, 0.22);
-    Matrix2x2 transformationMatrix4 = new Matrix2x2(-0.15, 0.28, 0.26, 0.24);
-    Vector2D transformationVector1 = new Vector2D(0, 0);
-    Vector2D transformationVector2 = new Vector2D(0, 1.6);
-    Vector2D transformationVector3 = new Vector2D(0, 0.44);
-
-    AffineTransform2D transformation1 = new AffineTransform2D(transformationMatrix1, transformationVector1);
-    AffineTransform2D transformation2 = new AffineTransform2D(transformationMatrix2, transformationVector2);
-    AffineTransform2D transformation3 = new AffineTransform2D(transformationMatrix3, transformationVector2);
-    AffineTransform2D transformation4 = new AffineTransform2D(transformationMatrix4, transformationVector3);
-    List<Transform2D> affineTransforms = new ArrayList<>();
-    affineTransforms.add(transformation1);
-    affineTransforms.add(transformation2);
     affineTransforms.add(transformation3);
-    affineTransforms.add(transformation4);
 
 
 
-//last test of the day
-
-
-    //Complex transformationVector4 = new Complex(-0.74543, 0.11301);
-    /*Complex transformationVector4 = new Complex(0.285, 0.01);
+    Complex transformationVector4 = new Complex(-0.74543, 0.11301);
     JuliaTransform transformation4 = new JuliaTransform(transformationVector4, 1);
     List<Transform2D> juliaTransforms = new ArrayList<>();
-    juliaTransforms.add(transformation4);*/
+    juliaTransforms.add(transformation4);
 
-    description = new ChaosGameDescription(affineTransforms, minCoordsVector, maxCoordsVector);
-    fileHandler.writeToFile(description, "file.csv");
 
-    description = fileHandler.readFromFile("file.csv");
 
-    /*description = new ChaosGameDescription(juliaTransforms, minCoordsVector, maxCoordsVector);
+
+    /*description = new ChaosGameDescription(affineTransforms, minCoordsVector, maxCoordsVector);
     fileHandler.writeToFile(description, "file.csv");
 
     description = fileHandler.readFromFile("file.csv");*/
 
+    description = new ChaosGameDescription(juliaTransforms, minCoordsVector, maxCoordsVector);
+    fileHandler.writeToFile(description, "file.csv");
 
-    ChaosGame game = new ChaosGame(description, 250,
-        100);
-    game.runSteps(10000000);
+    description = fileHandler.readFromFile("file.csv");
 
-    game.display();
+
+    ChaosGame game = new ChaosGame(description, 150,
+        50);
+    game.runSteps(15000);
+
+    int[][] canvasArray = game.getCanvas().getCanvasArray();
+    for (int i = 0; i < canvasArray.length; i++) {
+      for (int j = 0; j < canvasArray[i].length; j++) {
+        if (canvasArray[i][j] == 0) {
+          System.out.print(" ");
+        } else {
+          System.out.print("■");
+        }
+      }
+      System.out.println();
+    }
   }
+
+  /**
+   * Provides a loop for the Chaos Game to continually ask the user for the number of
+   * iterations to run. The loop continues until the user decides to stop the game.
+   * This method demonstrates how to create an interactive loop for running the Chaos Game.
+   */
 
   public void gameLoop(){
     boolean gameActive = true;
