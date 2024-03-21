@@ -8,7 +8,20 @@ import transformations.AffineTransform2D;
 import transformations.JuliaTransform;
 import transformations.Transform2D;
 
+/**
+ * The main application for the Chaos Game.
+ * It allows the user to select between different
+ * fractal transformations such as Affine transformations and Julia sets, configure parameters, and then visualize the results.
+ * The chaos game is a method of creating fractal structures by iteratively applying a set of affine transformations.
+ * This implementation supports generating fractals such as the Sierpinski triangle, the Barnsley fern, and Julia sets.
+ */
+
 public class Main {
+
+  /**
+   * The main method of the application. It initializes the main class and starts the game loop.
+   * @param args the command line arguments
+   */
 
   public static void main(String[] args) {
 
@@ -89,6 +102,14 @@ public class Main {
     Main main = new Main();
     main.gameLoop();
   }
+
+  /**
+   * Interacts with the user to determine the type of chaos game to play.
+   * The user is asked to select between Affine transformations and Julia sets.
+   * The user is then asked to select between the Sierpinski triangle and the Barnsley fern for Affine transformations.
+   * Based on the user's input, the method returns a ChaosGameDescription object that contains the necessary data to run the chaos game.
+   * @return ChaosGameDescription the description of the chaos game
+   */
 
   public ChaosGameDescription gameQuestions() {
     String transformationChoices = "";
@@ -178,6 +199,11 @@ public class Main {
     return null;
   }
 
+  /**
+   * Contains the main loop of the game. It repeatedly asks the user for the type of fractal, its configuration, and the
+   * number of iterations to run. After each simulation, it asks the user whether they want to play again.
+   */
+
   public void gameLoop() {
     boolean gameRunning = true;
     while (gameRunning) {
@@ -194,6 +220,11 @@ public class Main {
       }
     }
   }
+
+  /**
+   * Asks the user for the number of iterations to run the chaos game. It reads an integer value from the user.
+   * @return The number of iterations for the chaos game as entered by the user.
+   */
 
   private int askForIterations() {
     System.out.println("How many iterations do you want: ");
