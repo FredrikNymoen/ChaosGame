@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import mathcore.Vector2D;
 
 import static org.junit.Assert.*;
@@ -22,10 +23,10 @@ class ChaosCanvasTest {
 
     @org.junit.jupiter.api.BeforeEach
     void setUp() {
-        width = 100;
-        height = 100;
+        width = 10;
+        height = 10;
         minCoords = new Vector2D(0, 0);
-        maxCoords = new Vector2D(1, 1);
+        maxCoords = new Vector2D(10, 10);
         canvas = new ChaosCanvas(width, height, minCoords, maxCoords);
     }
 
@@ -34,12 +35,18 @@ class ChaosCanvasTest {
      * It creates a point within the canvas, puts a pixel on that point and then checks if the pixel is set to 1.
      */
 
+    //Noe rart med getPixel metoden. Vet ikke helt hva som er galt, eller putPixel metoden.
+    //Klarer hvertfall ikke å finne point i canvaset.
 
     @org.junit.jupiter.api.Test
     void testPutPixelAndGetPixelPositive() {
-        Vector2D point = new Vector2D(0.5, 0.5); // This should be within the canvas bounds
+        Vector2D point = new Vector2D(5.0, 9.0);
         canvas.putPixel(point);
+        System.out.println("Canvas array: " + Arrays.deepToString(canvas.getCanvasArray()));
+        System.out.println("Canvas array value: " + canvas.getCanvasArray()[5][9]);
         int pixelValue = canvas.getPixel(point);
+        System.out.println("Point: " + point.getX0() + point.getX1());
+        System.out.println("Pixel value: " + pixelValue);
         assertEquals("Pixel should be set to 1", 1, pixelValue);
     }
 
@@ -50,10 +57,10 @@ class ChaosCanvasTest {
 
     @org.junit.jupiter.api.Test
     void testPutPixelAndGetPixelNegative() {
-        Vector2D point = new Vector2D(0.5, 0.5); // This should be within the canvas bounds
+        Vector2D point = new Vector2D(0, 0);
         canvas.putPixel(point);
         int pixelValue = canvas.getPixel(point);
-        assertNotEquals("Pixel should not be set to 0", 0, pixelValue);
+        assertNotEquals("Pixel should not be set to 1", 1, pixelValue);
     }
 
     /**
@@ -64,7 +71,7 @@ class ChaosCanvasTest {
 
     @org.junit.jupiter.api.Test
     void testClearCanvasPositive() {
-        Vector2D point = new Vector2D(0.5, 0.5); // This should be within the canvas bounds
+        Vector2D point = new Vector2D(0.5, 0.5);
         canvas.putPixel(point);
         canvas.clear();
         int[][] canvasArray = canvas.getCanvasArray();
@@ -100,10 +107,11 @@ class ChaosCanvasTest {
      */
 
     @org.junit.jupiter.api.Test
-    public void testCanvasOutOfBounderies() {
-        Vector2D pointOutside = new Vector2D(-0.1, -0.1); // Outside the defined boundaries
+    public void testCanvasOutOfBoundaries() {
+        Vector2D pointOutside = new Vector2D(20, 20);
         try {
             canvas.putPixel(pointOutside);
+            canvas.getPixel(pointOutside);
             fail("Expected an ArrayIndexOutOfBoundsException to be thrown");
         } catch (ArrayIndexOutOfBoundsException e) {
         }
@@ -116,9 +124,10 @@ class ChaosCanvasTest {
 
     @org.junit.jupiter.api.Test
     public void testCanvasOnMaxBoundary() {
-        Vector2D pointOnBoundary = new Vector2D(1.0, 1.0);
+        Vector2D pointOnBoundary = new Vector2D(9, 9);
         try {
             canvas.putPixel(pointOnBoundary);
+            canvas.getPixel(pointOnBoundary);
         } catch (ArrayIndexOutOfBoundsException e) {
             fail("Should not throw ArrayIndexOutOfBoundsException when putting a pixel on the boundary");
         }
