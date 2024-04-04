@@ -1,3 +1,5 @@
+import chaosGame.ChaosGameDescription;
+import chaosGame.ChaosGameFileHandler;
 import mathcore.Matrix2x2;
 import mathcore.Vector2D;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,8 +18,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test class for the ChaosGameFileHandler class.
- * This class tests the writeToFile and readFromFile methods of the ChaosGameFileHandler class.
+ * Test class for the chaosGame.ChaosGameFileHandler class.
+ * This class tests the writeToFile and readFromFile methods of the chaosGame.ChaosGameFileHandler class.
  */
 
 class ChaosGameFileHandlerTest {
@@ -27,7 +29,7 @@ class ChaosGameFileHandlerTest {
     private Path tempFile;
 
     /**
-     * Sets up the ChaosGameFileHandler with a temporary directory.
+     * Sets up the chaosGame.ChaosGameFileHandler with a temporary directory.
      * It writes an affine transformation to a file and then reads it back from the file.
      * This method is called before each test.
      * @param tempDir The temporary directory used for the tests.
@@ -50,8 +52,8 @@ class ChaosGameFileHandlerTest {
     }
 
     /**
-     * Tests the writeToFile and readFromFile methods of the ChaosGameFileHandler class with a positive test case.
-     * It writes a ChaosGameDescription to a file and then reads it back from the file.
+     * Tests the writeToFile and readFromFile methods of the chaosGame.ChaosGameFileHandler class with a positive test case.
+     * It writes a chaosGame.ChaosGameDescription to a file and then reads it back from the file.
      * @throws Exception
      */
 
@@ -77,8 +79,8 @@ class ChaosGameFileHandlerTest {
     }
 
     /**
-     * Tests the writeToFile and readFromFile methods of the ChaosGameFileHandler class.
-     * It writes a ChaosGameDescription to a file and then reads it back from the file.
+     * Tests the writeToFile and readFromFile methods of the chaosGame.ChaosGameFileHandler class.
+     * It writes a chaosGame.ChaosGameDescription to a file and then reads it back from the file.
      * It then checks if the minCoords, maxCoords and transforms are equal.
      * @throws Exception
      */
