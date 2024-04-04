@@ -34,4 +34,4 @@ build/
 .DS_Store
 
 ### csv files ###
-file.csv
+src/main/resources/file.csv
