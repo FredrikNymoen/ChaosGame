@@ -207,10 +207,12 @@ public class Main {
    */
 
   public void gameLoop() {
+
+
     boolean gameRunning = true;
     while (gameRunning) {
       ChaosGameDescription description = gameQuestions();
-      fileHandler.writeToFile(description, getClass().getResource("file.csv").toString());
+      fileHandler.writeToFile(description,"file.csv");
       description = fileHandler.readFromFile(getClass().getResource("file.csv").toString());
       ChaosGame game = new ChaosGame(description, 250, 100);
       int iterations = askForIterations();
