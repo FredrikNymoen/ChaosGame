@@ -1,3 +1,5 @@
+package chaosGame;
+
 import java.util.List;
 import mathcore.Vector2D;
 import transformations.Transform2D;
@@ -15,7 +17,7 @@ public class ChaosGameDescription {
   private List<Transform2D> transforms;
 
   /**
-   * Constructor for the ChaosGameDescription class. With specified boundary cords and a list of transformations.
+   * Constructor for the chaosGame.ChaosGameDescription class. With specified boundary cords and a list of transformations.
    * @param transforms the list of transformations to be applied
    * @param minCoords the minimum coordinates of the canvas
    * @param maxCoords the maximum coordinates of the canvas

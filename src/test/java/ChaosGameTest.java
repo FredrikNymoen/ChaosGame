@@ -1,3 +1,5 @@
+import chaosGame.ChaosGame;
+import chaosGame.ChaosGameDescription;
 import mathcore.Matrix2x2;
 import mathcore.Vector2D;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,8 +13,8 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * Test class for the ChaosGame class.
- * This class tests the creation of a ChaosGame and the runSteps method.
+ * Test class for the chaosGame.ChaosGame class.
+ * This class tests the creation of a chaosGame.ChaosGame and the runSteps method.
  */
 
 class ChaosGameTest {
@@ -26,7 +28,7 @@ class ChaosGameTest {
     private Vector2D maxCoords;
 
     /**
-     * Sets up the ChaosGame with a width, height, min and max coordinates and a list of transformations.
+     * Sets up the chaosGame.ChaosGame with a width, height, min and max coordinates and a list of transformations.
      * This method is called before each test.
      */
 
@@ -46,7 +48,7 @@ class ChaosGameTest {
     }
 
     /**
-     * Tests the ChaosGame creation with a positive test case.
+     * Tests the chaosGame.ChaosGame creation with a positive test case.
      * It checks if the canvas, transforms, minCoords and maxCoords are not null.
      * It also checks if the width and height of the canvas are 100.
      */
@@ -62,7 +64,7 @@ class ChaosGameTest {
     }
 
     /**
-     * Tests the runSteps method of the ChaosGame class with a positive test case.
+     * Tests the runSteps method of the chaosGame.ChaosGame class with a positive test case.
      * It checks if at least one pixel is set on the canvas after running the game for 100 steps.
      */
 
@@ -82,7 +84,7 @@ class ChaosGameTest {
     }
 
     /**
-     * Tests the runSteps method of the ChaosGame class with a negative test case.
+     * Tests the runSteps method of the chaosGame.ChaosGame class with a negative test case.
      * It checks if no pixel is set on the canvas after running the game for 0 steps.
      */
 

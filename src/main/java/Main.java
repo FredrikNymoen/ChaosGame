@@ -1,3 +1,6 @@
+import chaosGame.ChaosGame;
+import chaosGame.ChaosGameDescription;
+import chaosGame.ChaosGameFileHandler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -27,8 +30,8 @@ public class Main {
   public static void main(String[] args) {
 
 
-    /*ChaosGameDescription description;
-    ChaosGameFileHandler fileHandler = new ChaosGameFileHandler();
+    /*chaosGame.ChaosGameDescription description;
+    chaosGame.ChaosGameFileHandler fileHandler = new chaosGame.ChaosGameFileHandler();
 
     //barnsley
     Vector2D minCoordsVector = new Vector2D(-2, -2);
@@ -86,17 +89,17 @@ public class Main {
     List<Transform2D> juliaTransforms = new ArrayList<>();
     juliaTransforms.add(transformation4);*/
 
-    /*description = new ChaosGameDescription(affineTransforms, minCoordsVector, maxCoordsVector);
+    /*description = new chaosGame.ChaosGameDescription(affineTransforms, minCoordsVector, maxCoordsVector);
     fileHandler.writeToFile(description, "file.csv");
 
     description = fileHandler.readFromFile("file.csv");*/
 
-    /*description = new ChaosGameDescription(juliaTransforms, minCoordsVector, maxCoordsVector);
+    /*description = new chaosGame.ChaosGameDescription(juliaTransforms, minCoordsVector, maxCoordsVector);
     fileHandler.writeToFile(description, "file.csv");
 
     description = fileHandler.readFromFile("file.csv");*/
 
-    /*ChaosGame game = new ChaosGame(description, 250,
+    /*chaosGame.ChaosGame game = new chaosGame.ChaosGame(description, 250,
         100);
     game.runSteps(10000000);
 
@@ -109,8 +112,8 @@ public class Main {
    * Interacts with the user to determine the type of chaos game to play.
    * The user is asked to select between Affine transformations and Julia sets.
    * The user is then asked to select between the Sierpinski triangle and the Barnsley fern for Affine transformations.
-   * Based on the user's input, the method returns a ChaosGameDescription object that contains the necessary data to run the chaos game.
-   * @return ChaosGameDescription the description of the chaos game
+   * Based on the user's input, the method returns a chaosGame.ChaosGameDescription object that contains the necessary data to run the chaos game.
+   * @return chaosGame.ChaosGameDescription the description of the chaos game
    */
 
   public ChaosGameDescription gameQuestions() {

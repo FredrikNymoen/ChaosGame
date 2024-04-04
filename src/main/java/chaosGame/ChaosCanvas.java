@@ -1,3 +1,5 @@
+package chaosGame;
+
 import static java.lang.Math.round;
 
 import mathcore.Matrix2x2;
@@ -5,7 +7,7 @@ import mathcore.Vector2D;
 import transformations.AffineTransform2D;
 
 /**
- * ChaosCanvas class is used to represent a canvas and perform operations on it.
+ * chaosGame.ChaosCanvas class is used to represent a canvas and perform operations on it.
  * The canvas is represented as a 2D array of integers.
  * The canvas is used to represent the Mandelbrot set, Julia set, Burning Ship set, Tricorn set and Multibrot set.
  */
@@ -18,7 +20,7 @@ public class ChaosCanvas {
   private AffineTransform2D transformCoordsToIndices;
 
     /**
-     * Constructor for the ChaosCanvas class.
+     * Constructor for the chaosGame.ChaosCanvas class.
      *
      * @param width the width of the canvas
      * @param height the height of the canvas

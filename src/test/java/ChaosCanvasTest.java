@@ -1,11 +1,11 @@
-import java.util.Arrays;
+import chaosGame.ChaosCanvas;
 import mathcore.Vector2D;
 
 import static org.junit.Assert.*;
 
 /**
- * Test class for the ChaosCanvas class.
- * This class tests the putPixel and getPixel methods of the ChaosCanvas class.
+ * Test class for the chaosGame.ChaosCanvas class.
+ * This class tests the putPixel and getPixel methods of the chaosGame.ChaosCanvas class.
  * It also tests the clear method and the boundaries of the canvas.
  */
 
@@ -31,7 +31,7 @@ class ChaosCanvasTest {
     }
 
     /**
-     * Tests the putPixel and getPixel methods of the ChaosCanvas class with a positive test case.
+     * Tests the putPixel and getPixel methods of the chaosGame.ChaosCanvas class with a positive test case.
      * It creates a point within the canvas, puts a pixel on that point and then checks if the pixel is set to 1.
      */
 
@@ -53,7 +53,7 @@ class ChaosCanvasTest {
     */
 
     /**
-     * Tests the putPixel and getPixel methods of the ChaosCanvas class with a negative test case.
+     * Tests the putPixel and getPixel methods of the chaosGame.ChaosCanvas class with a negative test case.
      * It creates a point within the canvas, puts a pixel on that point and then checks if the pixel is set to 0.
      */
 
@@ -67,7 +67,7 @@ class ChaosCanvasTest {
     }
 
     /**
-     * Tests the clear method of the ChaosCanvas class with a positive test case.
+     * Tests the clear method of the chaosGame.ChaosCanvas class with a positive test case.
      * It creates a point within the canvas, puts a pixel on that point and then clears the canvas.
      * It then checks if all the pixels are set to 0.
      */
@@ -86,7 +86,7 @@ class ChaosCanvasTest {
     }
 
     /**
-     * Tests the clear method of the ChaosCanvas class with a negative test case.
+     * Tests the clear method of the chaosGame.ChaosCanvas class with a negative test case.
      * It creates a point within the canvas, puts a pixel on that point and then clears the canvas.
      * It then checks if all the pixels are set to 0.
      */
