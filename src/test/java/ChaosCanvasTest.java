@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import mathcore.Vector2D;
 
 import static org.junit.Assert.*;
@@ -38,19 +37,13 @@ class ChaosCanvasTest {
     //Noe rart med getPixel metoden. Vet ikke helt hva som er galt, eller putPixel metoden.
     //Klarer hvertfall ikke å finne point i canvaset.
 
-   /* @org.junit.jupiter.api.Test
-    void testPutPixelAndGetPixelPositive() {
+   @org.junit.jupiter.api.Test
+    void testPutPixelPositive() {
         Vector2D point = new Vector2D(5.0, 9.0);
         canvas.putPixel(point);
-        System.out.println("Canvas array: " + Arrays.deepToString(canvas.getCanvasArray()));
-        System.out.println("Canvas array value: " + canvas.getCanvasArray()[5][9]);
         int pixelValue = canvas.getPixel(point);
-        System.out.println("Point: " + point.getX0() + point.getX1());
-        System.out.println("Pixel value: " + pixelValue);
         assertEquals("Pixel should be set to 1", 1, pixelValue);
     }
-
-    */
 
     /**
      * Tests the putPixel and getPixel methods of the ChaosCanvas class with a negative test case.
@@ -59,11 +52,11 @@ class ChaosCanvasTest {
 
 
     @org.junit.jupiter.api.Test
-    void testPutPixelAndGetPixelNegative() {
-        Vector2D point = new Vector2D(0, 0);
+    void testPutPixelNegative() {
+        Vector2D point = new Vector2D(5, 9);
         canvas.putPixel(point);
         int pixelValue = canvas.getPixel(point);
-        assertNotEquals("Pixel should not be set to 1", 1, pixelValue);
+        assertNotEquals("Pixel should not be set to 1", 0, pixelValue);
     }
 
     /**
