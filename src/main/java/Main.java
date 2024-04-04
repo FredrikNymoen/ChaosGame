@@ -18,12 +18,14 @@ import transformations.Transform2D;
 
 public class Main {
 
+  ChaosGameFileHandler fileHandler = new ChaosGameFileHandler();
   /**
    * The main method of the application. It initializes the main class and starts the game loop.
    * @param args the command line arguments
    */
 
   public static void main(String[] args) {
+
 
     /*ChaosGameDescription description;
     ChaosGameFileHandler fileHandler = new ChaosGameFileHandler();
@@ -208,10 +210,13 @@ public class Main {
     boolean gameRunning = true;
     while (gameRunning) {
       ChaosGameDescription description = gameQuestions();
+      fileHandler.writeToFile(description, "file.csv");
+      description = fileHandler.readFromFile("file.csv");
       ChaosGame game = new ChaosGame(description, 250, 100);
       int iterations = askForIterations();
       game.runSteps(iterations);
       game.display();
+
       System.out.println("Do you want to play again? [y/n]");
       Scanner scanner = new Scanner(System.in);
       String answer = scanner.nextLine();
@@ -225,11 +230,11 @@ public class Main {
    * Asks the user for the number of iterations to run the chaos game. It reads an integer value from the user.
    * @return The number of iterations for the chaos game as entered by the user.
    */
-
   private int askForIterations() {
     System.out.println("How many iterations do you want: ");
     Scanner scanner = new Scanner(System.in);
     return scanner.nextInt();
   }
+
 
 }
