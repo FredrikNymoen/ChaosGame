@@ -1,3 +1,5 @@
+import chaosGame.ChaosGameDescription;
+import chaosGame.ChaosGameFileHandler;
 import mathcore.Matrix2x2;
 import mathcore.Vector2D;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,8 +18,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test class for the ChaosGameFileHandler class.
- * This class tests the writeToFile and readFromFile methods of the ChaosGameFileHandler class.
+ * Test class for the chaosGame.ChaosGameFileHandler class.
+ * This class tests the writeToFile and readFromFile methods of the chaosGame.ChaosGameFileHandler class.
  */
 
 class ChaosGameFileHandlerTest {
@@ -27,10 +29,10 @@ class ChaosGameFileHandlerTest {
     private Path tempFile;
 
     /**
-     * Sets up the ChaosGameFileHandler with a temporary directory.
+     * Sets up the chaosGame.ChaosGameFileHandler with a temporary directory.
      * It writes an affine transformation to a file and then reads it back from the file.
      * This method is called before each test.
-     * @param tempDir
+     * @param tempDir The temporary directory used for the tests.
      * @throws Exception
      */
 
@@ -50,13 +52,13 @@ class ChaosGameFileHandlerTest {
     }
 
     /**
-     * Tests the writeToFile and readFromFile methods of the ChaosGameFileHandler class with a positive test case.
-     * It writes a ChaosGameDescription to a file and then reads it back from the file.
+     * Tests the writeToFile and readFromFile methods of the chaosGame.ChaosGameFileHandler class with a positive test case.
+     * It writes a chaosGame.ChaosGameDescription to a file and then reads it back from the file.
      * @throws Exception
      */
 
     @Test
-    void testWriteToFileAndReadFromFile() throws Exception {
+    void testWriteAndReadNotNull() throws Exception {
 
         fileHandler.writeToFile(description, tempFile.toString());
 
@@ -74,6 +76,42 @@ class ChaosGameFileHandlerTest {
 
         ChaosGameDescription readDescription = fileHandler.readFromFile(tempFile.toString());
         assertNotNull(readDescription, "readFromFile should return a non-null description");
+    }
+
+    /**
+     * Tests the writeToFile and readFromFile methods of the chaosGame.ChaosGameFileHandler class.
+     * It writes a chaosGame.ChaosGameDescription to a file and then reads it back from the file.
+     * It then checks if the minCoords, maxCoords and transforms are equal.
+     * @throws Exception
+     */
+    @Test
+    void testWriteAndReadFromFile() throws Exception {
+
+        fileHandler.writeToFile(description, tempFile.toString());
+
+        assertTrue(Files.exists(tempFile), "File should exist");
+        assertNotEquals(0, Files.size(tempFile), "File should not be empty");
+
+        ChaosGameDescription readDescription = fileHandler.readFromFile(tempFile.toString());
+        assertNotNull(readDescription, "readFromFile should return a non-null description");
+
+        assertEquals(description.getMinCoords().getX0(), readDescription.getMinCoords().getX0(),
+            "MinCoords X0 should be equal");
+        assertEquals(description.getMinCoords().getX1(), readDescription.getMinCoords().getX1(),
+            "MinCoords X1 should be equal");
+        assertEquals(description.getMaxCoords().getX0(), readDescription.getMaxCoords().getX0(),
+            "MaxCoords X0 should be equal");
+        assertEquals(description.getMaxCoords().getX1(), readDescription.getMaxCoords().getX1(),
+            "MaxCoords X1 should be equal");
+
+        assertEquals(description.getTransforms().size(), readDescription.getTransforms().size(),
+            "Number of transforms should be equal");
+
+        /*for (int i = 0; i < description.getTransforms().size(); i++) {
+            Transform2D originalTransform = description.getTransforms().get(i);
+            Transform2D readTransform = readDescription.getTransforms().get(i);
+            assertEquals(originalTransform, readTransform, "Transforms should be equal at index" + i);
+        }*/
 
     }
 }

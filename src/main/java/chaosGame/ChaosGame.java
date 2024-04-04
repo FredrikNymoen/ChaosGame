@@ -1,10 +1,13 @@
+package chaosGame;
+
+import chaosGame.ChaosCanvas;
 import java.util.Random;
 import mathcore.Vector2D;
 import transformations.Transform2D;
 
 /**
- * ChaosGame class is used to represent a chaos game where you can generate fractals or other complex structures
- * through repeated application of random transformations. It uses ChaosCanvas where the results of these
+ * chaosGame.ChaosGame class is used to represent a chaos game where you can generate fractals or other complex structures
+ * through repeated application of random transformations. It uses chaosGame.ChaosCanvas where the results of these
  * transformations are plotted.
  */
 public class ChaosGame {
@@ -14,7 +17,7 @@ public class ChaosGame {
   public Random random;
 
     /**
-     * Constructor for the ChaosGame class. Constructs a new chaos game using a specified set of rules and dimensions
+     * Constructor for the chaosGame.ChaosGame class. Constructs a new chaos game using a specified set of rules and dimensions
      * for the canvas.
      *
      * @param description the description of the chaos game
@@ -31,7 +34,7 @@ public class ChaosGame {
   /**
    * Returns the canvas of the chaos game.
    *
-   * @return ChaosCanvas the canvas of the chaos game
+   * @return chaosGame.ChaosCanvas the canvas of the chaos game
    */
   public ChaosCanvas getCanvas() {
     return canvas;
@@ -53,19 +56,6 @@ public class ChaosGame {
   }
 
   public void display(){
-    /*int[][] canvasArray = getCanvas().getCanvasArray();
-    for (int i = 0; i < canvasArray.length; i++) {
-      for (int j = 0; j < canvasArray[i].length; j++) {
-        if (getCanvas().getPixel(currentPoint) == 0) {
-          System.out.print(" ");
-        } else {
-          //System.out.print("■");
-          System.out.print("X");
-        }
-      }
-      System.out.println();
-    }*/
-
     int[][] canvasArray = getCanvas().getCanvasArray();
     for (int i = 0; i < canvasArray.length; i++) {
       for (int j = 0; j < canvasArray[i].length; j++) {

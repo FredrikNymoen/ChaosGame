@@ -13,6 +13,7 @@ import mathcore.Vector2D;
 public class JuliaTransform implements Transform2D {
   private Complex point;
   private int sign;
+  private int iterations;
 
   /**
    * Constructor for transformations.JuliaTransform.
