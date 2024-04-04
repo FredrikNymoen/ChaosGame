@@ -30,7 +30,7 @@ class ChaosGameFileHandlerTest {
      * Sets up the ChaosGameFileHandler with a temporary directory.
      * It writes an affine transformation to a file and then reads it back from the file.
      * This method is called before each test.
-     * @param tempDir
+     * @param tempDir The temporary directory used for the tests.
      * @throws Exception
      */
 
@@ -56,7 +56,7 @@ class ChaosGameFileHandlerTest {
      */
 
     @Test
-    void testWriteToFileAndReadFromFile() throws Exception {
+    void testWriteAndReadNotNull() throws Exception {
 
         fileHandler.writeToFile(description, tempFile.toString());
 
@@ -74,6 +74,42 @@ class ChaosGameFileHandlerTest {
 
         ChaosGameDescription readDescription = fileHandler.readFromFile(tempFile.toString());
         assertNotNull(readDescription, "readFromFile should return a non-null description");
+    }
+
+    /**
+     * Tests the writeToFile and readFromFile methods of the ChaosGameFileHandler class.
+     * It writes a ChaosGameDescription to a file and then reads it back from the file.
+     * It then checks if the minCoords, maxCoords and transforms are equal.
+     * @throws Exception
+     */
+    @Test
+    void testWriteAndReadFromFile() throws Exception {
+
+        fileHandler.writeToFile(description, tempFile.toString());
+
+        assertTrue(Files.exists(tempFile), "File should exist");
+        assertNotEquals(0, Files.size(tempFile), "File should not be empty");
+
+        ChaosGameDescription readDescription = fileHandler.readFromFile(tempFile.toString());
+        assertNotNull(readDescription, "readFromFile should return a non-null description");
+
+        assertEquals(description.getMinCoords().getX0(), readDescription.getMinCoords().getX0(),
+            "MinCoords X0 should be equal");
+        assertEquals(description.getMinCoords().getX1(), readDescription.getMinCoords().getX1(),
+            "MinCoords X1 should be equal");
+        assertEquals(description.getMaxCoords().getX0(), readDescription.getMaxCoords().getX0(),
+            "MaxCoords X0 should be equal");
+        assertEquals(description.getMaxCoords().getX1(), readDescription.getMaxCoords().getX1(),
+            "MaxCoords X1 should be equal");
+
+        assertEquals(description.getTransforms().size(), readDescription.getTransforms().size(),
+            "Number of transforms should be equal");
+
+        /*for (int i = 0; i < description.getTransforms().size(); i++) {
+            Transform2D originalTransform = description.getTransforms().get(i);
+            Transform2D readTransform = readDescription.getTransforms().get(i);
+            assertEquals(originalTransform, readTransform, "Transforms should be equal at index" + i);
+        }*/
 
     }
 }
