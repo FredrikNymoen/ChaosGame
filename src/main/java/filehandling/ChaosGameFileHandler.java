@@ -1,4 +1,4 @@
-package chaosGame;
+package filehandling;
 
 import chaosGame.ChaosGameDescription;
 import java.io.BufferedReader;

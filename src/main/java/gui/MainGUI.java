@@ -1,20 +1,23 @@
 package gui;
 
-import java.net.http.HttpResponse.BodyHandler;
+import chaosGame.ChaosCanvas;
+import chaosGame.ChaosGame;
+import chaosGame.ChaosGameDescription;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -22,15 +25,26 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import mathcore.Matrix2x2;
+import mathcore.Vector2D;
+import transformations.AffineTransform2D;
+import transformations.Transform2D;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
-public class StartupPage extends Application {
+public class MainGUI extends Application {
   private GridPane affineGrid; // This needs to be accessible by the button's event handler
   private VBox affineBox; // Container for the affine transformation section
   private GridPane juliaGrid;
   private RadioButton affine;
   private RadioButton julia;
+  private RadioButton barnsley;
+  private RadioButton sierpinski;
   private ToggleGroup transformationsGroup;
   private ScrollPane scrollPane; // ScrollPane for the left side
+  private Canvas fractalCanvas; // Canvas for drawing the fractal
+  private GraphicsContext gc; // GraphicsContext for fractalCanvas
 
   public static void main(String[] args) {
     launch(args);
@@ -59,11 +73,11 @@ public class StartupPage extends Application {
 
     affine = new RadioButton("Affine");
     affine.setToggleGroup(transformationsGroup);
-    RadioButton barnsley = new RadioButton("Barnsley");
+    barnsley = new RadioButton("Barnsley");
     barnsley.setToggleGroup(transformationsGroup);
     julia = new RadioButton("Julia");
     julia.setToggleGroup(transformationsGroup);
-    RadioButton sierpinski = new RadioButton("Sierpinski");
+    sierpinski = new RadioButton("Sierpinski");
     sierpinski.setToggleGroup(transformationsGroup);
 
     HBox transformationsBox = new HBox(10);
@@ -145,6 +159,17 @@ public class StartupPage extends Application {
 
     // Add the left layout to the root
     root.setLeft(leftLayout);
+
+
+    // Initialize the Canvas for fractal drawing
+    fractalCanvas = new Canvas(800, 600); // Adjust the size as needed
+    gc = fractalCanvas.getGraphicsContext2D();
+    // Position the fractalCanvas on the right side of the BorderPane
+    root.setRight(fractalCanvas); // Use setCenter if you prefer it in the center
+
+
+    // Show button action to draw the fractal
+    showButton.setOnAction(event -> drawFractal());
 
     initializeRadioButtonListener();
 
@@ -246,4 +271,94 @@ public class StartupPage extends Application {
       }
     });
   }
+
+  private void drawFractal(){
+    ChaosGame chaosGame = null;
+
+    if (affine.isSelected()){
+      List<Transform2D> transformations = getAffineTransformationValues();
+      ChaosGameDescription description = new ChaosGameDescription(transformations, new Vector2D(-1, -1), new Vector2D(1, 1));
+      chaosGame = new ChaosGame(description, 250, 100);
+      chaosGame.runSteps(10000);
+      // Get affine transformations
+      // Create ChaosGameDescription
+      // Create ChaosGame
+      // Run steps
+      // Display
+
+    }
+    else if (julia.isSelected()){
+      // Get Julia constant
+      // Create ChaosGameDescription
+      // Create ChaosGame
+      // Run steps
+      // Display
+    } else if (sierpinski.isSelected()){
+      // Create ChaosGameDescription
+      // Create ChaosGame
+      // Run steps
+      // Display
+    } else if (barnsley.isSelected()){
+      // Create ChaosGameDescription
+      // Create ChaosGame
+      // Run steps
+      // Display
+    }
+
+    int[][] canvasArray = chaosGame.getCanvas().getCanvasArray();
+    for (int i = 0; i < canvasArray.length; i++) {
+      for (int j = 0; j < canvasArray[i].length; j++) {
+        if (canvasArray[i][j] == 1) {
+          gc.setFill(Color.BLACK); // Fractal pixel color
+        } else {
+          //gc.setFill(Color.BLACK); // Background color
+        }
+        gc.fillRect(j, i, 1, 1); // Draw pixel
+      }
+    }
+  }
+
+
+
+  private List<Transform2D> getAffineTransformationValues() {
+    List<Transform2D> transformations = new ArrayList<>();
+    // Assuming there are 4 rows, and each row has 4 matrix fields followed by 2 vector fields
+    for (int row = 0; row < affineGrid.getRowCount(); row++) {
+      double[] matrixValues = new double[4]; // To store a00, a01, a10, a11
+      double[] vectorValues = new double[2]; // To store x0, y0
+
+      // Retrieve matrix values
+      for (int i = 0; i < 4; i++) { // matrixValues indexes are 0 to 3
+        TextField textField = (TextField) getNodeFromGridPane(affineGrid, i, row);
+        try {
+          matrixValues[i] = Double.parseDouble(textField.getText());
+        } catch (NumberFormatException e) {
+          System.out.println("Invalid input for matrix values.");
+          return null; // Or handle the error appropriately
+        }
+      }
+
+      // Retrieve vector values
+      for (int i = 0; i < 2; i++) { // vectorValues indexes are 0 to 1, grid positions are 5 and 6
+        TextField textField = (TextField) getNodeFromGridPane(affineGrid, i + 5, row);
+        try {
+          vectorValues[i] = Double.parseDouble(textField.getText());
+        } catch (NumberFormatException e) {
+          System.out.println("Invalid input for vector values.");
+          return null; // Or handle the error appropriately
+        }
+      }
+
+      // Now you have the values for this row in matrixValues and vectorValues
+      // Do whatever processing you need with these values
+      System.out.println("Matrix Values: " + Arrays.toString(matrixValues));
+      System.out.println("Vector Values: " + Arrays.toString(vectorValues));
+      Matrix2x2 matrix = new Matrix2x2(matrixValues[0], matrixValues[1], matrixValues[2], matrixValues[3]);
+      Vector2D vector = new Vector2D(vectorValues[0], vectorValues[1]);
+      transformations.add(new AffineTransform2D(matrix, vector));
+    }
+    return transformations;
+  }
+
+
 }
