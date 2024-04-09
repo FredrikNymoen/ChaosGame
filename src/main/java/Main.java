@@ -143,20 +143,20 @@ public class Main {
     }
     String[] parts = transformationChoices.split("-");
     if (parts[0].equals("a")){
-      if (parts[1].equals("s")){
+      /*if (parts[1].equals("s")){
         factory = new ChaosGameDescriptionFactory();
         return factory.sierpinski();
-      }
-      else if (parts[1].equals("b")){
+      }*/
+      /*else if (parts[1].equals("b")){
         factory = new ChaosGameDescriptionFactory();
         return factory.barnsley();
-      }
+      }*/
     }
-    else if (parts[0].equals("j")){
+    /*else if (parts[0].equals("j")){
       Complex c = new Complex(0.285, 0.01);
       factory = new ChaosGameDescriptionFactory();
       return factory.julia(c);
-    }
+    }*/
     return null;
   }
 

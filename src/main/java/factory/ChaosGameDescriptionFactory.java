@@ -13,9 +13,9 @@ import transformations.Transform2D;
 public class ChaosGameDescriptionFactory {
 
 
-  public ChaosGameDescription sierpinski(){
-    Vector2D minCoordsVector = new Vector2D(0, 0);
-    Vector2D maxCoordsVector = new Vector2D(1, 1);
+  public ChaosGameDescription sierpinski(Vector2D minCoordsVector, Vector2D maxCoordsVector){
+    //Vector2D minCoordsVector = new Vector2D(0, 0);
+    //Vector2D maxCoordsVector = new Vector2D(1, 1);
     Matrix2x2 transformationMatrix1 = new Matrix2x2(0.5, 0, 0, 0.5);
     Vector2D transformationVector1 = new Vector2D(0, 0);
     Vector2D transformationVector2 = new Vector2D(0.25, 0.5);
@@ -31,9 +31,9 @@ public class ChaosGameDescriptionFactory {
     return new ChaosGameDescription(affineTransforms, minCoordsVector, maxCoordsVector);
   }
 
-  public ChaosGameDescription barnsley(){
-    Vector2D minCoordsVector = new Vector2D(-2, -2);
-    Vector2D maxCoordsVector = new Vector2D(10, 10);
+  public ChaosGameDescription barnsley(Vector2D minCoordsVector, Vector2D maxCoordsVector){
+    //Vector2D minCoordsVector = new Vector2D(-4, -1);
+    //Vector2D maxCoordsVector = new Vector2D(4, 10);
     Matrix2x2 transformationMatrix1 = new Matrix2x2(0, 0, 0, 0.16);
     Matrix2x2 transformationMatrix2 = new Matrix2x2(0.85, 0.04, -0.04, 0.85);
     Matrix2x2 transformationMatrix3 = new Matrix2x2(0.2, -0.26, 0.23, 0.22);
@@ -58,13 +58,13 @@ public class ChaosGameDescriptionFactory {
     return new ChaosGameDescription(affineTransforms, minCoordsVector, maxCoordsVector);
   }
 
-  public ChaosGameDescription julia(Complex c){
-    Vector2D minCoordsVector = new Vector2D(-1.6, -1);
-    Vector2D maxCoordsVector = new Vector2D(1.6, 1);
-    Complex transformationVector4 = new Complex(c.getX0(), c.getX1());
-    JuliaTransform transformation4 = new JuliaTransform(transformationVector4, 1);
+  public ChaosGameDescription julia(Vector2D minCoordsVector, Vector2D maxCoordsVector, Complex c){
+    //Vector2D minCoordsVector = new Vector2D(-1.6, -1);
+    //Vector2D maxCoordsVector = new Vector2D(1.6, 1);
+    //Complex transformationVector4 = new Complex(c.getX0(), c.getX1());
+    JuliaTransform transformation = new JuliaTransform(c, 1);
     List<Transform2D> juliaTransforms = new ArrayList<>();
-    juliaTransforms.add(transformation4);
+    juliaTransforms.add(transformation);
     return new ChaosGameDescription(juliaTransforms, minCoordsVector, maxCoordsVector);
   }
 

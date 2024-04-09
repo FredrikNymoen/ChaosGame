@@ -3,6 +3,7 @@ package gui;
 import chaosGame.ChaosCanvas;
 import chaosGame.ChaosGame;
 import chaosGame.ChaosGameDescription;
+import factory.ChaosGameDescriptionFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,6 +26,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.converter.DoubleStringConverter;
+import mathcore.Complex;
 import mathcore.Matrix2x2;
 import mathcore.Vector2D;
 import transformations.AffineTransform2D;
@@ -32,6 +35,9 @@ import transformations.Transform2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.control.TextFormatter;
+import javafx.util.converter.IntegerStringConverter;
+import java.util.function.UnaryOperator;
 
 public class MainGUI extends Application {
   private GridPane affineGrid; // This needs to be accessible by the button's event handler
@@ -45,6 +51,13 @@ public class MainGUI extends Application {
   private ScrollPane scrollPane; // ScrollPane for the left side
   private Canvas fractalCanvas; // Canvas for drawing the fractal
   private GraphicsContext gc; // GraphicsContext for fractalCanvas
+  private TextField minXField;
+  private TextField minYField;
+  private TextField maxXField;
+  private TextField maxYField;
+  private TextField stepsField;
+  private TextField realPartField;
+  private TextField imaginaryPartField;
 
   public static void main(String[] args) {
     launch(args);
@@ -88,9 +101,27 @@ public class MainGUI extends Application {
     // Steps input
     VBox stepsBox = new VBox(5);
     Label stepsLabel = new Label("Steps");
-    TextField stepsField = new TextField();
-    stepsField.setPromptText("(0-1000000)");
+    stepsField = new TextField();
+    stepsField.setPromptText("(0-10000000)");
+
+    UnaryOperator<TextFormatter.Change> integerFilter = change -> {
+      String newText = change.getControlNewText();
+      // Match an empty string, or a number from 0 to 9999999, or the number 10000000
+      if (newText.matches("([1-9][0-9]{0,6}|10000000|0)?")) {
+        return change; // Accept the change
+      }
+      return null; // Reject the change
+    };
+
+    TextFormatter<Integer> textFormatter = new TextFormatter<>(
+        new IntegerStringConverter(), // Converter
+        0,                            // Default value
+        integerFilter                 // Filter
+    );
+
+    stepsField.setTextFormatter(textFormatter);
     stepsBox.getChildren().addAll(stepsLabel, stepsField);
+
 
 
     // Coordinate fields
@@ -99,18 +130,53 @@ public class MainGUI extends Application {
     coordGrid.setVgap(10);
     coordGrid.add(new Label("Min. Coord"), 0, 0);
     coordGrid.add(new Label("Max. Coord"), 2, 0);
-    coordGrid.add(createTextFieldWithPlaceholder("MinX"), 0, 1); // Min X
-    coordGrid.add(createTextFieldWithPlaceholder("MinY"), 1, 1); // Min Y
-    coordGrid.add(createTextFieldWithPlaceholder("MaxX"), 2, 1); // Max X
-    coordGrid.add(createTextFieldWithPlaceholder("MaxY"), 3, 1); // Max Y
+    minXField = createTextFieldWithPlaceholder("MinX");
+    minXField.setText("-4");
+    minYField = createTextFieldWithPlaceholder("MinY");
+    minYField.setText("-1");
+    maxXField = createTextFieldWithPlaceholder("MaxX");
+    maxXField.setText("4");
+    maxYField = createTextFieldWithPlaceholder("MaxY");
+    maxYField.setText("10");
+
+    UnaryOperator<TextFormatter.Change> decimalFilter = change -> {
+      String newText = change.getControlNewText();
+      if (newText.matches("-?((\\d*)|(\\d+\\.\\d*))")) { // Regex to match integers and decimal numbers, with an optional minus sign
+        return change; // Accept the change
+      }
+      return null; // Reject the change
+    };
+
+    // Create and apply a new TextFormatter to each TextField
+    minXField.setTextFormatter(new TextFormatter<>(new DoubleStringConverter(), Double.parseDouble(minXField.getText()), decimalFilter));
+    minYField.setTextFormatter(new TextFormatter<>(new DoubleStringConverter(), Double.parseDouble(minYField.getText()), decimalFilter));
+    maxXField.setTextFormatter(new TextFormatter<>(new DoubleStringConverter(), Double.parseDouble(maxXField.getText()), decimalFilter));
+    maxYField.setTextFormatter(new TextFormatter<>(new DoubleStringConverter(), Double.parseDouble(maxYField.getText()), decimalFilter));
+
+    coordGrid.add(minXField, 0, 1);
+    coordGrid.add(minYField, 1, 1);
+    coordGrid.add(maxXField, 2, 1);
+    coordGrid.add(maxYField, 3, 1);
 
     // Julia-constant fields
     juliaGrid = new GridPane();
     juliaGrid.setHgap(10);
     juliaGrid.setVgap(10);
     juliaGrid.add(new Label("Julia-constant"), 0, 0, 2, 1);
-    juliaGrid.add(createTextFieldWithPlaceholder("Real part"), 0, 1); // X0
-    juliaGrid.add(createTextFieldWithPlaceholder("Imaginary part"), 1, 1); // Y0
+
+    // Instantiate each TextField for the Julia constants with a placeholder
+    realPartField = createTextFieldWithPlaceholder("Real part");
+    imaginaryPartField = createTextFieldWithPlaceholder("Imaginary part");
+
+    // Create and apply a new TextFormatter to each TextField for Julia constants
+    realPartField.setTextFormatter(new TextFormatter<>(new DoubleStringConverter(), null, decimalFilter));
+    imaginaryPartField.setTextFormatter(new TextFormatter<>(new DoubleStringConverter(), null, decimalFilter));
+    // Set the initial texts for these fields
+    realPartField.setText("0.285"); // Example value for the real part
+    imaginaryPartField.setText("0.01"); // Example value for the imaginary part
+    // Add fields to the Julia grid
+    juliaGrid.add(realPartField, 0, 1); // Real part
+    juliaGrid.add(imaginaryPartField, 1, 1); // Imaginary part
 
     // Affine matrices and vectors
     affineBox = new VBox(10);
@@ -120,8 +186,8 @@ public class MainGUI extends Application {
     affineGrid.setHgap(10);
     affineGrid.setVgap(10);
 
-    // Add initial 4 rows of matrix and vector inputs
-    for (int row = 0; row < 4; row++) {
+    // Add initial 1 rows of matrix and vector inputs
+    for (int row = 0; row < 1; row++) {
       addMatrixVectorRow(row);
     }
     affineBox.getChildren().add(affineGrid);
@@ -162,16 +228,25 @@ public class MainGUI extends Application {
 
 
     // Initialize the Canvas for fractal drawing
-    fractalCanvas = new Canvas(800, 600); // Adjust the size as needed
+    //fractalCanvas = new Canvas(800, 600);
+    fractalCanvas = new Canvas();
     gc = fractalCanvas.getGraphicsContext2D();
+
+    // Bind the width and height of the fractalCanvas to the width and height of the BorderPane's right side
+    fractalCanvas.widthProperty().bind(root.widthProperty().subtract(scrollPane.getPrefWidth()));
+    fractalCanvas.heightProperty().bind(root.heightProperty());
+
     // Position the fractalCanvas on the right side of the BorderPane
     root.setRight(fractalCanvas); // Use setCenter if you prefer it in the center
-
 
     // Show button action to draw the fractal
     showButton.setOnAction(event -> drawFractal());
 
     initializeRadioButtonListener();
+
+    // The drawFractal() method will be responsible for centering the fractal
+    fractalCanvas.widthProperty().addListener(obs -> drawFractal());
+    fractalCanvas.heightProperty().addListener(obs -> drawFractal());
 
     Scene scene = new Scene(root);
     primaryStage.setMaximized(true); // Set the stage to be maximized
@@ -273,13 +348,25 @@ public class MainGUI extends Application {
   }
 
   private void drawFractal(){
+    // Get the coordinate values
+    double minX = Double.parseDouble(minXField.getText());
+    double minY = Double.parseDouble(minYField.getText());
+    double maxX = Double.parseDouble(maxXField.getText());
+    double maxY = Double.parseDouble(maxYField.getText());
+
+
+    // Clear the canvas first
+    gc.clearRect(0, 0, fractalCanvas.getWidth(), fractalCanvas.getHeight());
+
+
     ChaosGame chaosGame = null;
+    ChaosGameDescriptionFactory factory = new ChaosGameDescriptionFactory();
 
     if (affine.isSelected()){
       List<Transform2D> transformations = getAffineTransformationValues();
       ChaosGameDescription description = new ChaosGameDescription(transformations, new Vector2D(-1, -1), new Vector2D(1, 1));
-      chaosGame = new ChaosGame(description, 250, 100);
-      chaosGame.runSteps(10000);
+      chaosGame = new ChaosGame(description, 900, 750);
+      chaosGame.runSteps(100000);
       // Get affine transformations
       // Create ChaosGameDescription
       // Create ChaosGame
@@ -288,32 +375,59 @@ public class MainGUI extends Application {
 
     }
     else if (julia.isSelected()){
+      Complex c = new Complex(Double.parseDouble(realPartField.getText()), Double.parseDouble(imaginaryPartField.getText()));
+      ChaosGameDescription description = factory.julia(new Vector2D(minX, minY), new Vector2D(maxX, maxY), c);
+      chaosGame = new ChaosGame(description, 900, 750);
+      chaosGame.runSteps(Integer.parseInt(stepsField.getText()));
       // Get Julia constant
       // Create ChaosGameDescription
       // Create ChaosGame
       // Run steps
       // Display
     } else if (sierpinski.isSelected()){
+      ChaosGameDescription description = factory.sierpinski(new Vector2D(minX, minY), new Vector2D(maxX, maxY));
+      chaosGame = new ChaosGame(description, 900, 750);
+      chaosGame.runSteps(Integer.parseInt(stepsField.getText()));
       // Create ChaosGameDescription
       // Create ChaosGame
       // Run steps
       // Display
     } else if (barnsley.isSelected()){
+      ChaosGameDescription description = factory.barnsley(new Vector2D(minX, minY), new Vector2D(maxX, maxY));
+      chaosGame = new ChaosGame(description, 900, 750);
+      chaosGame.runSteps(Integer.parseInt(stepsField.getText()));
       // Create ChaosGameDescription
       // Create ChaosGame
       // Run steps
       // Display
     }
 
-    int[][] canvasArray = chaosGame.getCanvas().getCanvasArray();
-    for (int i = 0; i < canvasArray.length; i++) {
-      for (int j = 0; j < canvasArray[i].length; j++) {
-        if (canvasArray[i][j] == 1) {
-          gc.setFill(Color.BLACK); // Fractal pixel color
-        } else {
-          //gc.setFill(Color.BLACK); // Background color
+    // Ensure we have a valid ChaosGame instance before attempting to draw
+    if (chaosGame != null) {
+      int[][] canvasArray = chaosGame.getCanvas().getCanvasArray();
+
+      // Dynamically calculate the center of the canvas
+      double centerX = fractalCanvas.getWidth() / 2;
+      double centerY = fractalCanvas.getHeight() / 2;
+
+      // Assuming the fractal drawing's size for positioning
+      double fractalWidth = canvasArray[0].length;
+      double fractalHeight = canvasArray.length;
+
+      // Calculate the top-left corner of where the fractal should be drawn
+      double startX = centerX - fractalWidth / 2;
+      double startY = centerY - fractalHeight / 2;
+
+      // Adjust the drawing loop to position the fractal correctly
+      for (int i = 0; i < fractalHeight; i++) {
+        for (int j = 0; j < fractalWidth; j++) {
+          if (canvasArray[i][j] == 1) {
+            gc.setFill(Color.BLACK); // Fractal pixel color
+          } else {
+            gc.setFill(Color.WHITE); // Background color
+          }
+          gc.fillRect(startX + j, startY + i, 1, 1); // Draw pixel
         }
-        gc.fillRect(j, i, 1, 1); // Draw pixel
       }
     }
   }
