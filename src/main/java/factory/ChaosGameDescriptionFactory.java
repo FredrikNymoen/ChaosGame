@@ -12,10 +12,7 @@ import transformations.Transform2D;
 
 public class ChaosGameDescriptionFactory {
 
-
   public ChaosGameDescription sierpinski(Vector2D minCoordsVector, Vector2D maxCoordsVector){
-    //Vector2D minCoordsVector = new Vector2D(0, 0);
-    //Vector2D maxCoordsVector = new Vector2D(1, 1);
     Matrix2x2 transformationMatrix1 = new Matrix2x2(0.5, 0, 0, 0.5);
     Vector2D transformationVector1 = new Vector2D(0, 0);
     Vector2D transformationVector2 = new Vector2D(0.25, 0.5);
@@ -32,8 +29,6 @@ public class ChaosGameDescriptionFactory {
   }
 
   public ChaosGameDescription barnsley(Vector2D minCoordsVector, Vector2D maxCoordsVector){
-    //Vector2D minCoordsVector = new Vector2D(-4, -1);
-    //Vector2D maxCoordsVector = new Vector2D(4, 10);
     Matrix2x2 transformationMatrix1 = new Matrix2x2(0, 0, 0, 0.16);
     Matrix2x2 transformationMatrix2 = new Matrix2x2(0.85, 0.04, -0.04, 0.85);
     Matrix2x2 transformationMatrix3 = new Matrix2x2(0.2, -0.26, 0.23, 0.22);
@@ -59,16 +54,15 @@ public class ChaosGameDescriptionFactory {
   }
 
   public ChaosGameDescription julia(Vector2D minCoordsVector, Vector2D maxCoordsVector, Complex c){
-    //Vector2D minCoordsVector = new Vector2D(-1.6, -1);
-    //Vector2D maxCoordsVector = new Vector2D(1.6, 1);
-    //Complex transformationVector4 = new Complex(c.getX0(), c.getX1());
-    JuliaTransform transformation = new JuliaTransform(c, 1);
+    JuliaTransform transformation1 = new JuliaTransform(c, 1);
+    JuliaTransform transformation2 = new JuliaTransform(c, -1);
     List<Transform2D> juliaTransforms = new ArrayList<>();
-    juliaTransforms.add(transformation);
+    juliaTransforms.add(transformation1);
+    juliaTransforms.add(transformation2);
     return new ChaosGameDescription(juliaTransforms, minCoordsVector, maxCoordsVector);
   }
 
-public ChaosGameDescription affine(List<Matrix2x2> matrices, List<Vector2D> vectors){
+  public ChaosGameDescription affine(List<Matrix2x2> matrices, List<Vector2D> vectors){
     Vector2D minCoordsVector = new Vector2D(-1, -1);
     Vector2D maxCoordsVector = new Vector2D(1, 1);
     List<Transform2D> affineTransforms = new ArrayList<>();
