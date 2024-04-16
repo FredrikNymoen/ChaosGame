@@ -62,9 +62,7 @@ public class ChaosGameDescriptionFactory {
     return new ChaosGameDescription(juliaTransforms, minCoordsVector, maxCoordsVector);
   }
 
-  public ChaosGameDescription affine(List<Matrix2x2> matrices, List<Vector2D> vectors){
-    Vector2D minCoordsVector = new Vector2D(-1, -1);
-    Vector2D maxCoordsVector = new Vector2D(1, 1);
+  public ChaosGameDescription affine(List<Matrix2x2> matrices, List<Vector2D> vectors, Vector2D minCoordsVector, Vector2D maxCoordsVector){
     List<Transform2D> affineTransforms = new ArrayList<>();
     for (int i = 0; i < matrices.size(); i++) {
       affineTransforms.add(new AffineTransform2D(matrices.get(i), vectors.get(i)));
