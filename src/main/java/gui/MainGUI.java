@@ -367,11 +367,6 @@ public class MainGUI extends Application {
       ChaosGameDescription description = new ChaosGameDescription(transformations, new Vector2D(-1, -1), new Vector2D(1, 1));
       chaosGame = new ChaosGame(description, 900, 750);
       chaosGame.runSteps(100000);
-      // Get affine transformations
-      // Create ChaosGameDescription
-      // Create ChaosGame
-      // Run steps
-      // Display
 
     }
     else if (julia.isSelected()){
@@ -379,27 +374,17 @@ public class MainGUI extends Application {
       ChaosGameDescription description = factory.julia(new Vector2D(minX, minY), new Vector2D(maxX, maxY), c);
       chaosGame = new ChaosGame(description, 900, 750);
       chaosGame.runSteps(Integer.parseInt(stepsField.getText()));
-      // Get Julia constant
-      // Create ChaosGameDescription
-      // Create ChaosGame
-      // Run steps
-      // Display
+
     } else if (sierpinski.isSelected()){
       ChaosGameDescription description = factory.sierpinski(new Vector2D(minX, minY), new Vector2D(maxX, maxY));
       chaosGame = new ChaosGame(description, 900, 750);
       chaosGame.runSteps(Integer.parseInt(stepsField.getText()));
-      // Create ChaosGameDescription
-      // Create ChaosGame
-      // Run steps
-      // Display
+
     } else if (barnsley.isSelected()){
       ChaosGameDescription description = factory.barnsley(new Vector2D(minX, minY), new Vector2D(maxX, maxY));
       chaosGame = new ChaosGame(description, 900, 750);
       chaosGame.runSteps(Integer.parseInt(stepsField.getText()));
-      // Create ChaosGameDescription
-      // Create ChaosGame
-      // Run steps
-      // Display
+
     }
 
     // Ensure we have a valid ChaosGame instance before attempting to draw

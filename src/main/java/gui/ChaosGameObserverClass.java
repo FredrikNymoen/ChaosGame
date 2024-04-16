@@ -1,4 +1,4 @@
-package controller;
+package gui;
 
 public class ChaosGameObserverClass {
 
