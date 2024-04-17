@@ -31,8 +31,6 @@ import java.util.function.UnaryOperator;
 
 public class MainGUI extends Application {
   private GridPane affineGrid; // This needs to be accessible by the button's event handler
-  private VBox affineBox; // Container for the affine transformation section
-  private GridPane juliaGrid;
   private RadioButton affine;
   private RadioButton julia;
   private RadioButton barnsley;
@@ -50,6 +48,15 @@ public class MainGUI extends Application {
   private TextField imaginaryPartField;
   ChaosGameController controller = new ChaosGameController();
   private ChaosGame currentChaosGame;
+  
+  private VBox leftSide;
+  private VBox transformationBox;
+  private VBox stepsBox;
+  private GridPane coordGrid;
+  private GridPane juliaGrid;
+  private VBox affineBox; // Container for the affine transformation section
+  private Button showButton;
+  
 
   public static void main(String[] args) {
     launch(args);
@@ -57,25 +64,44 @@ public class MainGUI extends Application {
 
   @Override
   public void start(Stage primaryStage) {
-    // TODO Auto-generated method stub
     BorderPane root = new BorderPane();
-
     root.setPadding(new Insets(10));
 
+    configureScrollPane();
+    configureTransformationButtonOptions();
+    configureStepsInput();
+    configureCoordinateFields();
+    configureJuliaConstantFields();
+    configureAffineControls();
+    configureShowButton();
+
+    setupLeftSide(root);
+    setupRightSide(root);
+    setupListeners();
+
+    Scene scene = new Scene(root);
+    primaryStage.setMaximized(true); // Set the stage to be maximized
+    primaryStage.setTitle("Chaos game");
+    primaryStage.setScene(scene);
+    primaryStage.show();
+  }
+
+  private void configureScrollPane() {
     // Scrollable Left side layout
-    VBox leftSide = new VBox(10);
+    leftSide = new VBox(10);
     leftSide.setPadding(new Insets(10));
     scrollPane = new ScrollPane(leftSide);
     scrollPane.setFitToWidth(true);
     scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); // Hide horizontal scrollbar
     scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); // Hide vertical scrollbar
+  }
 
+  private void configureTransformationButtonOptions() {
     // Transformation checkboxes
-    VBox transformationBox = new VBox(5);
+    transformationBox = new VBox(5);
     Label transformationLabel = new Label("Transformations");
     transformationBox.getChildren().add(transformationLabel);
     transformationsGroup = new ToggleGroup();
-
     affine = new RadioButton("Affine");
     affine.setToggleGroup(transformationsGroup);
     barnsley = new RadioButton("Barnsley");
@@ -88,147 +114,71 @@ public class MainGUI extends Application {
     HBox transformationsBox = new HBox(10);
     transformationsBox.getChildren().addAll(affine, barnsley, julia, sierpinski);
     transformationBox.getChildren().add(transformationsBox);
+  }
 
-
+  private void configureStepsInput() {
     // Steps input
-    VBox stepsBox = new VBox(5);
+    stepsBox = new VBox(5);
     Label stepsLabel = new Label("Steps");
     stepsField = new TextField();
     stepsField.setPromptText("(0-10000000)");
 
     UnaryOperator<TextFormatter.Change> integerFilter = change -> {
       String newText = change.getControlNewText();
-      // Match an empty string, or a number from 0 to 9999999, or the number 10000000
-      if (newText.matches("([1-9][0-9]{0,6}|10000000|0)?")) {
-        return change; // Accept the change
-      }
-      return null; // Reject the change
+      return newText.matches("([1-9][0-9]{0,6}|10000000|0)?") ? change : null;
     };
 
-    TextFormatter<Integer> textFormatter = new TextFormatter<>(
-        new IntegerStringConverter(), // Converter
-        0,                            // Default value
-        integerFilter                 // Filter
-    );
-
-    stepsField.setTextFormatter(textFormatter);
+    stepsField.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), 0, integerFilter));
     stepsBox.getChildren().addAll(stepsLabel, stepsField);
+  }
 
-
-
-    // Coordinate fields
-    GridPane coordGrid = new GridPane();
+  private void configureCoordinateFields() {
+    coordGrid = new GridPane();
     coordGrid.setHgap(10);
     coordGrid.setVgap(10);
     coordGrid.add(new Label("Min. Coord"), 0, 0);
     coordGrid.add(new Label("Max. Coord"), 2, 0);
-    minXField = controller.createTextFieldWithPlaceholder("MinX");
-    minXField.setText("-4");
-    minYField = controller.createTextFieldWithPlaceholder("MinY");
-    minYField.setText("-1");
-    maxXField = controller.createTextFieldWithPlaceholder("MaxX");
-    maxXField.setText("4");
-    maxYField = controller.createTextFieldWithPlaceholder("MaxY");
-    maxYField.setText("10");
 
-    UnaryOperator<TextFormatter.Change> decimalFilter = change -> {
-      String newText = change.getControlNewText();
-      if (newText.matches("-?((\\d*)|(\\d+\\.\\d*))")) { // Regex to match integers and decimal numbers, with an optional minus sign
-        return change; // Accept the change
-      }
-      return null; // Reject the change
-    };
+    minXField = createDecimalTextField("-4");
+    minYField = createDecimalTextField("-1");
+    maxXField = createDecimalTextField("4");
+    maxYField = createDecimalTextField("10");
 
-    // Create and apply a new TextFormatter to each TextField
-    minXField.setTextFormatter(new TextFormatter<>(new DoubleStringConverter(), Double.parseDouble(minXField.getText()), decimalFilter));
-    minYField.setTextFormatter(new TextFormatter<>(new DoubleStringConverter(), Double.parseDouble(minYField.getText()), decimalFilter));
-    maxXField.setTextFormatter(new TextFormatter<>(new DoubleStringConverter(), Double.parseDouble(maxXField.getText()), decimalFilter));
-    maxYField.setTextFormatter(new TextFormatter<>(new DoubleStringConverter(), Double.parseDouble(maxYField.getText()), decimalFilter));
+    coordGrid.addRow(1, minXField, minYField, maxXField, maxYField);
+  }
 
-    coordGrid.add(minXField, 0, 1);
-    coordGrid.add(minYField, 1, 1);
-    coordGrid.add(maxXField, 2, 1);
-    coordGrid.add(maxYField, 3, 1);
-
-    // Julia-constant fields
+  private void configureJuliaConstantFields() {
     juliaGrid = new GridPane();
     juliaGrid.setHgap(10);
     juliaGrid.setVgap(10);
     juliaGrid.add(new Label("Julia-constant"), 0, 0, 2, 1);
 
-    // Instantiate each TextField for the Julia constants with a placeholder
-    realPartField = controller.createTextFieldWithPlaceholder("Real part");
-    imaginaryPartField = controller.createTextFieldWithPlaceholder("Imaginary part");
+    realPartField = createDecimalTextField("0.285");
+    imaginaryPartField = createDecimalTextField("0.01");
+    juliaGrid.addRow(1, realPartField, imaginaryPartField);
+  }
 
-    // Create and apply a new TextFormatter to each TextField for Julia constants
-    realPartField.setTextFormatter(new TextFormatter<>(new DoubleStringConverter(), null, decimalFilter));
-    imaginaryPartField.setTextFormatter(new TextFormatter<>(new DoubleStringConverter(), null, decimalFilter));
-    // Set the initial texts for these fields
-    realPartField.setText("0.285"); // Example value for the real part
-    imaginaryPartField.setText("0.01"); // Example value for the imaginary part
-    // Add fields to the Julia grid
-    juliaGrid.add(realPartField, 0, 1); // Real part
-    juliaGrid.add(imaginaryPartField, 1, 1); // Imaginary part
-
-    // Affine matrices and vectors
+  private void configureAffineControls() {
     affineBox = new VBox(10);
     affineBox.getChildren().add(new Label("Affine matrices and vectors"));
-
     affineGrid = new GridPane();
     affineGrid.setHgap(10);
     affineGrid.setVgap(10);
+    addMatrixVectorRow(0);
 
-    // Add initial 1 rows of matrix and vector inputs
-    for (int row = 0; row < 1; row++) {
-      addMatrixVectorRow(row);
-    }
-    affineBox.getChildren().add(affineGrid);
-
-
-    // Add and Remove buttons
     HBox buttonsBox = new HBox(10);
     Button addButton = new Button("Add");
     addButton.setOnAction(event -> addMatrixVectorRow(affineGrid.getRowCount()));
     Button removeButton = new Button("Remove");
     removeButton.setOnAction(event -> removeMatrixVectorRow());
     buttonsBox.getChildren().addAll(addButton, removeButton);
-    affineBox.getChildren().add(buttonsBox);
 
+    affineBox.getChildren().addAll(affineGrid, buttonsBox);
+  }
 
+  private void configureShowButton() {
     // Show button
-    Button showButton = new Button("Show");
-
-    // Add all elements to the left side layout
-    leftSide.getChildren().addAll(transformationBox, stepsBox, coordGrid, juliaGrid, affineBox, showButton);
-
-    // Set the ScrollPane as the content of the left side
-    scrollPane.setContent(leftSide);
-
-    // Set preferred width for the left side
-    double screenWidth = Screen.getPrimary().getBounds().getWidth();
-    scrollPane.setPrefWidth(screenWidth * 0.25);
-
-    // Add a vertical separator
-    Separator separator = new Separator();
-    separator.setOrientation(Orientation.VERTICAL);
-
-    // Layout that contains the left side and the separator
-    HBox leftLayout = new HBox(scrollPane, separator);
-
-    // Add the left layout to the root
-    root.setLeft(leftLayout);
-
-    // Initialize the Canvas for fractal drawing
-    fractalCanvas = new Canvas();
-    gc = fractalCanvas.getGraphicsContext2D();
-
-    // Bind the width and height of the fractalCanvas to the width and height of the BorderPane's right side
-    fractalCanvas.widthProperty().bind(root.widthProperty().subtract(scrollPane.getPrefWidth()));
-    fractalCanvas.heightProperty().bind(root.heightProperty());
-
-    // Position the fractalCanvas on the right side of the BorderPane
-    root.setRight(fractalCanvas); // Use setCenter if you prefer it in the center
-
+    showButton = new Button("Show");
     // Show button action to draw the fractal
     showButton.setOnAction(event -> {
       double minX = Double.parseDouble(minXField.getText());
@@ -243,27 +193,51 @@ public class MainGUI extends Application {
         drawFractal(currentChaosGame);
       }
     });
-
-    initializeRadioButtonListener();
-
-    fractalCanvas.widthProperty().addListener(obs -> {
-      if (currentChaosGame != null) {
-        drawFractal(currentChaosGame);
-      }
-    });
-    fractalCanvas.heightProperty().addListener(obs -> {
-      if (currentChaosGame != null) {
-        drawFractal(currentChaosGame);
-      }
-    });
-
-    Scene scene = new Scene(root);
-    primaryStage.setMaximized(true); // Set the stage to be maximized
-    primaryStage.setTitle("Chaos game");
-    primaryStage.setScene(scene);
-    primaryStage.show();
   }
 
+  private void setupLeftSide(BorderPane root) {
+    // Add all elements to the left side layout
+    leftSide.getChildren().addAll(transformationBox, stepsBox, coordGrid, juliaGrid, affineBox, showButton);
+    // Set the ScrollPane as the content of the left side
+    scrollPane.setContent(leftSide);
+    // Set preferred width for the left side
+    double screenWidth = Screen.getPrimary().getBounds().getWidth();
+    scrollPane.setPrefWidth(screenWidth * 0.25);
+    // Add a vertical separator
+    Separator separator = new Separator();
+    separator.setOrientation(Orientation.VERTICAL);
+
+    // Layout that contains the left side and the separator
+    HBox leftLayout = new HBox(scrollPane, separator);
+    // Add the left layout to the root
+    root.setLeft(leftLayout);
+  }
+
+  private void setupRightSide(BorderPane root) {
+    // Initialize the Canvas for fractal drawing
+    fractalCanvas = new Canvas();
+    gc = fractalCanvas.getGraphicsContext2D();
+
+    // Bind the width and height of the fractalCanvas to the width and height of the BorderPane's right side
+    fractalCanvas.widthProperty().bind(root.widthProperty().subtract(scrollPane.getPrefWidth()));
+    fractalCanvas.heightProperty().bind(root.heightProperty());
+
+    // Position the fractalCanvas on the right side of the BorderPane
+    root.setRight(fractalCanvas); // Use setCenter if you prefer it in the center
+  }
+
+  private void setupListeners() {
+    fractalCanvas.widthProperty().addListener(obs -> redrawFractalIfNeeded());
+    fractalCanvas.heightProperty().addListener(obs -> redrawFractalIfNeeded());
+    initializeRadioButtonListener();
+  }
+
+  private TextField createDecimalTextField(String defaultValue) {
+    TextField textField = new TextField(defaultValue);
+    UnaryOperator<TextFormatter.Change> decimalFilter = change -> change.getControlNewText().matches("-?((\\d*)|(\\d+\\.\\d*))") ? change : null;
+    textField.setTextFormatter(new TextFormatter<>(new DoubleStringConverter(), Double.parseDouble(defaultValue), decimalFilter));
+    return textField;
+  }
 
   private void addMatrixVectorRow(int row) {
     String[] matrixPlaceholders = {"a00", "a01", "a10", "a11"};
@@ -303,7 +277,11 @@ public class MainGUI extends Application {
     }
   }
 
-
+  private void redrawFractalIfNeeded() {
+    if (currentChaosGame != null) {
+      drawFractal(currentChaosGame);
+    }
+  }
 
   private void initializeRadioButtonListener(){
     // Radio button action listeners
