@@ -1,12 +1,18 @@
 package gui;
 
 import chaosGame.ChaosGame;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
@@ -52,6 +58,7 @@ public class MainGUI extends Application {
   private GridPane juliaGrid;
   private VBox affineBox; // Container for the affine transformation section
   private Button showButton;
+  private CheckBox colorModeCheckbox;  // Checkbox to toggle color mode
   
 
   public static void main(String[] args) {
@@ -69,6 +76,7 @@ public class MainGUI extends Application {
     configureCoordinateFields();
     configureJuliaConstantFields();
     configureAffineControls();
+    configureColorModeCheckbox();
     configureShowButton();
 
     setupLeftSide(root);
@@ -193,7 +201,7 @@ public class MainGUI extends Application {
 
   private void setupLeftSide(BorderPane root) {
     // Add all elements to the left side layout
-    leftSide.getChildren().addAll(transformationBox, stepsBox, coordGrid, juliaGrid, affineBox, showButton);
+    leftSide.getChildren().addAll(transformationBox, stepsBox, coordGrid, juliaGrid, affineBox, colorModeCheckbox, showButton);
     // Set the ScrollPane as the content of the left side
     scrollPane.setContent(leftSide);
     // Set preferred width for the left side
@@ -226,6 +234,12 @@ public class MainGUI extends Application {
     fractalCanvas.widthProperty().addListener(obs -> redrawFractalIfNeeded());
     fractalCanvas.heightProperty().addListener(obs -> redrawFractalIfNeeded());
     initializeRadioButtonListener();
+  }
+
+  private void configureColorModeCheckbox() {
+    colorModeCheckbox = new CheckBox("Enable Heatmap Color Mode");
+    colorModeCheckbox.setSelected(false);  // Default is unchecked (B&W mode)
+    colorModeCheckbox.setOnAction(event -> redrawFractalIfNeeded());
   }
 
   private TextField createDecimalTextField(String defaultValue) {
@@ -305,6 +319,17 @@ public class MainGUI extends Application {
 
   private void drawFractal(ChaosGame chaosGame){
     int[][] canvasArray = chaosGame.getCanvas().getCanvasArray();
+    // Use a set to avoid duplicate values and then convert to a list to sort
+    Set<Integer> valueSet = new HashSet<>();
+    for (int[] row : canvasArray) {
+      for (int value : row) {
+        if (value > 0) { // assuming value 0 means no data
+          valueSet.add(value);
+        }
+      }
+    }
+    List<Integer> sortedValues = new ArrayList<>(valueSet);
+    Collections.sort(sortedValues);
 
     // Dynamically calculate the center of the canvas
     double centerX = fractalCanvas.getWidth() / 2;
@@ -321,13 +346,36 @@ public class MainGUI extends Application {
     // Adjust the drawing loop to position the fractal correctly
     for (int i = 0; i < fractalHeight; i++) {
       for (int j = 0; j < fractalWidth; j++) {
-        if (canvasArray[i][j] == 1) {
-          gc.setFill(Color.BLACK); // Fractal pixel color
-        } else {
+        int value = canvasArray[i][j];
+        if(colorModeCheckbox.isSelected() && value > 0){
+          int index = sortedValues.indexOf(value);
+          double intensity = (double) index / (sortedValues.size() - 1);
+          Color color = getColorForValue(intensity);
+          gc.setFill(color);
+        }
+        else if (value > 0) { // assuming value 0 means no data
+          gc.setFill(Color.BLACK);
+        }
+        else {
           gc.setFill(Color.WHITE); // Background color
         }
         gc.fillRect(startX + j, startY + i, 1, 1); // Draw pixel
       }
+    }
+  }
+  private Color getColorForValue(double intensity) {
+    if (intensity < 0.25) {
+      // Interpolate between blue (0) and green (0.25)
+      return Color.BLUE.interpolate(Color.GREEN, intensity * 4);
+    } else if (intensity < 0.5) {
+      // Interpolate between green (0.25) and yellow (0.5)
+      return Color.GREEN.interpolate(Color.YELLOW, (intensity - 0.25) * 4);
+    } else if (intensity < 0.75) {
+      // Interpolate between yellow (0.5) and orange (0.75)
+      return Color.YELLOW.interpolate(Color.ORANGE, (intensity - 0.5) * 4);
+    } else {
+      // Interpolate between orange (0.75) and red (1)
+      return Color.ORANGE.interpolate(Color.RED, (intensity - 0.75) * 4);
     }
   }
 

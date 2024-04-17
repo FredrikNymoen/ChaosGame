@@ -66,7 +66,7 @@ public class ChaosCanvas {
       return;
     }
 
-    canvas[(int) point.getX0()][(int) point.getX1()] = 1;
+    canvas[(int) point.getX0()][(int) point.getX1()] += 1;
   }
   /**
    * Returns the canvas as an array.

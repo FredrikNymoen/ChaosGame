@@ -2,6 +2,7 @@ package chaosGame;
 
 import chaosGame.ChaosCanvas;
 import java.util.Random;
+import java.util.Stack;
 import mathcore.Vector2D;
 import transformations.Transform2D;
 
@@ -15,6 +16,7 @@ public class ChaosGame {
   private ChaosGameDescription description;
   private Vector2D currentPoint;
   public Random random;
+  private Stack<Vector2D> pointStack;
 
     /**
      * Constructor for the chaosGame.ChaosGame class. Constructs a new chaos game using a specified set of rules and dimensions
@@ -30,6 +32,8 @@ public class ChaosGame {
     this.canvas = new ChaosCanvas(width, height, description.getMinCoords(), description.getMaxCoords());
     this.currentPoint = new Vector2D(0, 0);
     this.random = new Random();
+    this.pointStack = new Stack<>();
+    pointStack.push(currentPoint);
   }
   /**
    * Returns the canvas of the chaos game.
@@ -54,6 +58,21 @@ public class ChaosGame {
       canvas.putPixel(currentPoint);
     }
   }
+
+  /*public void runSteps(int steps) {
+    for (int i = 0; i < steps; i++) {
+      while (pointStack.size() != 0) {
+        Vector2D currentPoint = pointStack.pop();
+
+        for(int j = 0; j < description.getTransforms().size(); j++) {
+          Transform2D transform = description.getTransforms().get(j);
+          Vector2D newPoint = transform.transform(currentPoint);
+          pointStack.push(newPoint);
+          canvas.putPixel(newPoint);
+        }
+      }
+    }
+  }*/
 
   public void display(){
     int[][] canvasArray = getCanvas().getCanvasArray();
