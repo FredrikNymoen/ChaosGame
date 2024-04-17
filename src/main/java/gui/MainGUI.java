@@ -31,10 +31,6 @@ import java.util.function.UnaryOperator;
 
 public class MainGUI extends Application {
   private GridPane affineGrid; // This needs to be accessible by the button's event handler
-  private RadioButton affine;
-  private RadioButton julia;
-  private RadioButton barnsley;
-  private RadioButton sierpinski;
   private ToggleGroup transformationsGroup;
   private ScrollPane scrollPane; // ScrollPane for the left side
   private Canvas fractalCanvas; // Canvas for drawing the fractal
@@ -102,13 +98,13 @@ public class MainGUI extends Application {
     Label transformationLabel = new Label("Transformations");
     transformationBox.getChildren().add(transformationLabel);
     transformationsGroup = new ToggleGroup();
-    affine = new RadioButton("Affine");
+    RadioButton affine = new RadioButton("Affine");
     affine.setToggleGroup(transformationsGroup);
-    barnsley = new RadioButton("Barnsley");
+    RadioButton barnsley = new RadioButton("Barnsley");
     barnsley.setToggleGroup(transformationsGroup);
-    julia = new RadioButton("Julia");
+    RadioButton julia = new RadioButton("Julia");
     julia.setToggleGroup(transformationsGroup);
-    sierpinski = new RadioButton("Sierpinski");
+    RadioButton sierpinski = new RadioButton("Sierpinski");
     sierpinski.setToggleGroup(transformationsGroup);
 
     HBox transformationsBox = new HBox(10);
@@ -188,7 +184,7 @@ public class MainGUI extends Application {
       int steps = Integer.parseInt(stepsField.getText());
       Vector2D minCoords = new Vector2D(minX, minY);
       Vector2D maxCoords = new Vector2D(maxX, maxY);
-      currentChaosGame = controller.handleTransformationSelection(affine, julia, sierpinski, barnsley, affineGrid, realPartField, imaginaryPartField, minCoords, maxCoords, steps);
+      currentChaosGame = controller.handleTransformationSelection(transformationsGroup, affineGrid, realPartField, imaginaryPartField, minCoords, maxCoords, steps);
       if (currentChaosGame != null) {
         drawFractal(currentChaosGame);
       }
@@ -284,40 +280,25 @@ public class MainGUI extends Application {
   }
 
   private void initializeRadioButtonListener(){
-    // Radio button action listeners
-    affine.selectedProperty().addListener((observable, oldValue, newValue) -> {
-      affineBox.setDisable(!newValue);
-    });
-    julia.selectedProperty().addListener((observable, oldValue, newValue) -> {
-      juliaGrid.setDisable(!newValue);
-    });
-
-    // Initially disable grids, since no option is selected by default
+    // Disable all grids initially
     affineBox.setDisable(true);
     juliaGrid.setDisable(true);
-
-    // Ensure that selecting a radio button enables the respective grid
     transformationsGroup.selectedToggleProperty().addListener((observable, oldToggle, newToggle) -> {
       if (newToggle != null) {
         RadioButton selectedButton = (RadioButton) newToggle;
         switch (selectedButton.getText()) {
           case "Affine":
             affineBox.setDisable(false);
-            juliaGrid.setDisable(true);
             break;
           case "Julia":
-            affineBox.setDisable(true);
             juliaGrid.setDisable(false);
             break;
           default:
+            // Keep all specialized controls disabled if none of the above cases match
             affineBox.setDisable(true);
             juliaGrid.setDisable(true);
             break;
         }
-      } else {
-        // No radio buttons are selected, disable both grids
-        affineBox.setDisable(true);
-        juliaGrid.setDisable(true);
       }
     });
   }

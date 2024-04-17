@@ -3,12 +3,14 @@ package gui;
 import chaosGame.ChaosGame;
 import chaosGame.ChaosGameDescription;
 import factory.ChaosGameDescriptionFactory;
+import filehandling.ChaosGameFileHandler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javafx.scene.Node;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import mathcore.Complex;
 import mathcore.Matrix2x2;
@@ -77,25 +79,35 @@ public class ChaosGameController {
   }
 
 
-  public ChaosGame handleTransformationSelection(RadioButton affine, RadioButton julia, RadioButton sierpinski, RadioButton barnsley, GridPane affineGrid, TextField realPartField, TextField imaginaryPartField, Vector2D minCoords, Vector2D maxCoords, int steps) {
+  public ChaosGame handleTransformationSelection(ToggleGroup transformationsGroup, GridPane affineGrid, TextField realPartField, TextField imaginaryPartField, Vector2D minCoords, Vector2D maxCoords, int steps) {
     ChaosGameDescriptionFactory factory = new ChaosGameDescriptionFactory();
     ChaosGameDescription description = null;
 
-    if (affine.isSelected()) {
-      List<Matrix2x2> matrices = new ArrayList<>();
-      List<Vector2D> vectors = new ArrayList<>();
-      getAffineTransformationValues(matrices, vectors, affineGrid);
-      description = factory.affine(matrices, vectors, minCoords, maxCoords);
-    } else if (julia.isSelected()) {
-      Complex c = new Complex(Double.parseDouble(realPartField.getText()), Double.parseDouble(imaginaryPartField.getText()));
-      description = factory.julia(minCoords, maxCoords, c);
-    } else if (sierpinski.isSelected()) {
-      description = factory.sierpinski(minCoords, maxCoords);
-    } else if (barnsley.isSelected()) {
-      description = factory.barnsley(minCoords, maxCoords);
+    RadioButton selectedButton = (RadioButton) transformationsGroup.getSelectedToggle();
+    if (selectedButton != null) {
+      switch (selectedButton.getText()) {
+        case "Affine":
+          List<Matrix2x2> matrices = new ArrayList<>();
+          List<Vector2D> vectors = new ArrayList<>();
+          getAffineTransformationValues(matrices, vectors, affineGrid);
+          description = factory.affine(matrices, vectors, minCoords, maxCoords);
+          break;
+        case "Julia":
+          Complex c = new Complex(Double.parseDouble(realPartField.getText()), Double.parseDouble(imaginaryPartField.getText()));
+          description = factory.julia(minCoords, maxCoords, c);
+          break;
+        case "Sierpinski":
+          description = factory.sierpinski(minCoords, maxCoords);
+          break;
+        case "Barnsley":
+          description = factory.barnsley(minCoords, maxCoords);
+          break;
+      }
     }
 
     if (description != null) {
+      ChaosGameFileHandler fileHandler = new ChaosGameFileHandler();
+      fileHandler.writeToFile(description, "file.csv");
       return createChaosGame(description, 900, 750, steps);
     }
     return null;
