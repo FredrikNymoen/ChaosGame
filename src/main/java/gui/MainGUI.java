@@ -109,7 +109,6 @@ public class MainGUI extends Application {
     scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); // Hide horizontal scrollbar
     scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); // Hide vertical scrollbar
   }
-
   private void configureTransformationButtonOptions() {
     // Transformation checkboxes
     transformationBox = new VBox(5);
@@ -117,12 +116,16 @@ public class MainGUI extends Application {
     transformationBox.getChildren().add(transformationLabel);
     transformationsGroup = new ToggleGroup();
     RadioButton affine = new RadioButton("Affine");
+    affine.setUserData("Affine");
     affine.setToggleGroup(transformationsGroup);
     RadioButton barnsley = new RadioButton("Barnsley");
+    barnsley.setUserData("Barnsley");
     barnsley.setToggleGroup(transformationsGroup);
     RadioButton julia = new RadioButton("Julia");
+    julia.setUserData("Julia");
     julia.setToggleGroup(transformationsGroup);
     RadioButton sierpinski = new RadioButton("Sierpinski");
+    sierpinski.setUserData("Sierpinski");
     sierpinski.setToggleGroup(transformationsGroup);
 
     HBox transformationsBox = new HBox(10);
