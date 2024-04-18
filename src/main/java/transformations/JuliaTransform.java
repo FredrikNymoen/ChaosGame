@@ -26,7 +26,6 @@ public class JuliaTransform implements Transform2D {
     this.sign = (int) Math.signum(sign);
   }
 
-
   /**
    * Transforms a 2D vector on the form z -> ±sqrt(z - c).
    *
