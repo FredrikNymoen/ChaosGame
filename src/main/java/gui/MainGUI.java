@@ -1,6 +1,10 @@
 package gui;
 
 import chaosGame.ChaosGame;
+import java.util.Properties;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -59,7 +63,10 @@ public class MainGUI extends Application {
   private VBox affineBox; // Container for the affine transformation section
   private Button showButton;
   private CheckBox colorModeCheckbox;  // Checkbox to toggle color mode
-  
+
+  private Properties appSettings = new Properties();
+  private final String settingsFilePath = "appSettings.properties";
+
 
   public static void main(String[] args) {
     launch(args);
@@ -82,6 +89,9 @@ public class MainGUI extends Application {
     setupLeftSide(root);
     setupRightSide(root);
     setupListeners();
+
+    primaryStage.setOnCloseRequest(event -> saveSettings());
+    loadSettings();
 
     Scene scene = new Scene(root);
     primaryStage.setMaximized(true); // Set the stage to be maximized
@@ -376,6 +386,52 @@ public class MainGUI extends Application {
     } else {
       // Interpolate between orange (0.75) and red (1)
       return Color.ORANGE.interpolate(Color.RED, (intensity - 0.75) * 4);
+    }
+  }
+
+
+
+  private void loadSettings() {
+    try (FileInputStream fis = new FileInputStream(settingsFilePath)) {
+      appSettings.load(fis);
+      minXField.setText(appSettings.getProperty("minX", "-4"));
+      minYField.setText(appSettings.getProperty("minY", "-1"));
+      maxXField.setText(appSettings.getProperty("maxX", "4"));
+      maxYField.setText(appSettings.getProperty("maxY", "10"));
+      stepsField.setText(appSettings.getProperty("steps", "0"));
+      realPartField.setText(appSettings.getProperty("realPart", "0.285"));
+      imaginaryPartField.setText(appSettings.getProperty("imaginaryPart", "0.01"));
+      try {
+        RadioButton selectedButton = (RadioButton) transformationsGroup.getToggles().stream()
+            .filter(
+                t -> t.getUserData().equals(appSettings.getProperty("transformation", "Affine")))
+            .findFirst().orElse(null);
+        if (selectedButton != null) {
+          transformationsGroup.selectToggle(selectedButton);
+        }
+      } catch (Exception e) {
+        System.out.println("Failed to select transformation: " + e.getMessage());
+      }
+      colorModeCheckbox.setSelected(Boolean.parseBoolean(appSettings.getProperty("colorMode", "false")));
+    } catch (IOException e) {
+      System.out.println("Failed to load settings: " + e.getMessage());
+    }
+  }
+
+  private void saveSettings() {
+    try (FileOutputStream fos = new FileOutputStream(settingsFilePath)) {
+      appSettings.setProperty("minX", minXField.getText());
+      appSettings.setProperty("minY", minYField.getText());
+      appSettings.setProperty("maxX", maxXField.getText());
+      appSettings.setProperty("maxY", maxYField.getText());
+      appSettings.setProperty("steps", stepsField.getText());
+      appSettings.setProperty("realPart", realPartField.getText());
+      appSettings.setProperty("imaginaryPart", imaginaryPartField.getText());
+      appSettings.setProperty("transformation", ((RadioButton) transformationsGroup.getSelectedToggle()).getText());
+      appSettings.setProperty("colorMode", String.valueOf(colorModeCheckbox.isSelected()));
+      appSettings.store(fos, "Application Settings");
+    } catch (IOException e) {
+      System.out.println("Failed to save settings: " + e.getMessage());
     }
   }
 
