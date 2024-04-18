@@ -50,29 +50,29 @@ public class ChaosGame {
      * @param steps the number of steps to run the chaos game
      */
 
-  public void runSteps(int steps) {
+  /*public void runSteps(int steps) {
     for (int i = 0; i < steps; i++) {
       int transformIndex = random.nextInt(description.getTransforms().size());
       Transform2D transform = description.getTransforms().get(transformIndex);
       currentPoint = transform.transform(currentPoint);
       canvas.putPixel(currentPoint);
     }
-  }
+  }*/
 
-  /*public void runSteps(int steps) {
-    for (int i = 0; i < steps; i++) {
+  public void runSteps(int steps) {
       while (pointStack.size() != 0) {
         Vector2D currentPoint = pointStack.pop();
 
         for(int j = 0; j < description.getTransforms().size(); j++) {
           Transform2D transform = description.getTransforms().get(j);
           Vector2D newPoint = transform.transform(currentPoint);
-          pointStack.push(newPoint);
-          canvas.putPixel(newPoint);
+          if(canvas.getCanvasArray()[(int) newPoint.getX0()][(int) newPoint.getX1()] == 0){
+            pointStack.push(newPoint);
+            canvas.putPixel(newPoint);
+          }
         }
       }
-    }
-  }*/
+  }
 
   public void display(){
     int[][] canvasArray = getCanvas().getCanvasArray();
