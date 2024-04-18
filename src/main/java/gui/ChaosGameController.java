@@ -16,7 +16,22 @@ import mathcore.Complex;
 import mathcore.Matrix2x2;
 import mathcore.Vector2D;
 
+/**
+ * ChaosGameController class is used to control the chaos game GUI.
+ * The class contains methods to get affine transformation values,
+ * create a chaos game and handle transformation selection.
+ */
+
 public class ChaosGameController {
+
+  /**
+   * Gets the affine transformation values from the affine grid.
+   * The affine grid is a GridPane containing text fields for the matrix and vector values.
+   * The method retrieves the values from the grid and stores them in lists.
+   * @param affineMatrices the list to store the affine matrices
+   * @param affineVectors the list to store the affine vectors
+   * @param affineGrid the grid containing the affine transformation values
+   */
 
   public void getAffineTransformationValues(List<Matrix2x2> affineMatrices, List<Vector2D> affineVectors, GridPane affineGrid) {
     // Assuming there are 4 rows, and each row has 4 matrix fields followed by 2 vector fields
@@ -55,6 +70,17 @@ public class ChaosGameController {
     }
   }
 
+  /**
+   * Gets a node from a GridPane at a specified column and row.
+   * The method iterates through the children of the GridPane
+   * and returns the node at the specified column and row.
+   * If no node is found, the method returns null.
+   * @param gridPane the GridPane to get the node from
+   * @param col the column of the node
+   * @param row the row of the node
+   * @return Node the node at the specified column and row
+   */
+
   public Node getNodeFromGridPane(GridPane gridPane, int col, int row) {
     for (Node node : gridPane.getChildren()) {
       if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
@@ -65,11 +91,28 @@ public class ChaosGameController {
   }
 
   // Helper method to create a TextField with placeholder text
+
+  /**
+   * Helper method to create a TextField with placeholder text
+   * @param placeholder the placeholder text for the TextField
+   * @return TextField the created TextField
+   */
   public TextField createTextFieldWithPlaceholder(String placeholder) {
     TextField textField = new TextField();
     textField.setPromptText(placeholder);
     return textField;
   }
+
+  /**
+   * Creates a chaos game with a specified description, width, height and number of steps.
+   * The method creates a ChaosGame object with the specified parameters
+   * and runs the chaos game for the specified number of steps.
+   * @param description the description of the chaos game
+   * @param width the width of the canvas
+   * @param height the height of the canvas
+   * @param steps the number of steps to run the chaos game
+   * @return ChaosGame the created chaos game
+   */
 
 
   public ChaosGame createChaosGame(ChaosGameDescription description, int width, int height, int steps) {
@@ -77,6 +120,21 @@ public class ChaosGameController {
     chaosGame.runSteps(steps);
     return chaosGame;
   }
+
+  /**
+   * Handles the selection of a transformation from a ToggleGroup.
+   * The method retrieves the selected RadioButton from the ToggleGroup
+   * and creates a ChaosGameDescription based on the selected transformation.
+   * The ChaosGameDescription is then written to a file and a ChaosGame object is created.
+   * @param transformationsGroup the ToggleGroup containing the transformation selection
+   * @param affineGrid the GridPane containing the affine transformation values
+   * @param realPartField the TextField containing the real part of the complex number for the Julia set
+   * @param imaginaryPartField the TextField containing the imaginary part of the complex number for the Julia set
+   * @param minCoords the minimum coordinates of the canvas
+   * @param maxCoords the maximum coordinates of the canvas
+   * @param steps the number of steps to run the chaos game
+   * @return ChaosGame the created chaos game
+   */
 
 
   public ChaosGame handleTransformationSelection(ToggleGroup transformationsGroup, GridPane affineGrid, TextField realPartField, TextField imaginaryPartField, Vector2D minCoords, Vector2D maxCoords, int steps) {
