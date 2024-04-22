@@ -173,13 +173,6 @@ public class ChaosGameController {
     }
 
     chaosGame.setCanvas(canvas);
-
-    for (int i = 0; i < canvas.getCanvasArray().length; i++) {
-      for (int j = 0; j < canvas.getCanvasArray()[i].length; j++) {
-        System.out.printf("%-" + 900 + "d", canvas.getCanvasArray()[i][j]); // Print with fixed width
-      }
-      System.out.println(); // New line after each row
-    }
     return chaosGame;
   }
 

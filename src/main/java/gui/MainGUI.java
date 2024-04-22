@@ -358,9 +358,11 @@ public class MainGUI extends Application {
         switch (selectedButton.getText()) {
           case "Affine":
             affineBox.setDisable(false);
+            juliaGrid.setDisable(true);
             break;
           case "Julia":
             juliaGrid.setDisable(false);
+            affineBox.setDisable(true);
             break;
           default:
             // Keep all specialized controls disabled if none of the above cases match
