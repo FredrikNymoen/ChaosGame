@@ -40,6 +40,15 @@ public class ChaosGame {
     this.pointStack = new Stack<>();
     pointStack.push(currentPoint);
   }
+
+  public ChaosGame(int width, int height) {
+    this.canvas = new ChaosCanvas(width, height, new Vector2D(-1, -1), new Vector2D(1, 1));
+    this.currentPoint = new Vector2D(0, 0);
+    this.random = new Random();
+    this.pointStack = new Stack<>();
+    pointStack.push(currentPoint);
+  }
+
   /**
    * Returns the canvas of the chaos game.
    *
@@ -56,6 +65,7 @@ public class ChaosGame {
      */
 
   public void runSteps(int steps) {
+      canvas.clear();
       for (int i = 0; i < steps; i++) {
         int transformIndex = random.nextInt(description.getTransforms().size());
         Transform2D transform = description.getTransforms().get(transformIndex);
@@ -67,19 +77,19 @@ public class ChaosGame {
   public void runStepsForBarnsley(int steps){
     for (int i = 0; i < steps; i++) {
       // Define the cumulative probabilities
-      List<Double> cumulativeProbabilities = new ArrayList<>();
-      cumulativeProbabilities.add(1.0);   // 1% for the first element
-      cumulativeProbabilities.add(86.0);  // 85% for the second element (1% + 85%)
-      cumulativeProbabilities.add(93.0);  // 7% for the third element (86% + 7%)
-      cumulativeProbabilities.add(100.0); // 7% for the fourth element (93% + 7%)
+      List<Double> probabilities = new ArrayList<>();
+      probabilities.add(1.0);   // 1% for the first element
+      probabilities.add(86.0);  // 85% for the second element (1% + 85%)
+      probabilities.add(93.0);  // 7% for the third element (86% + 7%)
+      probabilities.add(100.0); // 7% for the fourth element (93% + 7%)
 
       // Get a random value between 0 and 100
       double randomValue = 100 * random.nextDouble();
 
       // Determine which index the random value falls into
       int transformIndex = 0;
-      for (int j = 0; j < cumulativeProbabilities.size(); j++) {
-        if (randomValue < cumulativeProbabilities.get(j)) {
+      for (int j = 0; j < probabilities.size(); j++) {
+        if (randomValue < probabilities.get(j)) {
           transformIndex = j;
           break;
         }
@@ -124,6 +134,10 @@ public class ChaosGame {
       }
       System.out.println();
     }
+  }
+
+  public void setCanvas(ChaosCanvas canvas) {
+    this.canvas = canvas;
   }
 
 }

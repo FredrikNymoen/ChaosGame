@@ -172,8 +172,8 @@ public class MainGUI extends Application {
     juliaGrid.setVgap(10);
     juliaGrid.add(new Label("Julia-constant"), 0, 0, 2, 1);
 
-    realPartField = createDecimalTextField("0.285");
-    imaginaryPartField = createDecimalTextField("0.01");
+    realPartField = createDecimalTextField("0.28");
+    imaginaryPartField = createDecimalTextField("0.9");
     juliaGrid.addRow(1, realPartField, imaginaryPartField);
   }
 
@@ -291,8 +291,11 @@ public class MainGUI extends Application {
       if (makeFullFractalCheckbox.isSelected() && currentChaosGame != null) {
         currentChaosGame.makeFullFractal();
         drawFractal(currentChaosGame);
+      } else if (currentChaosGame != null) {
+        currentChaosGame.runSteps(Integer.parseInt(stepsField.getText()));
+        drawFractal(currentChaosGame);
       }
-  });
+    });
   }
 
   private TextField createDecimalTextField(String defaultValue) {
@@ -305,7 +308,7 @@ public class MainGUI extends Application {
   private void addMatrixVectorRow(int row) {
     String[] matrixPlaceholders = {"a00", "a01", "a10", "a11"};
     for (int i = 0; i < matrixPlaceholders.length; i++) {
-      TextField matrixField = new TextField();
+      TextField matrixField = createDecimalTextField("0.0");
       matrixField.setPrefWidth(50);
       matrixField.setPromptText(matrixPlaceholders[i]);
       affineGrid.add(matrixField, i, row);
@@ -317,19 +320,18 @@ public class MainGUI extends Application {
     affineGrid.add(spacer, 4, row);
 
     // Vector elements with placeholders
-    TextField vectorFieldX = new TextField();
+    TextField vectorFieldX = createDecimalTextField("0.0");
     vectorFieldX.setPrefWidth(50);
     vectorFieldX.setPromptText("x0");
     affineGrid.add(vectorFieldX, 5, row);
 
-    TextField vectorFieldY = new TextField();
+    TextField vectorFieldY = createDecimalTextField("0.0");
     vectorFieldY.setPrefWidth(50);
     vectorFieldY.setPromptText("y0");
     affineGrid.add(vectorFieldY, 6, row);
   }
 
   private void removeMatrixVectorRow() {
-    ChaosGameController controller = new ChaosGameController();
     int lastRowIndex = affineGrid.getRowCount() - 1;
     if (lastRowIndex >= 1) {
       // Remove all elements in the last row
@@ -438,7 +440,6 @@ public class MainGUI extends Application {
       return Color.ORANGE.interpolate(Color.RED, (intensity - 0.75) * 4);
     }
   }
-
 
 
   private void loadSettings() {
