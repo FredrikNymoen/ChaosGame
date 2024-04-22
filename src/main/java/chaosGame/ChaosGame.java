@@ -1,9 +1,14 @@
 package chaosGame;
 
 import chaosGame.ChaosCanvas;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.Stack;
+import mathcore.Matrix2x2;
 import mathcore.Vector2D;
+import transformations.AffineTransform2D;
 import transformations.Transform2D;
 
 /**
@@ -50,29 +55,61 @@ public class ChaosGame {
      * @param steps the number of steps to run the chaos game
      */
 
-  /*public void runSteps(int steps) {
+  public void runSteps(int steps) {
+      for (int i = 0; i < steps; i++) {
+        int transformIndex = random.nextInt(description.getTransforms().size());
+        Transform2D transform = description.getTransforms().get(transformIndex);
+        currentPoint = transform.transform(currentPoint);
+        canvas.putPixel(currentPoint);
+      }
+  }
+
+  public void runStepsForBarnsley(int steps){
     for (int i = 0; i < steps; i++) {
-      int transformIndex = random.nextInt(description.getTransforms().size());
-      Transform2D transform = description.getTransforms().get(transformIndex);
+      // Define the cumulative probabilities
+      List<Double> cumulativeProbabilities = new ArrayList<>();
+      cumulativeProbabilities.add(1.0);   // 1% for the first element
+      cumulativeProbabilities.add(86.0);  // 85% for the second element (1% + 85%)
+      cumulativeProbabilities.add(93.0);  // 7% for the third element (86% + 7%)
+      cumulativeProbabilities.add(100.0); // 7% for the fourth element (93% + 7%)
+
+      // Get a random value between 0 and 100
+      double randomValue = 100 * random.nextDouble();
+
+      // Determine which index the random value falls into
+      int transformIndex = 0;
+      for (int j = 0; j < cumulativeProbabilities.size(); j++) {
+        if (randomValue < cumulativeProbabilities.get(j)) {
+          transformIndex = j;
+          break;
+        }
+      }
+      // Retrieve the transform based on the selected index
+      List<Transform2D> transforms = description.getTransforms();
+      Transform2D transform = transforms.get(transformIndex);
       currentPoint = transform.transform(currentPoint);
       canvas.putPixel(currentPoint);
     }
-  }*/
-
-  public void runSteps(int steps) {
-      while (pointStack.size() != 0) {
-        Vector2D currentPoint = pointStack.pop();
-
-        for(int j = 0; j < description.getTransforms().size(); j++) {
-          Transform2D transform = description.getTransforms().get(j);
-          Vector2D newPoint = transform.transform(currentPoint);
-          if(canvas.getCanvasArray()[(int) newPoint.getX0()][(int) newPoint.getX1()] == 0){
-            pointStack.push(newPoint);
-            canvas.putPixel(newPoint);
-          }
-        }
-      }
   }
+
+  public void makeFullFractal() {
+    canvas.clear();
+    do {
+      currentPoint = pointStack.pop();
+
+      for (int j = 0; j < description.getTransforms().size(); j++) {
+        Transform2D transform = description.getTransforms().get(j);
+        Vector2D newPoint = transform.transform(currentPoint);
+        if (canvas.getPixel(newPoint) == 1) {
+          continue;
+        }
+        pointStack.push(newPoint);
+        canvas.putPixel(newPoint);
+      }
+    } while (!pointStack.isEmpty());
+    pointStack.push(new Vector2D(0, 0));
+  }
+
 
   public void display(){
     int[][] canvasArray = getCanvas().getCanvasArray();

@@ -72,9 +72,13 @@ public class ChaosGameController {
   }
 
 
-  public ChaosGame createChaosGame(ChaosGameDescription description, int width, int height, int steps) {
+  public ChaosGame createChaosGame(ChaosGameDescription description, int width, int height, int steps,boolean isBarnsleyTransformation) {
     ChaosGame chaosGame = new ChaosGame(description, width, height);
-    chaosGame.runSteps(steps);
+    if (isBarnsleyTransformation) {
+      chaosGame.runStepsForBarnsley(steps);
+    } else {
+      chaosGame.runSteps(steps);
+    }
     return chaosGame;
   }
 
@@ -108,7 +112,7 @@ public class ChaosGameController {
     if (description != null) {
       ChaosGameFileHandler fileHandler = new ChaosGameFileHandler();
       fileHandler.writeToFile(description, "file.csv");
-      return createChaosGame(description, 900, 750, steps);
+      return createChaosGame(description, 900, 750, steps, selectedButton.getText().equals("Barnsley"));
     }
     return null;
   }

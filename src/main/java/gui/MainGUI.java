@@ -63,6 +63,7 @@ public class MainGUI extends Application {
   private VBox affineBox; // Container for the affine transformation section
   private Button showButton;
   private CheckBox colorModeCheckbox;  // Checkbox to toggle color mode
+  private CheckBox makeFullFractalCheckbox; // Checkbox to toggle full fractal
 
   private Properties appSettings = new Properties();
   private final String settingsFilePath = "appSettings.properties";
@@ -84,6 +85,7 @@ public class MainGUI extends Application {
     configureJuliaConstantFields();
     configureAffineControls();
     configureColorModeCheckbox();
+    configureMakeFullFractalCheckbox();
     configureShowButton();
 
     setupLeftSide(root);
@@ -206,6 +208,9 @@ public class MainGUI extends Application {
       Vector2D minCoords = new Vector2D(minX, minY);
       Vector2D maxCoords = new Vector2D(maxX, maxY);
       currentChaosGame = controller.handleTransformationSelection(transformationsGroup, affineGrid, realPartField, imaginaryPartField, minCoords, maxCoords, steps);
+
+      makeFullFractalCheckbox.setSelected(false);
+
       if (currentChaosGame != null) {
         drawFractal(currentChaosGame);
       }
@@ -214,7 +219,28 @@ public class MainGUI extends Application {
 
   private void setupLeftSide(BorderPane root) {
     // Add all elements to the left side layout
-    leftSide.getChildren().addAll(transformationBox, stepsBox, coordGrid, juliaGrid, affineBox, colorModeCheckbox, showButton);
+    //leftSide.getChildren().addAll(transformationBox, stepsBox, coordGrid, juliaGrid, affineBox, showButton, colorModeCheckbox, makeFullFractalCheckbox);
+
+    // Add an empty VBox for spacing between 'Show' and 'colorModeCheckbox'
+    VBox spacingBox = new VBox();
+    spacingBox.setMinHeight(20); // Adjust as needed to create the desired space
+
+
+    // Add the existing elements to the VBox
+    leftSide.getChildren().addAll(
+        transformationBox,
+        stepsBox,
+        coordGrid,
+        juliaGrid,
+        affineBox,
+        showButton,
+        spacingBox,
+        colorModeCheckbox,
+        makeFullFractalCheckbox
+    );
+
+
+
     // Set the ScrollPane as the content of the left side
     scrollPane.setContent(leftSide);
     // Set preferred width for the left side
@@ -252,7 +278,21 @@ public class MainGUI extends Application {
   private void configureColorModeCheckbox() {
     colorModeCheckbox = new CheckBox("Enable Heatmap Color Mode");
     colorModeCheckbox.setSelected(false);  // Default is unchecked (B&W mode)
+    // Increase font size for visibility
+    colorModeCheckbox.setStyle("-fx-font-size: 18px;");
     colorModeCheckbox.setOnAction(event -> redrawFractalIfNeeded());
+  }
+
+  private void configureMakeFullFractalCheckbox() {
+    makeFullFractalCheckbox = new CheckBox("Make full fractal");
+    makeFullFractalCheckbox.setSelected(false);
+    makeFullFractalCheckbox.setStyle("-fx-font-size: 18px;");
+    makeFullFractalCheckbox.setOnAction(event -> {
+      if (makeFullFractalCheckbox.isSelected() && currentChaosGame != null) {
+        currentChaosGame.makeFullFractal();
+        drawFractal(currentChaosGame);
+      }
+  });
   }
 
   private TextField createDecimalTextField(String defaultValue) {
@@ -331,6 +371,8 @@ public class MainGUI extends Application {
   }
 
   private void drawFractal(ChaosGame chaosGame){
+    gc.clearRect(0, 0, fractalCanvas.getWidth(), fractalCanvas.getHeight());
+
     int[][] canvasArray = chaosGame.getCanvas().getCanvasArray();
     // Use a set to avoid duplicate values and then convert to a list to sort
     Set<Integer> valueSet = new HashSet<>();
@@ -359,12 +401,17 @@ public class MainGUI extends Application {
     // Adjust the drawing loop to position the fractal correctly
     for (int i = 0; i < fractalHeight; i++) {
       for (int j = 0; j < fractalWidth; j++) {
+
         int value = canvasArray[i][j];
         if(colorModeCheckbox.isSelected() && value > 0){
           int index = sortedValues.indexOf(value);
-          double intensity = (double) index / (sortedValues.size() - 1);
-          Color color = getColorForValue(intensity);
-          gc.setFill(color);
+          if(sortedValues.get(index) == 1){
+            gc.setFill(Color.BLUE);
+          } else {
+            double intensity = (double) index / (sortedValues.size() - 1);
+            Color color = getColorForValue(intensity);
+            gc.setFill(color);
+          }
         }
         else if (value > 0) { // assuming value 0 means no data
           gc.setFill(Color.BLACK);
