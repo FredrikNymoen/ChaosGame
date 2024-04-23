@@ -85,11 +85,15 @@ public class ChaosGameDescriptionFactory {
    */
 
   public ChaosGameDescription julia(Vector2D minCoordsVector, Vector2D maxCoordsVector, Complex c){
-    JuliaTransform transformation1 = new JuliaTransform(c, 1);
-    JuliaTransform transformation2 = new JuliaTransform(c, -1);
+    JuliaTransform transformation1 = new JuliaTransform(c, 0);
+    JuliaTransform transformation2 = new JuliaTransform(c, 1);
+    JuliaTransform transformation3 = new JuliaTransform(c, 2);
+    JuliaTransform transformation4 = new JuliaTransform(c, 3);
     List<Transform2D> juliaTransforms = new ArrayList<>();
     juliaTransforms.add(transformation1);
     juliaTransforms.add(transformation2);
+    juliaTransforms.add(transformation3);
+    juliaTransforms.add(transformation4);
     return new ChaosGameDescription(juliaTransforms, minCoordsVector, maxCoordsVector);
   }
 

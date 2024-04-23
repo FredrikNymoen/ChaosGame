@@ -39,10 +39,6 @@ import javafx.scene.control.TextFormatter;
 import javafx.util.converter.IntegerStringConverter;
 import java.util.function.UnaryOperator;
 
-/**
- * The MainGUI class is the main entry point for the JavaFX application. It creates the GUI
- * components and handles the user interactions.
- */
 public class MainGUI extends Application {
   private GridPane affineGrid; // This needs to be accessible by the button's event handler
   private ToggleGroup transformationsGroup;
@@ -67,25 +63,16 @@ public class MainGUI extends Application {
   private VBox affineBox; // Container for the affine transformation section
   private Button showButton;
   private CheckBox colorModeCheckbox;  // Checkbox to toggle color mode
+  private CheckBox makeFullFractalCheckbox; // Checkbox to toggle full fractal
 
   private Properties appSettings = new Properties();
   private final String settingsFilePath = "appSettings.properties";
 
 
-  /**
-   * The main method is the entry point for the JavaFX application.
-   * @param args the command line arguments
-   */
   public static void main(String[] args) {
     launch(args);
   }
 
-
-  /**
-   * The start method is called when the JavaFX application is launched.
-   * It sets up the GUI components and initializes the application.
-   * @param primaryStage the main scene for the application
-   */
   @Override
   public void start(Stage primaryStage) {
     BorderPane root = new BorderPane();
@@ -98,6 +85,7 @@ public class MainGUI extends Application {
     configureJuliaConstantFields();
     configureAffineControls();
     configureColorModeCheckbox();
+    configureMakeFullFractalCheckbox();
     configureShowButton();
 
     setupLeftSide(root);
@@ -114,11 +102,6 @@ public class MainGUI extends Application {
     primaryStage.show();
   }
 
-  /**
-   * Configures the ScrollPane for the left side layout.
-   * It removes the bar of the scrollPane and sets the preferred width.
-   */
-
   private void configureScrollPane() {
     // Scrollable Left side layout
     leftSide = new VBox(10);
@@ -128,13 +111,6 @@ public class MainGUI extends Application {
     scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); // Hide horizontal scrollbar
     scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); // Hide vertical scrollbar
   }
-
-  /**
-   * Configures the transformation button options.
-   * It creates a VBox for the transformation checkboxes and adds them to the left side layout.
-   * It also creates a ToggleGroup for the radio buttons
-   * and sets the listener for the selected toggle.
-   */
   private void configureTransformationButtonOptions() {
     // Transformation checkboxes
     transformationBox = new VBox(5);
@@ -159,11 +135,6 @@ public class MainGUI extends Application {
     transformationBox.getChildren().add(transformationsBox);
   }
 
-  /**
-   * Configures the steps input field.
-   * It creates a VBox for the steps input field and adds it to the left side layout.
-   */
-
   private void configureStepsInput() {
     // Steps input
     stepsBox = new VBox(5);
@@ -180,11 +151,6 @@ public class MainGUI extends Application {
     stepsBox.getChildren().addAll(stepsLabel, stepsField);
   }
 
-  /**
-   * Configures the coordinate fields.
-   * It creates a GridPane for the coordinate fields and adds it to the left side layout.
-   */
-
   private void configureCoordinateFields() {
     coordGrid = new GridPane();
     coordGrid.setHgap(10);
@@ -200,26 +166,16 @@ public class MainGUI extends Application {
     coordGrid.addRow(1, minXField, minYField, maxXField, maxYField);
   }
 
-  /**
-   * Configures the Julia constant fields.
-   * It creates a GridPane for the Julia constant fields and adds it to the left side layout.
-   */
-
   private void configureJuliaConstantFields() {
     juliaGrid = new GridPane();
     juliaGrid.setHgap(10);
     juliaGrid.setVgap(10);
     juliaGrid.add(new Label("Julia-constant"), 0, 0, 2, 1);
 
-    realPartField = createDecimalTextField("0.285");
-    imaginaryPartField = createDecimalTextField("0.01");
+    realPartField = createDecimalTextField("0.28");
+    imaginaryPartField = createDecimalTextField("0.9");
     juliaGrid.addRow(1, realPartField, imaginaryPartField);
   }
-
-  /**
-   * Configures the affine controls.
-   * It creates a VBox for the affine matrices and vectors and adds it to the left side layout.
-   */
 
   private void configureAffineControls() {
     affineBox = new VBox(10);
@@ -239,11 +195,6 @@ public class MainGUI extends Application {
     affineBox.getChildren().addAll(affineGrid, buttonsBox);
   }
 
-  /**
-   * Configures the show button.
-   * It creates a button to draw the fractal and adds it to the left side layout.
-   */
-
   private void configureShowButton() {
     // Show button
     showButton = new Button("Show");
@@ -257,22 +208,39 @@ public class MainGUI extends Application {
       Vector2D minCoords = new Vector2D(minX, minY);
       Vector2D maxCoords = new Vector2D(maxX, maxY);
       currentChaosGame = controller.handleTransformationSelection(transformationsGroup, affineGrid, realPartField, imaginaryPartField, minCoords, maxCoords, steps);
+
+      makeFullFractalCheckbox.setSelected(false);
+
       if (currentChaosGame != null) {
         drawFractal(currentChaosGame);
       }
     });
   }
 
-  /**
-   * Sets up the left side layout of the BorderPane.
-   * It adds the transformationBox, stepsBox, coordGrid, juliaGrid, affineBox, colorModeCheckbox,
-   * and showButton to the left side layout.
-   * @param root the BorderPane layout
-   */
-
   private void setupLeftSide(BorderPane root) {
     // Add all elements to the left side layout
-    leftSide.getChildren().addAll(transformationBox, stepsBox, coordGrid, juliaGrid, affineBox, colorModeCheckbox, showButton);
+    //leftSide.getChildren().addAll(transformationBox, stepsBox, coordGrid, juliaGrid, affineBox, showButton, colorModeCheckbox, makeFullFractalCheckbox);
+
+    // Add an empty VBox for spacing between 'Show' and 'colorModeCheckbox'
+    VBox spacingBox = new VBox();
+    spacingBox.setMinHeight(20); // Adjust as needed to create the desired space
+
+
+    // Add the existing elements to the VBox
+    leftSide.getChildren().addAll(
+        transformationBox,
+        stepsBox,
+        coordGrid,
+        juliaGrid,
+        affineBox,
+        showButton,
+        spacingBox,
+        colorModeCheckbox,
+        makeFullFractalCheckbox
+    );
+
+
+
     // Set the ScrollPane as the content of the left side
     scrollPane.setContent(leftSide);
     // Set preferred width for the left side
@@ -288,12 +256,6 @@ public class MainGUI extends Application {
     root.setLeft(leftLayout);
   }
 
-  /**
-   * Sets up the right side layout of the BorderPane.
-   * It adds the fractalCanvas to the right side layout.
-   * @param root the BorderPane layout
-   */
-
   private void setupRightSide(BorderPane root) {
     // Initialize the Canvas for fractal drawing
     fractalCanvas = new Canvas();
@@ -307,33 +269,34 @@ public class MainGUI extends Application {
     root.setRight(fractalCanvas); // Use setCenter if you prefer it in the center
   }
 
-  /**
-   * Sets up the listeners for the GUI components.
-   * It sets up listeners for the affineGrid, juliaGrid, transformationsGroup, and colorModeCheckbox.
-   */
-
   private void setupListeners() {
     fractalCanvas.widthProperty().addListener(obs -> redrawFractalIfNeeded());
     fractalCanvas.heightProperty().addListener(obs -> redrawFractalIfNeeded());
     initializeRadioButtonListener();
   }
 
-  /**
-   * Redraws the fractal if the canvas size changes.
-   * It checks if the currentChaosGame is not null and then calls the drawFractal method.
-   */
-
   private void configureColorModeCheckbox() {
     colorModeCheckbox = new CheckBox("Enable Heatmap Color Mode");
     colorModeCheckbox.setSelected(false);  // Default is unchecked (B&W mode)
+    // Increase font size for visibility
+    colorModeCheckbox.setStyle("-fx-font-size: 18px;");
     colorModeCheckbox.setOnAction(event -> redrawFractalIfNeeded());
   }
 
-  /**
-   * Creates a TextField for decimal values.
-   * @param defaultValue the default value for the TextField
-   * @return the created TextField
-   */
+  private void configureMakeFullFractalCheckbox() {
+    makeFullFractalCheckbox = new CheckBox("Make full fractal");
+    makeFullFractalCheckbox.setSelected(false);
+    makeFullFractalCheckbox.setStyle("-fx-font-size: 18px;");
+    makeFullFractalCheckbox.setOnAction(event -> {
+      if (makeFullFractalCheckbox.isSelected() && currentChaosGame != null) {
+        currentChaosGame.makeFullFractal();
+        drawFractal(currentChaosGame);
+      } else if (currentChaosGame != null) {
+        currentChaosGame.runSteps(Integer.parseInt(stepsField.getText()));
+        drawFractal(currentChaosGame);
+      }
+    });
+  }
 
   private TextField createDecimalTextField(String defaultValue) {
     TextField textField = new TextField(defaultValue);
@@ -342,15 +305,10 @@ public class MainGUI extends Application {
     return textField;
   }
 
-  /**
-   * Adds a row to the affineGrid for matrix and vector elements.
-   * @param row the row number to add the elements
-   */
-
   private void addMatrixVectorRow(int row) {
     String[] matrixPlaceholders = {"a00", "a01", "a10", "a11"};
     for (int i = 0; i < matrixPlaceholders.length; i++) {
-      TextField matrixField = new TextField();
+      TextField matrixField = createDecimalTextField("0.0");
       matrixField.setPrefWidth(50);
       matrixField.setPromptText(matrixPlaceholders[i]);
       affineGrid.add(matrixField, i, row);
@@ -362,24 +320,18 @@ public class MainGUI extends Application {
     affineGrid.add(spacer, 4, row);
 
     // Vector elements with placeholders
-    TextField vectorFieldX = new TextField();
+    TextField vectorFieldX = createDecimalTextField("0.0");
     vectorFieldX.setPrefWidth(50);
     vectorFieldX.setPromptText("x0");
     affineGrid.add(vectorFieldX, 5, row);
 
-    TextField vectorFieldY = new TextField();
+    TextField vectorFieldY = createDecimalTextField("0.0");
     vectorFieldY.setPrefWidth(50);
     vectorFieldY.setPromptText("y0");
     affineGrid.add(vectorFieldY, 6, row);
   }
 
-  /**
-   * Removes the last row from the affineGrid.
-   * It removes all elements in the last row from the affineGrid.
-   */
-
   private void removeMatrixVectorRow() {
-    ChaosGameController controller = new ChaosGameController();
     int lastRowIndex = affineGrid.getRowCount() - 1;
     if (lastRowIndex >= 1) {
       // Remove all elements in the last row
@@ -390,21 +342,11 @@ public class MainGUI extends Application {
     }
   }
 
-  /**
-   * Redraws the fractal if the canvas size changes.
-   */
-
   private void redrawFractalIfNeeded() {
     if (currentChaosGame != null) {
       drawFractal(currentChaosGame);
     }
   }
-
-  /**
-   * Initializes the listener for the radio buttons.
-   * It enables the affineBox or juliaGrid based on the selected radio button.
-   * If none of the radio buttons are selected, it disables all specialized controls.
-   */
 
   private void initializeRadioButtonListener(){
     // Disable all grids initially
@@ -416,9 +358,11 @@ public class MainGUI extends Application {
         switch (selectedButton.getText()) {
           case "Affine":
             affineBox.setDisable(false);
+            juliaGrid.setDisable(true);
             break;
           case "Julia":
             juliaGrid.setDisable(false);
+            affineBox.setDisable(true);
             break;
           default:
             // Keep all specialized controls disabled if none of the above cases match
@@ -430,13 +374,9 @@ public class MainGUI extends Application {
     });
   }
 
-  /**
-   * Draws the fractal on the canvas.
-   * It uses the ChaosGame object to get the canvasArray and then draws the fractal on the canvas.
-   * @param chaosGame the ChaosGame object to draw the fractal
-   */
-
   private void drawFractal(ChaosGame chaosGame){
+    gc.clearRect(0, 0, fractalCanvas.getWidth(), fractalCanvas.getHeight());
+
     int[][] canvasArray = chaosGame.getCanvas().getCanvasArray();
     // Use a set to avoid duplicate values and then convert to a list to sort
     Set<Integer> valueSet = new HashSet<>();
@@ -465,12 +405,17 @@ public class MainGUI extends Application {
     // Adjust the drawing loop to position the fractal correctly
     for (int i = 0; i < fractalHeight; i++) {
       for (int j = 0; j < fractalWidth; j++) {
+
         int value = canvasArray[i][j];
         if(colorModeCheckbox.isSelected() && value > 0){
           int index = sortedValues.indexOf(value);
-          double intensity = (double) index / (sortedValues.size() - 1);
-          Color color = getColorForValue(intensity);
-          gc.setFill(color);
+          if(sortedValues.get(index) == 1){
+            gc.setFill(Color.BLUE);
+          } else {
+            double intensity = (double) index / (sortedValues.size() - 1);
+            Color color = getColorForValue(intensity);
+            gc.setFill(color);
+          }
         }
         else if (value > 0) { // assuming value 0 means no data
           gc.setFill(Color.BLACK);
@@ -482,13 +427,6 @@ public class MainGUI extends Application {
       }
     }
   }
-
-  /**
-   * Returns a color based on the intensity value.
-   * It interpolates between different colors based on the intensity value.
-   * @param intensity the intensity value to determine the color
-   * @return the color based on the intensity value
-   */
   private Color getColorForValue(double intensity) {
     if (intensity < 0.25) {
       // Interpolate between blue (0) and green (0.25)
@@ -506,12 +444,6 @@ public class MainGUI extends Application {
   }
 
 
-  /**
-   * Loads the application settings from the properties file.
-   * It loads the settings for minX, minY, maxX, maxY, steps, realPart, imaginaryPart,
-   * transformation, and colorMode from the properties file.
-   * If the properties file is not found, it prints an error message.
-   */
   private void loadSettings() {
     try (FileInputStream fis = new FileInputStream(settingsFilePath)) {
       appSettings.load(fis);
@@ -539,12 +471,6 @@ public class MainGUI extends Application {
     }
   }
 
-  /**
-   * Saves the application settings to the properties file.
-   * It saves the settings for minX, minY, maxX, maxY, steps, realPart, imaginaryPart,
-   * transformation, and colorMode to the properties file.
-   */
-
   private void saveSettings() {
     try (FileOutputStream fos = new FileOutputStream(settingsFilePath)) {
       appSettings.setProperty("minX", minXField.getText());
@@ -561,4 +487,5 @@ public class MainGUI extends Application {
       System.out.println("Failed to save settings: " + e.getMessage());
     }
   }
+
 }
