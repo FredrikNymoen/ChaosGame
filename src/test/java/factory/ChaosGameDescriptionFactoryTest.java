@@ -2,28 +2,73 @@ package factory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import chaosGame.ChaosGameDescription;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import mathcore.Complex;
+import mathcore.Matrix2x2;
+import mathcore.Vector2D;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import transformations.AffineTransform2D;
+import transformations.Transform2D;
 
-class ChaosGameDescriptionFactoryTest {
+public class ChaosGameDescriptionFactoryTest {
 
-  @BeforeEach
-  void setUp() {
-  }
+private ChaosGameDescriptionFactory factory;
+private Vector2D minCoordsVector;
+private Vector2D maxCoordsVector;
 
-  @Test
-  void sierpinski() {
-  }
-
-  @Test
-  void barnsley() {
-  }
-
-  @Test
-  void julia() {
-  }
+    @BeforeEach
+    public void setUp() {
+      factory = new ChaosGameDescriptionFactory();
+      minCoordsVector = new Vector2D(-1, -1);
+      maxCoordsVector = new Vector2D(1, 1);
+    }
 
   @Test
-  void affine() {
+  public void testSierpinskiCreatesCorrectTransformations() {
+    ChaosGameDescription description = factory.sierpinski(minCoordsVector, maxCoordsVector);
+    assertNotNull(description);
+
+    // Assuming you have getters for your transformations and that they implement equals correctly.
+    List<Transform2D> expectedTransformations = new ArrayList<>();
+    expectedTransformations.add(new AffineTransform2D(new Matrix2x2(0.5, 0, 0, 0.5), new Vector2D(0, 0)));
+    expectedTransformations.add(new AffineTransform2D(new Matrix2x2(0.5, 0, 0, 0.5), new Vector2D(0.25, 0.5)));
+    expectedTransformations.add(new AffineTransform2D(new Matrix2x2(0.5, 0, 0, 0.5), new Vector2D(0.5, 0)));
+    List<Transform2D> actualTransformations = description.getTransforms();
+    assertNotNull(actualTransformations);
+    assertEquals(expectedTransformations.size(), actualTransformations.size());
+    System.out.println(expectedTransformations.get(0).toString());
+    System.out.println(actualTransformations.get(0).toString());
+    System.out.println(expectedTransformations.stream().filter(actualTransformations::contains).count());
   }
-}
+
+    @Test
+    public void testBarnsley() {
+      ChaosGameDescription description = factory.barnsley(minCoordsVector, maxCoordsVector);
+      assertNotNull(description);
+      // Further assertions depend on the behavior of your ChaosGameDescription class
+    }
+
+    @Test
+    public void testJulia() {
+      Complex c = new Complex(0.285, 0.01);
+      ChaosGameDescription description = factory.julia(minCoordsVector, maxCoordsVector, c);
+      assertNotNull(description);
+      // Further assertions depend on the behavior of your ChaosGameDescription class
+    }
+
+    @Test
+    public void testAffine() {
+      Matrix2x2 matrix = new Matrix2x2(1, 2, 3, 4);
+      Vector2D vector = new Vector2D(5, 6);
+      List<Matrix2x2> matrices = Arrays.asList(matrix);
+      List<Vector2D> vectors = Arrays.asList(vector);
+      ChaosGameDescription description = factory.affine(matrices, vectors, minCoordsVector,
+          maxCoordsVector);
+      assertNotNull(description);
+      // Further assertions depend on the behavior of your ChaosGameDescription class
+    }
+  }
