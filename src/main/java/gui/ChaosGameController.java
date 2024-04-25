@@ -249,52 +249,40 @@ public class ChaosGameController {
     return chaosGame;
   }
   public List<String> checkForEmptyFields(ToggleGroup transformationsGroup, GridPane affineGrid,
-      TextField realPartField, TextField imaginaryPartField, Vector2D minCoords, Vector2D maxCoords,
-      int steps) {
+                                          TextField realPartField, TextField imaginaryPartField, int steps) {
     List<String> missingArray = new ArrayList<>();
     if (steps == 0) {
-      System.out.println("hi");
       missingArray.add("Please fill in the number of steps.");
     }
-    if(minCoords == null) {
-      missingArray.add("Please fill in the minimum coordinates.");
-    }
-    if (maxCoords == null){
-      missingArray.add("Please fill in the maximum coordinates.");
-    }
     RadioButton selectedButton = (RadioButton) transformationsGroup.getSelectedToggle();
-    switch (selectedButton.getText()) {
-      case "Affine":
-        for (int row = 0;  row < affineGrid.getRowCount(); row++) {
-          for (int i = 0; i < 4; i++) {  // Check matrix elements
-            TextField textField = (TextField) getNodeFromGridPane(affineGrid, i, row);
-            if (!isDouble(textField.getText())) {
-              missingArray.add("Please fill in all matrix elements.");
-              //missingArray.add("Field at column " + i + " and row " + row + " is not a valid double.");
+    if (selectedButton != null) {  // Make sure there is a selected toggle
+      switch (selectedButton.getText()) {
+        case "Affine":
+          for (int row = 0; row < affineGrid.getRowCount(); row++) {
+            for (int i = 0; i < 4; i++) {  // Check matrix elements
+              TextField textField = (TextField) getNodeFromGridPane(affineGrid, i, row);
+              if (!isDouble(textField.getText())) {
+                missingArray.add("Matrix element at (" + row + ", " + i + ") is invalid");
+              }
+            }
+            for (int i = 5; i < 7; i++) {  // Check vector elements
+              TextField textField = (TextField) getNodeFromGridPane(affineGrid, i, row);
+              if (!isDouble(textField.getText())) {
+                missingArray.add("Vector element at (" + row + ", " + i + ") is invalid");
+              }
             }
           }
-          for (int i = 5; i < 7; i++) {  // Check vector elements
-            TextField textField = (TextField) getNodeFromGridPane(affineGrid, i, row);
-            if (!isDouble(textField.getText())) {
-              missingArray.add("Please fill in all vector elements.");
-              //missingArray.add("Field at column " + i + " and row " + row + " is not a valid double.");
-            }
+          break;
+        case "Julia":
+          if (!isDouble(realPartField.getText())) {
+            missingArray.add("Real part of the complex number is not a valid double.");
           }
-        }
-        // Further logic can be applied here to create the transformation description
-        break;
-      case "Julia":
-        if (!isDouble(realPartField.getText())) {
-          missingArray.add("Real part of the complex number is not a valid double.");
-        }
-        if (!isDouble(imaginaryPartField.getText())) {
-          missingArray.add("Imaginary part of the complex number is not a valid double.");
-        }
-        break;
-      case "Sierpinski":
-        break;
-      case "Barnsley":
-        break;
+          if (!isDouble(imaginaryPartField.getText())) {
+            missingArray.add("Imaginary part of the complex number is not a valid double.");
+          }
+          break;
+        // Add other cases if needed
+      }
     }
     return missingArray;
   }
