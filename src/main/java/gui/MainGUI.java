@@ -194,6 +194,7 @@ public class MainGUI extends Application {
 
     affineBox.getChildren().addAll(affineGrid, buttonsBox);
   }
+  //check
 
   private void configureShowButton() {
     // Show button
