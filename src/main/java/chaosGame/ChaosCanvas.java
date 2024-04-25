@@ -18,8 +18,10 @@ public class ChaosCanvas {
   private Vector2D minCoords;
   private Vector2D maxCoords;
   private AffineTransform2D transformCoordsToIndices;
+  private AffineTransform2D transformIndicesToCoords;
+  private Vector2D coord;
 
-    /**
+  /**
      * Constructor for the chaosGame.ChaosCanvas class.
      *
      * @param width the width of the canvas
@@ -54,6 +56,40 @@ public class ChaosCanvas {
 
     return canvas[(int) point.getX0()][(int) point.getX1()];
   }
+
+  public Vector2D pixelToCoordinate(Vector2D pixel) {
+    // Extract original transformation components
+    Matrix2x2 matrix = new Matrix2x2(0, (height - 1) / (minCoords.getX1() - maxCoords.getX1()), (width - 1) / (maxCoords.getX0() - minCoords.getX0()), 0);
+    Vector2D vector = new Vector2D(((height - 1) * maxCoords.getX1()) / (maxCoords.getX1() - minCoords.getX1()), ((width - 1) * minCoords.getX0()) / (minCoords.getX0() - maxCoords.getX0()));
+
+    // Calculate the inverse matrix
+    double a = matrix.geta00(); // 0
+    double b = matrix.geta01(); // (height - 1) / (minCoords.getX1() - maxCoords.getX1())
+    double c = matrix.geta10(); // (width - 1) / (maxCoords.getX0() - minCoords.getX0())
+    double d = matrix.geta11(); // 0
+
+    double det = a * d - b * c;
+
+    if (det == 0) {
+      throw new RuntimeException("Matrix is singular and cannot be inverted");
+    }
+
+    Matrix2x2 inverseMatrix = new Matrix2x2(d / det, -b / det, -c / det, a / det);
+    double ia = inverseMatrix.geta00();
+    double ib = inverseMatrix.geta01();
+    double ic = inverseMatrix.geta10();
+    double id = inverseMatrix.geta11();
+    Vector2D inverseVector = new Vector2D(-ia * vector.getX0() - ib * vector.getX1(), -ic * vector.getX0() - id * vector.getX1());
+
+
+    transformIndicesToCoords = new AffineTransform2D(inverseMatrix, inverseVector);
+    this.coord = transformCoordsToIndices.transform(pixel);
+
+    // Apply the inverse transformation to get coordinates
+    //this.pixel = pixel.subtract(inverseVector);
+    return this.coord;
+  }
+
 
      /**
       * Puts a pixel on the canvas.
