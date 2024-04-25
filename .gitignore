@@ -35,3 +35,6 @@ build/
 
 ### csv files ###
 file.csv
+
+### appSettings ###
+appSettings.properties
