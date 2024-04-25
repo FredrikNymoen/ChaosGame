@@ -202,7 +202,6 @@ public class MainGUI extends Application {
     missingInputMessage.setVisible(false);
   }
 
-
   private void configureShowButton() {
     showButton = new Button("Show");
     showButton.setOnAction(event -> {
