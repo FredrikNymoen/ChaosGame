@@ -199,29 +199,71 @@ public class MainGUI extends Application {
     // Show button
     showButton = new Button("Show");
     // Show button action to draw the fractal
-
-
     showButton.setOnAction(event -> {
-      double minX = Double.parseDouble(minXField.getText());
-      double minY = Double.parseDouble(minYField.getText());
-      double maxX = Double.parseDouble(maxXField.getText());
-      double maxY = Double.parseDouble(maxYField.getText());
-      int steps = Integer.parseInt(stepsField.getText());
-      Vector2D minCoords = new Vector2D(minX, minY);
-      Vector2D maxCoords = new Vector2D(maxX, maxY);
-      currentChaosGame = controller.handleTransformationSelection(transformationsGroup, affineGrid, realPartField, imaginaryPartField, minCoords, maxCoords, steps);
+      // Initially assume all fields are valid
+      boolean allFieldsValid = true;
 
-      makeFullFractalCheckbox.setSelected(false);
+      // Validate inputs before attempting to parse
+      List<String> missingInputs = controller.checkForEmptyFields(transformationsGroup,
+          affineGrid, realPartField, imaginaryPartField, null, null, parseStepsSafely(stepsField.getText()));
 
-      try{
-        if (currentChaosGame != null) {
-          drawFractal(currentChaosGame);
+      // Handle each case of missing inputs to update the GUI
+      for (String notFilled : missingInputs) {
+        allFieldsValid = false; // Mark as invalid since there's an error
+        switch (notFilled) {
+          case "Please fill in the number of steps.":
+            stepsField.setStyle("-fx-border-color: red;");
+            break;
+          case "Please fill in the minimum coordinates.":
+            minYField.setStyle("-fx-border-color: red;");
+            minXField.setStyle("-fx-border-color: red;");
+          case "Please fill in the maximum coordinates.":
+            maxXField.setStyle("-fx-border-color: red;");
+            maxYField.setStyle("-fx-border-color: red;");
+            break;
+          case "Please fill in all matrix elements.":
+          case "Please fill in all vector elements.":
+            affineBox.setStyle("-fx-border-color: red;");
+            break;
+          case "Real part of the complex number is not a valid double.":
+          case "Imaginary part of the complex number is not a valid double.":
+            juliaGrid.setStyle("-fx-border-color: red;");
+            break;
+          case "Please select a transformation":
+            transformationBox.setStyle("-fx-border-color: red;");
+            break;
         }
-      }catch (Exception e){
-        controller.checkForEmptyFields(transformationsGroup, affineGrid, realPartField, imaginaryPartField, minCoords, maxCoords, steps);
-        e.printStackTrace();
+      }
+
+      // Only parse and use the coordinates if all inputs are valid
+      if (allFieldsValid) {
+        try {
+          double minX = Double.parseDouble(minXField.getText());
+          double minY = Double.parseDouble(minYField.getText());
+          double maxX = Double.parseDouble(maxXField.getText());
+          double maxY = Double.parseDouble(maxYField.getText());
+          int steps = Integer.parseInt(stepsField.getText());
+
+          Vector2D minCoords = new Vector2D(minX, minY);
+          Vector2D maxCoords = new Vector2D(maxX, maxY);
+
+          currentChaosGame = controller.handleTransformationSelection(transformationsGroup,
+              affineGrid, realPartField, imaginaryPartField, minCoords, maxCoords, steps);
+          if (currentChaosGame != null) {
+            drawFractal(currentChaosGame);
+          }
+        } catch (NumberFormatException e) {
+          System.err.println("Input formatting error: " + e.getMessage());
+        }
       }
     });
+  }
+  private int parseStepsSafely(String text) {
+    try {
+      return Integer.parseInt(text);
+    } catch (NumberFormatException e) {
+      return 0; // Return a default indicating invalid input if parsing fails
+    }
   }
 
   private void setupLeftSide(BorderPane root) {
