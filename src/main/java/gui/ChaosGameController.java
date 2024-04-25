@@ -207,6 +207,7 @@ public class ChaosGameController {
     // Loop through each pixel on the screen
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
+
         double zx = x * realScale - r; // Scale to the real axis
         double zy = y * imagScale - r; // Scale to the imaginary axis
 
@@ -224,7 +225,8 @@ public class ChaosGameController {
         if (iteration == maxIterations) {
           // Pixel did not escape, part of the Julia set
           //drawPixel(x, y, Color.BLACK); // Use appropriate draw method
-          canvas.putPixel(new Vector2D(x, y));
+          Vector2D vector = canvas.pixelToCoordinate(new Vector2D(x, y));
+          canvas.putPixel(vector);
         } else {
         }
       }

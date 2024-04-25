@@ -75,6 +75,7 @@ public class ChaosGame {
   }
 
   public void runStepsForBarnsley(int steps){
+    canvas.clear();
     for (int i = 0; i < steps; i++) {
       // Define the cumulative probabilities
       List<Double> probabilities = new ArrayList<>();
@@ -110,7 +111,7 @@ public class ChaosGame {
       for (int j = 0; j < description.getTransforms().size(); j++) {
         Transform2D transform = description.getTransforms().get(j);
         Vector2D newPoint = transform.transform(currentPoint);
-        if (canvas.getPixel(newPoint) == 1) {
+        if (canvas.getPixel(newPoint) >= 6) {
           continue;
         }
         pointStack.push(newPoint);
