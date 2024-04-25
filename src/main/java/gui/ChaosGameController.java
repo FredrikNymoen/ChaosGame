@@ -26,15 +26,17 @@ import mathcore.Vector2D;
 public class ChaosGameController {
 
   /**
-   * Gets the affine transformation values from the affine grid.
-   * The affine grid is a GridPane containing text fields for the matrix and vector values.
-   * The method retrieves the values from the grid and stores them in lists.
+   * Gets the affine transformation values from the affine grid. The affine grid is a GridPane
+   * containing text fields for the matrix and vector values. The method retrieves the values from
+   * the grid and stores them in lists.
+   *
    * @param affineMatrices the list to store the affine matrices
-   * @param affineVectors the list to store the affine vectors
-   * @param affineGrid the grid containing the affine transformation values
+   * @param affineVectors  the list to store the affine vectors
+   * @param affineGrid     the grid containing the affine transformation values
    */
 
-  public void getAffineTransformationValues(List<Matrix2x2> affineMatrices, List<Vector2D> affineVectors, GridPane affineGrid) {
+  public void getAffineTransformationValues(List<Matrix2x2> affineMatrices,
+      List<Vector2D> affineVectors, GridPane affineGrid) {
     // Assuming there are 4 rows, and each row has 4 matrix fields followed by 2 vector fields
     for (int row = 0; row < affineGrid.getRowCount(); row++) {
       double[] matrixValues = new double[4]; // To store a00, a01, a10, a11
@@ -64,7 +66,8 @@ public class ChaosGameController {
       // Do whatever processing you need with these values
       System.out.println("Matrix Values: " + Arrays.toString(matrixValues));
       System.out.println("Vector Values: " + Arrays.toString(vectorValues));
-      Matrix2x2 matrix = new Matrix2x2(matrixValues[0], matrixValues[1], matrixValues[2], matrixValues[3]);
+      Matrix2x2 matrix = new Matrix2x2(matrixValues[0], matrixValues[1], matrixValues[2],
+          matrixValues[3]);
       Vector2D vector = new Vector2D(vectorValues[0], vectorValues[1]);
       affineMatrices.add(matrix);
       affineVectors.add(vector);
@@ -72,13 +75,13 @@ public class ChaosGameController {
   }
 
   /**
-   * Gets a node from a GridPane at a specified column and row.
-   * The method iterates through the children of the GridPane
-   * and returns the node at the specified column and row.
-   * If no node is found, the method returns null.
+   * Gets a node from a GridPane at a specified column and row. The method iterates through the
+   * children of the GridPane and returns the node at the specified column and row. If no node is
+   * found, the method returns null.
+   *
    * @param gridPane the GridPane to get the node from
-   * @param col the column of the node
-   * @param row the row of the node
+   * @param col      the column of the node
+   * @param row      the row of the node
    * @return Node the node at the specified column and row
    */
 
@@ -95,6 +98,7 @@ public class ChaosGameController {
 
   /**
    * Helper method to create a TextField with placeholder text
+   *
    * @param placeholder the placeholder text for the TextField
    * @return TextField the created TextField
    */
@@ -105,18 +109,20 @@ public class ChaosGameController {
   }
 
   /**
-   * Creates a chaos game with a specified description, width, height and number of steps.
-   * The method creates a ChaosGame object with the specified parameters
-   * and runs the chaos game for the specified number of steps.
+   * Creates a chaos game with a specified description, width, height and number of steps. The
+   * method creates a ChaosGame object with the specified parameters and runs the chaos game for the
+   * specified number of steps.
+   *
    * @param description the description of the chaos game
-   * @param width the width of the canvas
-   * @param height the height of the canvas
-   * @param steps the number of steps to run the chaos game
+   * @param width       the width of the canvas
+   * @param height      the height of the canvas
+   * @param steps       the number of steps to run the chaos game
    * @return ChaosGame the created chaos game
    */
 
 
-  public ChaosGame createChaosGame(ChaosGameDescription description, int width, int height, int steps,boolean isBarnsleyTransformation) {
+  public ChaosGame createChaosGame(ChaosGameDescription description, int width, int height,
+      int steps, boolean isBarnsleyTransformation) {
     ChaosGame chaosGame = new ChaosGame(description, width, height);
     if (isBarnsleyTransformation) {
       chaosGame.runStepsForBarnsley(steps);
@@ -127,22 +133,27 @@ public class ChaosGameController {
   }
 
   /**
-   * Handles the selection of a transformation from a ToggleGroup.
-   * The method retrieves the selected RadioButton from the ToggleGroup
-   * and creates a ChaosGameDescription based on the selected transformation.
-   * The ChaosGameDescription is then written to a file and a ChaosGame object is created.
+   * Handles the selection of a transformation from a ToggleGroup. The method retrieves the selected
+   * RadioButton from the ToggleGroup and creates a ChaosGameDescription based on the selected
+   * transformation. The ChaosGameDescription is then written to a file and a ChaosGame object is
+   * created.
+   *
    * @param transformationsGroup the ToggleGroup containing the transformation selection
-   * @param affineGrid the GridPane containing the affine transformation values
-   * @param realPartField the TextField containing the real part of the complex number for the Julia set
-   * @param imaginaryPartField the TextField containing the imaginary part of the complex number for the Julia set
-   * @param minCoords the minimum coordinates of the canvas
-   * @param maxCoords the maximum coordinates of the canvas
-   * @param steps the number of steps to run the chaos game
+   * @param affineGrid           the GridPane containing the affine transformation values
+   * @param realPartField        the TextField containing the real part of the complex number for
+   *                             the Julia set
+   * @param imaginaryPartField   the TextField containing the imaginary part of the complex number
+   *                             for the Julia set
+   * @param minCoords            the minimum coordinates of the canvas
+   * @param maxCoords            the maximum coordinates of the canvas
+   * @param steps                the number of steps to run the chaos game
    * @return ChaosGame the created chaos game
    */
 
 
-  public ChaosGame handleTransformationSelection(ToggleGroup transformationsGroup, GridPane affineGrid, TextField realPartField, TextField imaginaryPartField, Vector2D minCoords, Vector2D maxCoords, int steps) {
+  public ChaosGame handleTransformationSelection(ToggleGroup transformationsGroup,
+      GridPane affineGrid, TextField realPartField, TextField imaginaryPartField,
+      Vector2D minCoords, Vector2D maxCoords, int steps) {
     ChaosGameDescriptionFactory factory = new ChaosGameDescriptionFactory();
     ChaosGameDescription description = null;
     Complex c = null;
@@ -157,7 +168,8 @@ public class ChaosGameController {
           description = factory.affine(matrices, vectors, minCoords, maxCoords);
           break;
         case "Julia":
-          c = new Complex(Double.parseDouble(realPartField.getText()), Double.parseDouble(imaginaryPartField.getText()));
+          c = new Complex(Double.parseDouble(realPartField.getText()),
+              Double.parseDouble(imaginaryPartField.getText()));
           description = factory.julia(minCoords, maxCoords, c);
           break;
         case "Sierpinski":
@@ -176,9 +188,9 @@ public class ChaosGameController {
       ChaosGame chaosGame = null;
       if (selectedButton.getText().equals("Julia")) {
         chaosGame = generateJuliaGame(c);
-      }
-      else{
-        chaosGame = createChaosGame(description, 900, 750, steps, selectedButton.getText().equals("Barnsley"));
+      } else {
+        chaosGame = createChaosGame(description, 900, 750, steps,
+            selectedButton.getText().equals("Barnsley"));
       }
       return chaosGame;
     }
@@ -186,7 +198,8 @@ public class ChaosGameController {
   }
 
   public ChaosGame generateJuliaGame(Complex c) {
-    double modulus = Math.sqrt(c.getX0() * c.getX0() + c.getX1() * c.getX1()); // Calculate modulus of c
+    double modulus = Math.sqrt(
+        c.getX0() * c.getX0() + c.getX1() * c.getX1()); // Calculate modulus of c
     double r = Math.sqrt(1 + modulus); // Choose an appropriate escape radius
     int maxIterations = 1000; // Maximum iterations for convergence check
 
@@ -234,4 +247,61 @@ public class ChaosGameController {
     return chaosGame;
   }
 
-}
+  public String checkForEmptyFields(ToggleGroup transformationsGroup, GridPane affineGrid,
+      TextField realPartField, TextField imaginaryPartField, Vector2D minCoords, Vector2D maxCoords,
+      int steps) {
+    List<String> missingArray = new ArrayList<>();
+    ChaosGameDescriptionFactory factory = new ChaosGameDescriptionFactory();
+    ChaosGameDescription description = null;
+    Complex c = null;
+    if(steps == 0){
+      return "Please fill in the number of steps.";
+    }
+    RadioButton selectedButton = (RadioButton) transformationsGroup.getSelectedToggle();
+    switch (selectedButton.getText()) {
+      case "Affine":
+        List<Matrix2x2> matrices = new ArrayList<>();
+        List<Vector2D> vectors = new ArrayList<>();
+        getAffineTransformationValues(matrices, vectors, affineGrid);
+        for (int row = 0;  row < affineGrid.getRowCount(); row++) {
+          for (int i = 0; i < 4; i++) {
+            TextField textField = (TextField) getNodeFromGridPane(affineGrid, i, row);
+            if (isDouble(textField.getText())) {
+              missingArray.add("Please fill in all fields for the affine transformation.");
+              return "Please fill in all fields for the affine transformation.";
+            }
+          }
+          for (int i = 5; i < 7; i++) {
+            TextField textField = (TextField) getNodeFromGridPane(affineGrid, i, row);
+            if (isDouble(textField.getText())) {
+
+              return "Please fill in all fields for the affine transformation.";
+            }
+          }
+        }
+
+           // description = factory.affine(matrices, vectors, minCoords, maxCoords);
+            break;
+            case "Julia":
+              c = new Complex(Double.parseDouble(realPartField.getText()),
+                  Double.parseDouble(imaginaryPartField.getText()));
+              description = factory.julia(minCoords, maxCoords, c);
+              break;
+            case "Sierpinski":
+              description = factory.sierpinski(minCoords, maxCoords);
+              break;
+            case "Barnsley":
+              description = factory.barnsley(minCoords, maxCoords);
+              break;
+          }
+    return null;
+    }
+  public boolean isDouble(String text) {
+    try {
+      Double.parseDouble(text); // Try to parse the text to a double
+      return true; // Parsing succeeded, so it's a valid double
+    } catch (NumberFormatException e) {
+      return false; // Parsing failed, it's not a valid double
+    }
+  }
+  }

@@ -199,6 +199,8 @@ public class MainGUI extends Application {
     // Show button
     showButton = new Button("Show");
     // Show button action to draw the fractal
+
+
     showButton.setOnAction(event -> {
       double minX = Double.parseDouble(minXField.getText());
       double minY = Double.parseDouble(minYField.getText());
@@ -211,8 +213,13 @@ public class MainGUI extends Application {
 
       makeFullFractalCheckbox.setSelected(false);
 
-      if (currentChaosGame != null) {
-        drawFractal(currentChaosGame);
+      try{
+        if (currentChaosGame != null) {
+          drawFractal(currentChaosGame);
+        }
+      }catch (Exception e){
+        controller.checkForEmptyFields(transformationsGroup, affineGrid, realPartField, imaginaryPartField, minCoords, maxCoords, steps);
+        e.printStackTrace();
       }
     });
   }
@@ -486,6 +493,29 @@ public class MainGUI extends Application {
     } catch (IOException e) {
       System.out.println("Failed to save settings: " + e.getMessage());
     }
+  }
+  public String missingTransformationInput(){
+    String message = "";
+    try {
+     if (message.equals("Please select a transformation")){
+       transformationBox.setStyle("-fx-border-color: red;");
+     }
+      else if (message.equals("Please enter a valid number of steps")){
+        stepsBox.setStyle("-fx-border-color: red;");
+      }
+      else if (message.equals("Please enter valid coordinates")){
+        coordGrid.setStyle("-fx-border-color: red;");
+      }
+      else if (message.equals("Please enter valid Julia constant")){
+        juliaGrid.setStyle("-fx-border-color: red;");
+      }
+      else if (message.equals("Please enter valid affine transformation")){
+        affineBox.setStyle("-fx-border-color: red;");
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return message;
   }
 
 }
