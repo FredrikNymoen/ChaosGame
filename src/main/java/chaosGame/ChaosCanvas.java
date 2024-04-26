@@ -79,15 +79,21 @@ public class ChaosCanvas {
     double ib = inverseMatrix.geta01();
     double ic = inverseMatrix.geta10();
     double id = inverseMatrix.geta11();
-    Vector2D inverseVector = new Vector2D(-ia * vector.getX0() - ib * vector.getX1(), -ic * vector.getX0() - id * vector.getX1());
+    Vector2D subtractVector = new Vector2D(-ia * vector.getX0() - ib * vector.getX1(), -ic * vector.getX0() - id * vector.getX1());
 
+    transformIndicesToCoords = new AffineTransform2D(inverseMatrix, subtractVector);
+    this.coord = transformIndicesToCoords.transform(pixel);
 
-    transformIndicesToCoords = new AffineTransform2D(inverseMatrix, inverseVector);
-    this.coord = transformCoordsToIndices.transform(pixel);
-
-    // Apply the inverse transformation to get coordinates
-    //this.pixel = pixel.subtract(inverseVector);
     return this.coord;
+  }
+
+  public Vector2D coordinateToPixel(Vector2D point) {
+    Matrix2x2 matrix = new Matrix2x2(0, (height - 1) / (minCoords.getX1() - maxCoords.getX1()), (width - 1) / (maxCoords.getX0() - minCoords.getX0()), 0);
+    Vector2D vector = new Vector2D(((height - 1) * maxCoords.getX1()) / (maxCoords.getX1() - minCoords.getX1()), ((width - 1) * minCoords.getX0()) / (minCoords.getX0() - maxCoords.getX0()));
+    transformCoordsToIndices = new AffineTransform2D(matrix, vector);
+    Vector2D transformedVector = transformCoordsToIndices.transform(point);
+
+    return transformedVector;
   }
 
 

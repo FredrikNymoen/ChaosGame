@@ -201,51 +201,41 @@ public class ChaosGameController {
     double modulus = Math.sqrt(
         c.getX0() * c.getX0() + c.getX1() * c.getX1()); // Calculate modulus of c
     double r = Math.sqrt(1 + modulus); // Choose an appropriate escape radius
-    int maxIterations = 1000; // Maximum iterations for convergence check
 
     ChaosGame chaosGame = new ChaosGame(900, 750);
     ChaosCanvas canvas = chaosGame.getCanvas();
-
-    double cx = c.getX0();
-    double cy = c.getX1();
 
     // Assuming the fractal drawing's size for positioning
     double width = canvas.getCanvasArray()[0].length;
     double height = canvas.getCanvasArray().length;
 
-    // Define the range for scaling to real and imaginary axes
-    double realScale = (2 * r) / (width - 1);
-    double imagScale = (2 * r) / (height - 1);
-
     // Loop through each pixel on the screen
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
-
-        double zx = x * realScale - r; // Scale to the real axis
-        double zy = y * imagScale - r; // Scale to the imaginary axis
+    for (int j = 0; j < height; j++) {
+      for (int i = 0; i < width; i++) {
+        Vector2D vector = canvas.pixelToCoordinate(new Vector2D(i, j));
+        double x = vector.getX0();
+        double y = vector.getX1();
 
         int iteration = 0;
+        int maxIterations = 1000; // Maximum iterations for convergence check
 
         // Iterative escape test
-        while (zx * zx + zy * zy < r * r && iteration < maxIterations) {
-          double xtemp = zx * zx - zy * zy; // Real part of new z
-          zy = 2 * zx * zy + cy; // Imaginary part with c
-          zx = xtemp + cx; // Add cx to real part
-          iteration++; // Increment iteration count
+        while (x * x + y * y < r * r && iteration < maxIterations) {
+          double xtemp = x * x - y * y;
+          y = 2 * x * y + c.getX1();
+          x = xtemp + c.getX0();
+          iteration++;
         }
 
-        // Determine color based on iterations
         if (iteration == maxIterations) {
-          // Pixel did not escape, part of the Julia set
-          //drawPixel(x, y, Color.BLACK); // Use appropriate draw method
-          Vector2D vector = canvas.pixelToCoordinate(new Vector2D(x, y));
+          //Vector2D vector = canvas.pixelToCoordinate(new Vector2D(x, y));
           canvas.putPixel(vector);
-        } else {
+          //canvas.putPixel(new Vector2D(i, j));
         }
       }
     }
 
-    chaosGame.setCanvas(canvas);
+    //chaosGame.setCanvas(canvas);
     return chaosGame;
   }
 

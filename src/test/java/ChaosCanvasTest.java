@@ -1,4 +1,6 @@
 import chaosGame.ChaosCanvas;
+import chaosGame.ChaosGame;
+import gui.ChaosGameController;
 import mathcore.Vector2D;
 
 import static org.junit.Assert.*;
@@ -31,13 +33,13 @@ class ChaosCanvasTest {
     }
 
     /**
-     * Tests the putPixel and getPixel methods of the chaosGame.ChaosCanvas class with a positive test case.
-     * It creates a point within the canvas, puts a pixel on that point and then checks if the pixel is set to 1.
+     * Tests the putPixel and getPixel methods of the chaosGame.ChaosCanvas class with a positive test
+     * case. It creates a point within the canvas, puts a pixel on that point and then checks if the
+     * pixel is set to 1.
      */
 
     //Noe rart med getPixel metoden. Vet ikke helt hva som er galt, eller putPixel metoden.
     //Klarer hvertfall ikke å finne point i canvaset.
-
     @org.junit.jupiter.api.Test
     void testPutPixelPositive() {
         Vector2D point = new Vector2D(5.0, 9.0);
@@ -47,8 +49,9 @@ class ChaosCanvasTest {
     }
 
     /**
-     * Tests the putPixel and getPixel methods of the chaosGame.ChaosCanvas class with a negative test case.
-     * It creates a point within the canvas, puts a pixel on that point and then checks if the pixel is set to 0.
+     * Tests the putPixel and getPixel methods of the chaosGame.ChaosCanvas class with a negative test
+     * case. It creates a point within the canvas, puts a pixel on that point and then checks if the
+     * pixel is set to 0.
      */
 
 
@@ -61,9 +64,9 @@ class ChaosCanvasTest {
     }
 
     /**
-     * Tests the clear method of the chaosGame.ChaosCanvas class with a positive test case.
-     * It creates a point within the canvas, puts a pixel on that point and then clears the canvas.
-     * It then checks if all the pixels are set to 0.
+     * Tests the clear method of the chaosGame.ChaosCanvas class with a positive test case. It creates
+     * a point within the canvas, puts a pixel on that point and then clears the canvas. It then
+     * checks if all the pixels are set to 0.
      */
 
     @org.junit.jupiter.api.Test
@@ -80,9 +83,9 @@ class ChaosCanvasTest {
     }
 
     /**
-     * Tests the clear method of the chaosGame.ChaosCanvas class with a negative test case.
-     * It creates a point within the canvas, puts a pixel on that point and then clears the canvas.
-     * It then checks if all the pixels are set to 0.
+     * Tests the clear method of the chaosGame.ChaosCanvas class with a negative test case. It creates
+     * a point within the canvas, puts a pixel on that point and then clears the canvas. It then
+     * checks if all the pixels are set to 0.
      */
 
     @org.junit.jupiter.api.Test
@@ -115,8 +118,8 @@ class ChaosCanvasTest {
     }
 
     /**
-     * Tests the boundaries of the canvas by attempting to put a pixel on the maximum boundary of the canvas.
-     * Then expects no ArrayIndexOutOfBoundsException to be thrown.
+     * Tests the boundaries of the canvas by attempting to put a pixel on the maximum boundary of the
+     * canvas. Then expects no ArrayIndexOutOfBoundsException to be thrown.
      */
 
     @org.junit.jupiter.api.Test
@@ -128,8 +131,23 @@ class ChaosCanvasTest {
             System.out.println(canvas.getPixel(pointOnBoundary));
             System.out.println(pointOnBoundary.getX0() + " " + pointOnBoundary.getX1());
         } catch (ArrayIndexOutOfBoundsException e) {
-            fail("Should not throw ArrayIndexOutOfBoundsException when putting a pixel on the boundary");
+            fail(
+                "Should not throw ArrayIndexOutOfBoundsException when putting a pixel on the boundary");
         }
     }
+
+    @org.junit.jupiter.api.Test
+    public void testPixelToCoordinate() {
+        ChaosGame chaosGame = new ChaosGame(900, 750);
+        ChaosCanvas chaosCanvas = chaosGame.getCanvas();
+        Vector2D vector = new Vector2D(4.5, -1.5);
+
+        Vector2D pixel = chaosCanvas.coordinateToPixel(vector);
+        Vector2D coords = chaosCanvas.pixelToCoordinate(pixel);
+
+        assertEquals(vector.getX0(),coords.getX0(),0.000001);
+        assertEquals(vector.getX1(),coords.getX1(),0.000001);
+    }
+
 
 }

@@ -299,8 +299,8 @@ public class MainGUI extends Application {
         currentChaosGame.makeFullFractal();
         drawFractal(currentChaosGame);
       } else if (currentChaosGame != null) {
+
         currentChaosGame.runStepsForBarnsley(Integer.parseInt(stepsField.getText()));
-        System.out.println(Integer.parseInt(stepsField.getText()));
         drawFractal(currentChaosGame);
       }
     });
