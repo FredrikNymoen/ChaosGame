@@ -66,6 +66,7 @@ public class MainGUI extends Application {
   private CheckBox makeFullFractalCheckbox; // Checkbox to toggle full fractal
 
   private Properties appSettings = new Properties();
+  private Label missingInputMessage;
   private final String settingsFilePath = "appSettings.properties";
 
 
@@ -87,6 +88,7 @@ public class MainGUI extends Application {
     configureColorModeCheckbox();
     configureMakeFullFractalCheckbox();
     configureShowButton();
+    configureMissingInputMessage();
 
     setupLeftSide(root);
     setupRightSide(root);
@@ -194,59 +196,161 @@ public class MainGUI extends Application {
 
     affineBox.getChildren().addAll(affineGrid, buttonsBox);
   }
+  public void configureMissingInputMessage() {
+    missingInputMessage = new Label("Please fill in all required fields.");
+    missingInputMessage.setStyle("-fx-text-fill: red;");
+    missingInputMessage.setVisible(false);
+  }
 
   private void configureShowButton() {
-    // Show button
     showButton = new Button("Show");
-    // Show button action to draw the fractal
-
-
     showButton.setOnAction(event -> {
-      double minX = Double.parseDouble(minXField.getText());
-      double minY = Double.parseDouble(minYField.getText());
-      double maxX = Double.parseDouble(maxXField.getText());
-      double maxY = Double.parseDouble(maxYField.getText());
-      int steps = Integer.parseInt(stepsField.getText());
-      Vector2D minCoords = new Vector2D(minX, minY);
-      Vector2D maxCoords = new Vector2D(maxX, maxY);
-      currentChaosGame = controller.handleTransformationSelection(transformationsGroup, affineGrid, realPartField, imaginaryPartField, minCoords, maxCoords, steps);
+      boolean allFieldsValid = true;
+      double minX = 0, minY = 0, maxX = 0, maxY = 0;
+      int steps = parseStepsSafely(stepsField.getText());
 
-      makeFullFractalCheckbox.setSelected(false);
+      List<String> missingInputs = controller.checkForEmptyFields(transformationsGroup,
+              affineGrid, realPartField, imaginaryPartField, steps);
 
-      try{
+      resetAllToDefaultStyle();  // Reset all fields to default style
+
+      // Handle each case of missing inputs to update the GUI
+      for (String notFilled : missingInputs) {
+        allFieldsValid = false; // Mark as invalid since there's an error
+        if (notFilled.startsWith("Matrix element at") || notFilled.startsWith("Vector element at")) {
+          String[] parts = notFilled.split("[() ,]+");
+          int row = Integer.parseInt(parts[3]);
+          int col = Integer.parseInt(parts[4]);
+          TextField textField = (TextField) getNodeFromGridPane(affineGrid, col, row);
+          textField.setStyle("-fx-border-color: red;");
+        } else {
+          switch (notFilled) {
+            case "Please fill in the number of steps.":
+              stepsField.setStyle("-fx-border-color: red;");
+              break;
+            case "Real part of the complex number is not a valid double.":
+              realPartField.setStyle("-fx-border-color: red;");
+              break;
+            case "Imaginary part of the complex number is not a valid double.":
+              imaginaryPartField.setStyle("-fx-border-color: red;");
+              break;
+            // Handle other general errors
+          }
+        }
+      }
+
+      // Validate and parse minimum coordinates
+      if (minXField.getText().trim().isEmpty() || minYField.getText().trim().isEmpty()) {
+        minXField.setStyle("-fx-border-color: red;");
+        minYField.setStyle("-fx-border-color: red;");
+        allFieldsValid = false;
+      } else {
+        try {
+          minX = Double.parseDouble(minXField.getText());
+          minY = Double.parseDouble(minYField.getText());
+          minXField.setStyle("");
+          minYField.setStyle("");
+        } catch (NumberFormatException e) {
+          minXField.setStyle("-fx-border-color: red;");
+          minYField.setStyle("-fx-border-color: red;");
+          allFieldsValid = false;
+        }
+      }
+
+      // Validate and parse maximum coordinates
+      if (maxXField.getText().trim().isEmpty() || maxYField.getText().trim().isEmpty()) {
+        maxXField.setStyle("-fx-border-color: red;");
+        maxYField.setStyle("-fx-border-color: red;");
+        allFieldsValid = false;
+      } else {
+        try {
+          maxX = Double.parseDouble(maxXField.getText());
+          maxY = Double.parseDouble(maxYField.getText());
+          maxXField.setStyle("");
+          maxYField.setStyle("");
+        } catch (NumberFormatException e) {
+          maxXField.setStyle("-fx-border-color: red;");
+          maxYField.setStyle("-fx-border-color: red;");
+          allFieldsValid = false;
+        }
+       }
+
+      missingInputMessage.setVisible(!allFieldsValid);
+
+      // Proceed only if all fields are valid
+      if (allFieldsValid) {
+        // Reset all fields to default style
+        resetAllToDefaultStyle();
+        Vector2D minCoords = new Vector2D(minX, minY);
+        Vector2D maxCoords = new Vector2D(maxX, maxY);
+        currentChaosGame = controller.handleTransformationSelection(transformationsGroup,
+                affineGrid, realPartField, imaginaryPartField, minCoords, maxCoords, steps);
         if (currentChaosGame != null) {
           drawFractal(currentChaosGame);
         }
-      }catch (Exception e){
-        controller.checkForEmptyFields(transformationsGroup, affineGrid, realPartField, imaginaryPartField, minCoords, maxCoords, steps);
-        e.printStackTrace();
+      } else {
+        System.err.println("Please correct the highlighted errors.");
       }
     });
   }
+  public void resetAllToDefaultStyle() {
+    // Reset all fields to default style
+    for (Node node : affineGrid.getChildren()) {
+      if (node instanceof TextField) {
+        node.setStyle("");
+      }
+    }
+      stepsField.setStyle("");
+      affineGrid.setStyle("");
+      affineBox.setStyle("");
+      realPartField.setStyle("");
+      imaginaryPartField.setStyle("");
+  }
+  private int parseStepsSafely(String text) {
+    try {
+      return Integer.parseInt(text);
+    } catch (NumberFormatException e) {
+      return 0; // Return a default indicating invalid input if parsing fails
+    }
+  }
+  /**
+   * Retrieves a node from a GridPane at the specified row and column indices.
+   *
+   * @param gridPane The GridPane from which to fetch the node.
+   * @param col The column index of the node.
+   * @param row The row index of the node.
+   * @return The node found at the specified indices or null if no such node exists.
+   */
+  public Node getNodeFromGridPane(GridPane gridPane, int col, int row) {
+    for (Node node : gridPane.getChildren()) {
+      if (GridPane.getColumnIndex(node) != null && GridPane.getColumnIndex(node) == col
+              && GridPane.getRowIndex(node) != null && GridPane.getRowIndex(node) == row) {
+        return node;
+      }
+    }
+    return null;  // Return null if no matching node is found
+  }
 
   private void setupLeftSide(BorderPane root) {
-    // Add all elements to the left side layout
-    //leftSide.getChildren().addAll(transformationBox, stepsBox, coordGrid, juliaGrid, affineBox, showButton, colorModeCheckbox, makeFullFractalCheckbox);
-
-    // Add an empty VBox for spacing between 'Show' and 'colorModeCheckbox'
-    VBox spacingBox = new VBox();
-    spacingBox.setMinHeight(20); // Adjust as needed to create the desired space
-
-
-    // Add the existing elements to the VBox
-    leftSide.getChildren().addAll(
-        transformationBox,
-        stepsBox,
-        coordGrid,
-        juliaGrid,
-        affineBox,
-        showButton,
-        spacingBox,
-        colorModeCheckbox,
-        makeFullFractalCheckbox
-    );
-
-
+    try{
+      VBox spacingBox = new VBox();
+      spacingBox.setMinHeight(20); // Adjust as needed to create the desired space
+      // Add the existing elements to the VBox
+      leftSide.getChildren().addAll(
+          transformationBox,
+          stepsBox,
+          coordGrid,
+          juliaGrid,
+          affineBox,
+          showButton,
+          missingInputMessage,
+          spacingBox,
+          colorModeCheckbox,
+          makeFullFractalCheckbox
+      );
+    } catch (Exception e) {
+      System.out.println("Failed to add elements to the left side: " + e.getMessage());
+    }
 
     // Set the ScrollPane as the content of the left side
     scrollPane.setContent(leftSide);
@@ -494,29 +598,6 @@ public class MainGUI extends Application {
     } catch (IOException e) {
       System.out.println("Failed to save settings: " + e.getMessage());
     }
-  }
-  public String missingTransformationInput(){
-    String message = "";
-    try {
-     if (message.equals("Please select a transformation")){
-       transformationBox.setStyle("-fx-border-color: red;");
-     }
-      else if (message.equals("Please enter a valid number of steps")){
-        stepsBox.setStyle("-fx-border-color: red;");
-      }
-      else if (message.equals("Please enter valid coordinates")){
-        coordGrid.setStyle("-fx-border-color: red;");
-      }
-      else if (message.equals("Please enter valid Julia constant")){
-        juliaGrid.setStyle("-fx-border-color: red;");
-      }
-      else if (message.equals("Please enter valid affine transformation")){
-        affineBox.setStyle("-fx-border-color: red;");
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return message;
   }
 
 
