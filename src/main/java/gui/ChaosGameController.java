@@ -173,7 +173,8 @@ public class ChaosGameController {
           description = factory.julia(minCoords, maxCoords, c);
           break;
         case "Sierpinski":
-          description = factory.sierpinski(minCoords, maxCoords);
+          //description = factory.sierpinski(minCoords, maxCoords);
+          description = factory.mapleTree(minCoords, maxCoords);
           break;
         case "Barnsley":
           description = factory.barnsley(minCoords, maxCoords);
@@ -198,9 +199,11 @@ public class ChaosGameController {
   }
 
   public ChaosGame generateJuliaGame(Complex c) {
-    double modulus = Math.sqrt(
-        c.getX0() * c.getX0() + c.getX1() * c.getX1()); // Calculate modulus of c
-    double r = Math.sqrt(1 + modulus); // Choose an appropriate escape radius
+    //System.out.println(c.getX0() + " " + c.getX1());
+    //double modulus = Math.sqrt(c.getX0() * c.getX0() + c.getX1() * c.getX1()); // Calculate modulus of c
+    //double r = Math.sqrt(1 + modulus); // Choose an appropriate escape radius
+    double r = 2;
+    System.out.println(r);
 
     ChaosGame chaosGame = new ChaosGame(900, 750);
     ChaosCanvas canvas = chaosGame.getCanvas();
@@ -217,27 +220,40 @@ public class ChaosGameController {
         double y = vector.getX1();
 
         int iteration = 0;
-        int maxIterations = 1000; // Maximum iterations for convergence check
+        int maxIterations = 40; // Maximum iterations for convergence check
+        double xtemp = 0;
 
-        // Iterative escape test
-        while (x * x + y * y < r * r && iteration < maxIterations) {
-          double xtemp = x * x - y * y;
+        // Iterative escape test(r*r)
+        while ((x * x + y * y) < (r*r) && iteration < maxIterations) {
+          xtemp = x * x - y * y;
           y = 2 * x * y + c.getX1();
           x = xtemp + c.getX0();
           iteration++;
         }
 
         if (iteration == maxIterations) {
-          //Vector2D vector = canvas.pixelToCoordinate(new Vector2D(x, y));
-          canvas.putPixel(vector);
-          //canvas.putPixel(new Vector2D(i, j));
+          if(canvas.getPixel(vector) == 1){
+
+          }
+          else {
+            canvas.putPixel(vector);
+          }
         }
       }
     }
 
+    /*for (int i = 0; i < height; i++) { // Iterate over each row
+      for (int j = 0; j < canvas.getCanvasArray()[i].length; j++) { // Iterate over each column in a row
+        System.out.print(canvas.getCanvasArray()[i][j] + "\t"); // Print each element with a tab space
+      }
+      System.out.println(); // New line after printing all columns in a row
+    };*/
+
     //chaosGame.setCanvas(canvas);
     return chaosGame;
   }
+
+
   public List<String> checkForEmptyFields(ToggleGroup transformationsGroup, GridPane affineGrid,
                                           TextField realPartField, TextField imaginaryPartField, int steps) {
     List<String> missingArray = new ArrayList<>();

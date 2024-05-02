@@ -192,10 +192,14 @@ public class MainGUI extends Application {
     addButton.setOnAction(event -> addMatrixVectorRow(affineGrid.getRowCount()));
     Button removeButton = new Button("Remove");
     removeButton.setOnAction(event -> removeMatrixVectorRow());
-    buttonsBox.getChildren().addAll(addButton, removeButton);
+    HBox spacingBox = new HBox() {{ setPrefWidth(20); }};
+    Button mapleTreeButton = new Button("Maple Tree Example");
+    mapleTreeButton.setOnAction(event -> fillInAffineGridForMapleTree());
+    buttonsBox.getChildren().addAll(addButton, removeButton,spacingBox, mapleTreeButton);
 
     affineBox.getChildren().addAll(affineGrid, buttonsBox);
   }
+
   public void configureMissingInputMessage() {
     missingInputMessage = new Label("Please fill in all required fields.");
     missingInputMessage.setStyle("-fx-text-fill: red;");
@@ -285,9 +289,7 @@ public class MainGUI extends Application {
         Vector2D maxCoords = new Vector2D(maxX, maxY);
         currentChaosGame = controller.handleTransformationSelection(transformationsGroup,
                 affineGrid, realPartField, imaginaryPartField, minCoords, maxCoords, steps);
-        if (currentChaosGame != null) {
-          drawFractal(currentChaosGame);
-        }
+        drawFractal(currentChaosGame);
       } else {
         System.err.println("Please correct the highlighted errors.");
       }
@@ -402,9 +404,11 @@ public class MainGUI extends Application {
       if (makeFullFractalCheckbox.isSelected() && currentChaosGame != null) {
         currentChaosGame.makeFullFractal();
         drawFractal(currentChaosGame);
-      } else if (currentChaosGame != null) {
-
+      } else if (currentChaosGame != null && transformationsGroup.getSelectedToggle().getUserData().equals("Barnsley")) {
         currentChaosGame.runStepsForBarnsley(Integer.parseInt(stepsField.getText()));
+        drawFractal(currentChaosGame);
+      } else if (currentChaosGame != null) {
+        currentChaosGame.runSteps(Integer.parseInt(stepsField.getText()));
         drawFractal(currentChaosGame);
       }
     });
@@ -452,6 +456,39 @@ public class MainGUI extends Application {
         affineGrid.getChildren().remove(node);
       }
     }
+  }
+
+  private void fillInAffineGridForMapleTree() {
+    // Clear existing rows if necessary
+    affineGrid.getChildren().clear();
+
+    // Matrix and vector entries as provided
+    double[][] matrixValues = {
+        {-0.04, 0, -0.23, -0.65},
+        {0.61, 0, 0, 0.31},
+        {0.65, 0.29, 0, 0.48},
+        {0.64, -0.3, 0.16, 0.56}
+    };
+    double[][] vectorValues = {
+        {-0.08, 0.26},
+        {0.07, 3.5},
+        {0.74, 1.39},
+        {-0.56, 0.60}
+    };
+
+    // Assuming each row will contain 4 matrix text fields, a spacer, and 2 vector text fields
+    for (int i = 0; i < matrixValues.length; i++) {
+      addMatrixVectorRow(i);  // Add a new row
+      for (int j = 0; j < 4; j++) {  // Set matrix values
+        TextField matrixField = (TextField) getNodeFromGridPane(affineGrid, j, i);
+        matrixField.setText(String.format("%.2f", matrixValues[i][j]));
+      }
+      for (int j = 0; j < 2; j++) {  // Set vector values
+        TextField vectorField = (TextField) getNodeFromGridPane(affineGrid, 5 + j, i);
+        vectorField.setText(String.format("%.2f", vectorValues[i][j]));
+      }
+    }
+
   }
 
   private void redrawFractalIfNeeded() {

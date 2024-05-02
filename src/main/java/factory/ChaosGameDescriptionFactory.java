@@ -76,6 +76,39 @@ public class ChaosGameDescriptionFactory {
   }
 
   /**
+   * Creates a ChaosGameDescription object for the maple tree.
+   * The maple tree is created by four affine transformations.
+   * @param minCoordsVector the minimum coordinates of the canvas
+   * @param maxCoordsVector the maximum coordinates of the canvas
+   * @return a ChaosGameDescription object for the maple tree
+   */
+  public ChaosGameDescription mapleTree(Vector2D minCoordsVector, Vector2D maxCoordsVector){
+    Matrix2x2 transformationMatrix1 = new Matrix2x2(-0.04, 0, -0.23, -0.65);
+    Matrix2x2 transformationMatrix2 = new Matrix2x2(0.61, 0, 0, 0.31);
+    Matrix2x2 transformationMatrix3 = new Matrix2x2(0.65, 0.29, 0, 0.48);
+    Matrix2x2 transformationMatrix4 = new Matrix2x2(0.64, -0.3, 0.16, 0.56);
+    Vector2D transformationVector1 = new Vector2D(-0.08, 0.26);
+    Vector2D transformationVector2 = new Vector2D(0.07, 3.5);
+    Vector2D transformationVector3 = new Vector2D(0.74, 1.39);
+    Vector2D transformationVector4 = new Vector2D(-0.56, 0.60);
+
+    AffineTransform2D transformation1 = new AffineTransform2D(transformationMatrix1,
+        transformationVector1);
+    AffineTransform2D transformation2 = new AffineTransform2D(transformationMatrix2,
+        transformationVector2);
+    AffineTransform2D transformation3 = new AffineTransform2D(transformationMatrix3,
+        transformationVector3);
+    AffineTransform2D transformation4 = new AffineTransform2D(transformationMatrix4,
+        transformationVector4);
+    List<Transform2D> affineTransforms = new ArrayList<>();
+    affineTransforms.add(transformation1);
+    affineTransforms.add(transformation2);
+    affineTransforms.add(transformation3);
+    affineTransforms.add(transformation4);
+    return new ChaosGameDescription(affineTransforms, minCoordsVector, maxCoordsVector);
+  }
+
+  /**
    * Creates a ChaosGameDescription object for the Julia set.
    * The Julia set is created by two Julia transformations.
    * @param minCoordsVector the minimum coordinates of the canvas

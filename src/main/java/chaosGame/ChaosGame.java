@@ -42,7 +42,7 @@ public class ChaosGame {
   }
 
   public ChaosGame(int width, int height) {
-    this.canvas = new ChaosCanvas(width, height, new Vector2D(-1, -1), new Vector2D(1, 1));
+    this.canvas = new ChaosCanvas(width, height, new Vector2D(-2, -2), new Vector2D(2, 2));
     this.currentPoint = new Vector2D(0, 0);
     this.random = new Random();
     this.pointStack = new Stack<>();
@@ -137,8 +137,5 @@ public class ChaosGame {
     }
   }
 
-  public void setCanvas(ChaosCanvas canvas) {
-    this.canvas = canvas;
-  }
 
 }

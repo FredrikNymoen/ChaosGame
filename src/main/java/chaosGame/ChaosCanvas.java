@@ -2,6 +2,8 @@ package chaosGame;
 
 import static java.lang.Math.round;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import mathcore.Matrix2x2;
 import mathcore.Vector2D;
 import transformations.AffineTransform2D;
@@ -21,6 +23,19 @@ public class ChaosCanvas {
   private AffineTransform2D transformIndicesToCoords;
   private Vector2D coord;
 
+  private BigDecimal ia;
+  private BigDecimal ib;
+  private BigDecimal ic;
+  private BigDecimal id;
+  private BigDecimal subtractX;
+  private BigDecimal subtractY;
+  private MathContext mc;
+
+  private BigDecimal a;
+  private BigDecimal b;
+  private BigDecimal c;
+  private BigDecimal d;
+
   /**
      * Constructor for the chaosGame.ChaosCanvas class.
      *
@@ -36,6 +51,45 @@ public class ChaosCanvas {
     this.minCoords = minCoords;
     this.maxCoords = maxCoords;
     canvas = new int[height][width];
+
+
+    int precision = 15; // Define the precision level
+    mc = new MathContext(precision);
+
+    BigDecimal heightMinusOne = new BigDecimal(height - 1, mc);
+    BigDecimal widthMinusOne = new BigDecimal(width - 1, mc);
+
+    BigDecimal minY = new BigDecimal(minCoords.getX1(), mc);
+    BigDecimal maxY = new BigDecimal(maxCoords.getX1(), mc);
+    BigDecimal minX = new BigDecimal(minCoords.getX0(), mc);
+    BigDecimal maxX = new BigDecimal(maxCoords.getX0(), mc);
+
+    b = heightMinusOne.divide(maxY.subtract(minY), mc);
+    c = widthMinusOne.divide(maxX.subtract(minX), mc);
+
+    // These are zero as per your original code, but using BigDecimal for consistency
+    a = BigDecimal.ZERO;
+    d = BigDecimal.ZERO;
+
+    BigDecimal det = a.multiply(d, mc).subtract(b.multiply(c, mc));
+
+    if (det.compareTo(BigDecimal.ZERO) == 0) {
+      throw new RuntimeException("Matrix is singular and cannot be inverted");
+    }
+
+    // Inverse calculations
+    ia = d.divide(det, mc);
+    ib = b.negate().divide(det, mc);
+    ic = c.negate().divide(det, mc);
+    id = a.divide(det, mc);
+
+
+    // Vector calculations using BigDecimals
+    BigDecimal vectorX = heightMinusOne.multiply(maxY, mc).divide(maxY.subtract(minY), mc);
+    BigDecimal vectorY = widthMinusOne.multiply(minX, mc).divide(minX.subtract(maxX), mc);
+
+    subtractX = ia.multiply(vectorX, mc).add(ib.multiply(vectorY, mc)).negate();
+    subtractY = ic.multiply(vectorX, mc).add(id.multiply(vectorY, mc)).negate();
   }
 
     /**
@@ -79,6 +133,7 @@ public class ChaosCanvas {
     double ib = inverseMatrix.geta01();
     double ic = inverseMatrix.geta10();
     double id = inverseMatrix.geta11();
+
     Vector2D subtractVector = new Vector2D(-ia * vector.getX0() - ib * vector.getX1(), -ic * vector.getX0() - id * vector.getX1());
 
     transformIndicesToCoords = new AffineTransform2D(inverseMatrix, subtractVector);
@@ -86,6 +141,20 @@ public class ChaosCanvas {
 
     return this.coord;
   }
+
+
+  /*public Vector2D pixelToCoordinate(Vector2D pixel) {
+
+    // Transform using AffineTransform2D (assuming it can take BigDecimal inputs, otherwise convert back to double)
+    BigDecimal pixelX = new BigDecimal(pixel.getX0(), mc);
+    BigDecimal pixelY = new BigDecimal(pixel.getX1(), mc);
+
+    BigDecimal transformedX = ia.multiply(pixelX, mc).add(ib.multiply(pixelY, mc)).add(subtractX);
+    BigDecimal transformedY = ic.multiply(pixelX, mc).add(id.multiply(pixelY, mc)).add(subtractY);
+
+    // Return new coordinates, converting BigDecimal back to double
+    return new Vector2D(transformedX.doubleValue(), transformedY.doubleValue());
+  }*/
 
   public Vector2D coordinateToPixel(Vector2D point) {
     Matrix2x2 matrix = new Matrix2x2(0, (height - 1) / (minCoords.getX1() - maxCoords.getX1()), (width - 1) / (maxCoords.getX0() - minCoords.getX0()), 0);

@@ -149,5 +149,22 @@ class ChaosCanvasTest {
         assertEquals(vector.getX1(),coords.getX1(),0.000001);
     }
 
+    @org.junit.jupiter.api.Test
+    public void testCoordinateToPixel() {
+        ChaosGame chaosGame = new ChaosGame(900, 750);
+        ChaosCanvas chaosCanvas = chaosGame.getCanvas();
+        Vector2D vector = new Vector2D(4.5, -10.5);
+
+        Vector2D pixel = chaosCanvas.coordinateToPixel(vector);
+
+        Vector2D pixel2 = chaosCanvas.coordinateToPixel(vector);
+        Vector2D coord = chaosCanvas.pixelToCoordinate(pixel2);
+        pixel2 = chaosCanvas.coordinateToPixel(coord);
+
+
+        assertEquals(pixel2.getX0(),pixel.getX0(),0.000001);
+        assertEquals(pixel2.getX1(),pixel.getX1(),0.000001);
+    }
+
 
 }
