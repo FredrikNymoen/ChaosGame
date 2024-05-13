@@ -4,6 +4,7 @@ import chaosGame.ChaosCanvas;
 import chaosGame.ChaosGame;
 import chaosGame.ChaosGameDescription;
 import factory.ChaosGameDescriptionFactory;
+import factory.ChaosGameFactory;
 import filehandling.ChaosGameFileHandler;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +25,10 @@ import mathcore.Vector2D;
  */
 
 public class ChaosGameController {
+  private ChaosGameFactory chaosGameFactory;
+  public ChaosGameController(){
+    chaosGameFactory = new ChaosGameFactory();
+  }
 
   /**
    * Gets the affine transformation values from the affine grid. The affine grid is a GridPane
@@ -108,29 +113,6 @@ public class ChaosGameController {
     return textField;
   }
 
-  /**
-   * Creates a chaos game with a specified description, width, height and number of steps. The
-   * method creates a ChaosGame object with the specified parameters and runs the chaos game for the
-   * specified number of steps.
-   *
-   * @param description the description of the chaos game
-   * @param width       the width of the canvas
-   * @param height      the height of the canvas
-   * @param steps       the number of steps to run the chaos game
-   * @return ChaosGame the created chaos game
-   */
-
-
-  public ChaosGame createChaosGame(ChaosGameDescription description, int width, int height,
-      int steps, boolean isBarnsleyTransformation) {
-    ChaosGame chaosGame = new ChaosGame(description, width, height);
-    if (isBarnsleyTransformation) {
-      chaosGame.runStepsForBarnsley(steps);
-    } else {
-      chaosGame.runSteps(steps);
-    }
-    return chaosGame;
-  }
 
   /**
    * Handles the selection of a transformation from a ToggleGroup. The method retrieves the selected
@@ -155,6 +137,7 @@ public class ChaosGameController {
       GridPane affineGrid, TextField realPartField, TextField imaginaryPartField,
       Vector2D minCoords, Vector2D maxCoords, int steps) {
     ChaosGameDescriptionFactory factory = new ChaosGameDescriptionFactory();
+    ChaosGameFileHandler fileHandler = new ChaosGameFileHandler();
     ChaosGameDescription description = null;
     Complex c = null;
 
@@ -166,6 +149,7 @@ public class ChaosGameController {
           List<Vector2D> vectors = new ArrayList<>();
           getAffineTransformationValues(matrices, vectors, affineGrid);
           description = factory.affine(matrices, vectors, minCoords, maxCoords);
+          fileHandler.writeToFile(description, "file.csv");
           break;
         case "Julia":
           c = new Complex(Double.parseDouble(realPartField.getText()),
@@ -173,86 +157,33 @@ public class ChaosGameController {
           description = factory.julia(minCoords, maxCoords, c);
           break;
         case "Sierpinski":
-          //description = factory.sierpinski(minCoords, maxCoords);
-          description = factory.mapleTree(minCoords, maxCoords);
+          description = factory.sierpinski(minCoords, maxCoords);
+          //description = factory.mapleTree(minCoords, maxCoords);
+          fileHandler.writeToFile(description, "file.csv");
           break;
         case "Barnsley":
           description = factory.barnsley(minCoords, maxCoords);
+          fileHandler.writeToFile(description, "file.csv");
+          break;
+        case "Maple-Tree":
+          description = factory.mapleTree(minCoords, maxCoords);
+          fileHandler.writeToFile(description, "file.csv");
           break;
       }
     }
 
-    if (description != null) {
-      ChaosGameFileHandler fileHandler = new ChaosGameFileHandler();
-      fileHandler.writeToFile(description, "file.csv");
-
-      ChaosGame chaosGame = null;
-      if (selectedButton.getText().equals("Julia")) {
-        chaosGame = generateJuliaGame(c);
-      } else {
-        chaosGame = createChaosGame(description, 900, 750, steps,
-            selectedButton.getText().equals("Barnsley"));
-      }
-      return chaosGame;
+    ChaosGame chaosGame = null;
+    if (selectedButton.getText().equals("Julia")) {
+      chaosGame = chaosGameFactory.createJuliaChaosGame(c);
+    } else if(selectedButton.getText().equals("Mandelbrot")){
+      chaosGame = chaosGameFactory.createMandelbrotChaosGame();
     }
-    return null;
-  }
-
-  public ChaosGame generateJuliaGame(Complex c) {
-    //System.out.println(c.getX0() + " " + c.getX1());
-    //double modulus = Math.sqrt(c.getX0() * c.getX0() + c.getX1() * c.getX1()); // Calculate modulus of c
-    //double r = Math.sqrt(1 + modulus); // Choose an appropriate escape radius
-    double r = 2;
-    System.out.println(r);
-
-    ChaosGame chaosGame = new ChaosGame(900, 750);
-    ChaosCanvas canvas = chaosGame.getCanvas();
-
-    // Assuming the fractal drawing's size for positioning
-    double width = canvas.getCanvasArray()[0].length;
-    double height = canvas.getCanvasArray().length;
-
-    // Loop through each pixel on the screen
-    for (int j = 0; j < height; j++) {
-      for (int i = 0; i < width; i++) {
-        Vector2D vector = canvas.pixelToCoordinate(new Vector2D(i, j));
-        double x = vector.getX0();
-        double y = vector.getX1();
-
-        int iteration = 0;
-        int maxIterations = 40; // Maximum iterations for convergence check
-        double xtemp = 0;
-
-        // Iterative escape test(r*r)
-        while ((x * x + y * y) < (r*r) && iteration < maxIterations) {
-          xtemp = x * x - y * y;
-          y = 2 * x * y + c.getX1();
-          x = xtemp + c.getX0();
-          iteration++;
-        }
-
-        if (iteration == maxIterations) {
-          if(canvas.getPixel(vector) == 1){
-
-          }
-          else {
-            canvas.putPixel(vector);
-          }
-        }
-      }
+    else {
+      chaosGame = chaosGameFactory.createChaosGame(description, 900, 750, steps,selectedButton.getText().equals("Barnsley"));
     }
 
-    /*for (int i = 0; i < height; i++) { // Iterate over each row
-      for (int j = 0; j < canvas.getCanvasArray()[i].length; j++) { // Iterate over each column in a row
-        System.out.print(canvas.getCanvasArray()[i][j] + "\t"); // Print each element with a tab space
-      }
-      System.out.println(); // New line after printing all columns in a row
-    };*/
-
-    //chaosGame.setCanvas(canvas);
     return chaosGame;
   }
-
 
   public List<String> checkForEmptyFields(ToggleGroup transformationsGroup, GridPane affineGrid,
                                           TextField realPartField, TextField imaginaryPartField, int steps) {
@@ -301,4 +232,10 @@ public class ChaosGameController {
       return false; // Parsing failed, it's not a valid double
     }
   }
+
+  public ChaosGame juliaAnimation(Complex c){
+    ChaosGame chaosGame = chaosGameFactory.createJuliaChaosGame(c);
+    return chaosGame;
   }
+
+}

@@ -111,7 +111,7 @@ public class ChaosGame {
       for (int j = 0; j < description.getTransforms().size(); j++) {
         Transform2D transform = description.getTransforms().get(j);
         Vector2D newPoint = transform.transform(currentPoint);
-        if (canvas.getPixel(newPoint) >= 6) {
+        if (canvas.getPixel(newPoint) >= 100) {
           continue;
         }
         pointStack.push(newPoint);

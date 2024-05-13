@@ -1,5 +1,7 @@
 package factory;
 
+import chaosGame.ChaosCanvas;
+import chaosGame.ChaosGame;
 import chaosGame.ChaosGameDescription;
 import java.util.ArrayList;
 import java.util.List;
@@ -147,6 +149,5 @@ public class ChaosGameDescriptionFactory {
     }
     return new ChaosGameDescription(affineTransforms, minCoordsVector, maxCoordsVector);
   }
-
 
 }

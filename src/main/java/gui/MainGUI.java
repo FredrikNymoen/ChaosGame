@@ -1,6 +1,7 @@
 package gui;
 
 import chaosGame.ChaosGame;
+import java.net.URL;
 import java.util.Properties;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -10,9 +11,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -30,7 +35,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import javafx.util.converter.DoubleStringConverter;
+import mathcore.Complex;
 import mathcore.Vector2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -68,6 +75,8 @@ public class MainGUI extends Application {
   private Properties appSettings = new Properties();
   private Label missingInputMessage;
   private final String settingsFilePath = "appSettings.properties";
+  private boolean isAnimationPlaying = false;  // Now a field in the class
+  private Timeline animationTimeline;  // Now a field in the class
 
 
   public static void main(String[] args) {
@@ -98,6 +107,7 @@ public class MainGUI extends Application {
     loadSettings();
 
     Scene scene = new Scene(root);
+    scene.getStylesheets().add(getClass().getResource("/chaosgame.css").toExternalForm());
     primaryStage.setMaximized(true); // Set the stage to be maximized
     primaryStage.setTitle("Chaos game");
     primaryStage.setScene(scene);
@@ -116,9 +126,13 @@ public class MainGUI extends Application {
   private void configureTransformationButtonOptions() {
     // Transformation checkboxes
     transformationBox = new VBox(5);
+    transformationBox.setAlignment(Pos.CENTER);
     Label transformationLabel = new Label("Transformations");
+    transformationLabel.getStyleClass().add("bold-label");
     transformationBox.getChildren().add(transformationLabel);
     transformationsGroup = new ToggleGroup();
+
+    // Create radio buttons
     RadioButton affine = new RadioButton("Affine");
     affine.setUserData("Affine");
     affine.setToggleGroup(transformationsGroup);
@@ -128,19 +142,37 @@ public class MainGUI extends Application {
     RadioButton julia = new RadioButton("Julia");
     julia.setUserData("Julia");
     julia.setToggleGroup(transformationsGroup);
+
     RadioButton sierpinski = new RadioButton("Sierpinski");
     sierpinski.setUserData("Sierpinski");
     sierpinski.setToggleGroup(transformationsGroup);
+    RadioButton mandelbrot = new RadioButton("Mandelbrot");
+    mandelbrot.setUserData("Mandelbrot");
+    mandelbrot.setToggleGroup(transformationsGroup);
+    RadioButton mapleTree = new RadioButton("Maple-Tree");
+    mapleTree.setUserData("Maple-tree");
+    mapleTree.setToggleGroup(transformationsGroup);
 
-    HBox transformationsBox = new HBox(10);
-    transformationsBox.getChildren().addAll(affine, barnsley, julia, sierpinski);
-    transformationBox.getChildren().add(transformationsBox);
+    // Create HBoxes for layout
+    HBox topRow = new HBox(10);
+    topRow.setAlignment(Pos.CENTER);  // Center the buttons in the top row
+    HBox bottomRow = new HBox(10);
+    bottomRow.setAlignment(Pos.CENTER);  // Center the buttons in the bottom row
+
+    // Add radio buttons to each HBox
+    topRow.getChildren().addAll(affine, barnsley, julia, sierpinski);
+    bottomRow.getChildren().addAll(mandelbrot, mapleTree);
+
+    // Add both HBoxes to the main VBox
+    transformationBox.getChildren().addAll(topRow, bottomRow);
   }
 
   private void configureStepsInput() {
     // Steps input
     stepsBox = new VBox(5);
+    stepsBox.setAlignment(Pos.CENTER);
     Label stepsLabel = new Label("Steps");
+    stepsLabel.getStyleClass().add("bold-label");
     stepsField = new TextField();
     stepsField.setPromptText("(0-10000000)");
 
@@ -157,8 +189,12 @@ public class MainGUI extends Application {
     coordGrid = new GridPane();
     coordGrid.setHgap(10);
     coordGrid.setVgap(10);
-    coordGrid.add(new Label("Min. Coord"), 0, 0);
-    coordGrid.add(new Label("Max. Coord"), 2, 0);
+    Label minCoordLabel = new Label("Min.Coord");
+    minCoordLabel.getStyleClass().add("small-label");
+    Label maxCoordLabel = new Label("Max.Coord");
+    maxCoordLabel.getStyleClass().add("small-label");
+    coordGrid.add(minCoordLabel, 0, 0);
+    coordGrid.add(maxCoordLabel, 2, 0);
 
     minXField = createDecimalTextField("-4");
     minYField = createDecimalTextField("-1");
@@ -172,16 +208,79 @@ public class MainGUI extends Application {
     juliaGrid = new GridPane();
     juliaGrid.setHgap(10);
     juliaGrid.setVgap(10);
-    juliaGrid.add(new Label("Julia-constant"), 0, 0, 2, 1);
+    Label juliaLabel = new Label("Julia-constant");
+    juliaLabel.getStyleClass().add("small-label");
+    juliaGrid.add(juliaLabel, 0, 0, 2, 1);
 
     realPartField = createDecimalTextField("0.28");
     imaginaryPartField = createDecimalTextField("0.9");
     juliaGrid.addRow(1, realPartField, imaginaryPartField);
+
+    Button juliaAnimationButton = new Button("Play Julia Animation");
+    juliaAnimationButton.setId("playPauseButton");  // Set an ID for possible CSS styling
+    configureJuliaAnimationButton(juliaAnimationButton);
+
+    juliaGrid.add(juliaAnimationButton, 0, 2, 2, 1);
   }
+
+  private void configureJuliaAnimationButton(Button juliaAnimationButton) {
+    juliaAnimationButton.setOnAction(event -> {
+      if (!isAnimationPlaying) {
+        if (animationTimeline == null) {
+          animationTimeline = setupAnimation();  // Properly initialize the timeline
+        }
+        animationTimeline.play();
+        juliaAnimationButton.setText("Pause Julia Animation");
+        isAnimationPlaying = true;
+      } else {
+        animationTimeline.pause();
+        juliaAnimationButton.setText("Play Julia Animation");
+        isAnimationPlaying = false;
+      }
+    });
+  }
+
+  private Timeline setupAnimation() {
+    double[] time = {0};  // Time variable to evolve the pattern
+    double maxPartValue = 0.6; // Maximum absolute value for real or imaginary part
+    double maxDifference = 0.5; // Maximum difference allowed between real and imaginary parts
+
+    Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), e -> {
+      // Increment time for smooth oscillation
+      time[0] += 0.02;
+
+      // Generate complex patterns using trigonometric functions
+      // Ensure values do not exceed 0.65 in absolute terms
+      double realPart = maxPartValue * Math.sin(time[0]);
+      double imaginaryPart = maxPartValue * Math.cos(time[0]);
+
+      // Adjust imaginaryPart or realPart to ensure the difference does not exceed 0.9
+      if (Math.abs(realPart - imaginaryPart) > maxDifference) {
+        if (realPart > imaginaryPart) {
+          imaginaryPart = realPart - maxDifference; // Adjust down if necessary
+        } else {
+          imaginaryPart = realPart + maxDifference; // Adjust up if necessary
+        }
+        // Clamp the adjusted part to stay within the -0.65 to 0.65 range
+        imaginaryPart = Math.max(-maxPartValue, Math.min(maxPartValue, imaginaryPart));
+      }
+
+      // Update the GUI elements and fractal calculation on JavaFX thread
+
+      currentChaosGame = controller.juliaAnimation(new Complex(realPart, imaginaryPart));
+      drawFractal(currentChaosGame);
+    }));
+
+    timeline.setCycleCount(Timeline.INDEFINITE);
+    return timeline;
+  }
+
 
   private void configureAffineControls() {
     affineBox = new VBox(10);
-    affineBox.getChildren().add(new Label("Affine matrices and vectors"));
+    Label affineMatrixAndVectorLabel = new Label("Affine matrices and vectors");
+    affineMatrixAndVectorLabel.getStyleClass().add("small-label");
+    affineBox.getChildren().add(affineMatrixAndVectorLabel);
     affineGrid = new GridPane();
     affineGrid.setHgap(10);
     affineGrid.setVgap(10);
@@ -192,11 +291,8 @@ public class MainGUI extends Application {
     addButton.setOnAction(event -> addMatrixVectorRow(affineGrid.getRowCount()));
     Button removeButton = new Button("Remove");
     removeButton.setOnAction(event -> removeMatrixVectorRow());
-    HBox spacingBox = new HBox() {{ setPrefWidth(20); }};
-    Button mapleTreeButton = new Button("Maple Tree Example");
-    mapleTreeButton.setOnAction(event -> fillInAffineGridForMapleTree());
-    buttonsBox.getChildren().addAll(addButton, removeButton,spacingBox, mapleTreeButton);
 
+    buttonsBox.getChildren().addAll(addButton, removeButton);
     affineBox.getChildren().addAll(affineGrid, buttonsBox);
   }
 
@@ -208,7 +304,11 @@ public class MainGUI extends Application {
 
   private void configureShowButton() {
     showButton = new Button("Show");
+    showButton.getStyleClass().add("show-button");
     showButton.setOnAction(event -> {
+      if(makeFullFractalCheckbox.isSelected()){
+        makeFullFractalCheckbox.setSelected(false);
+      }
       boolean allFieldsValid = true;
       double minX = 0, minY = 0, maxX = 0, maxY = 0;
       int steps = parseStepsSafely(stepsField.getText());
@@ -392,14 +492,14 @@ public class MainGUI extends Application {
     colorModeCheckbox = new CheckBox("Enable Heatmap Color Mode");
     colorModeCheckbox.setSelected(false);  // Default is unchecked (B&W mode)
     // Increase font size for visibility
-    colorModeCheckbox.setStyle("-fx-font-size: 18px;");
+    colorModeCheckbox.getStyleClass().add("option-checkbox");
     colorModeCheckbox.setOnAction(event -> redrawFractalIfNeeded());
   }
 
   private void configureMakeFullFractalCheckbox() {
     makeFullFractalCheckbox = new CheckBox("Make full fractal");
     makeFullFractalCheckbox.setSelected(false);
-    makeFullFractalCheckbox.setStyle("-fx-font-size: 18px;");
+    makeFullFractalCheckbox.getStyleClass().add("option-checkbox");
     makeFullFractalCheckbox.setOnAction(event -> {
       if (makeFullFractalCheckbox.isSelected() && currentChaosGame != null) {
         currentChaosGame.makeFullFractal();
@@ -418,6 +518,7 @@ public class MainGUI extends Application {
     TextField textField = new TextField(defaultValue);
     UnaryOperator<TextFormatter.Change> decimalFilter = change -> change.getControlNewText().matches("-?((\\d*)|(\\d+\\.\\d*))") ? change : null;
     textField.setTextFormatter(new TextFormatter<>(new DoubleStringConverter(), Double.parseDouble(defaultValue), decimalFilter));
+    //textField.setTextFormatter(new TextFormatter<>(new DoubleStringConverter()));
     return textField;
   }
 
@@ -458,38 +559,6 @@ public class MainGUI extends Application {
     }
   }
 
-  private void fillInAffineGridForMapleTree() {
-    // Clear existing rows if necessary
-    affineGrid.getChildren().clear();
-
-    // Matrix and vector entries as provided
-    double[][] matrixValues = {
-        {-0.04, 0, -0.23, -0.65},
-        {0.61, 0, 0, 0.31},
-        {0.65, 0.29, 0, 0.48},
-        {0.64, -0.3, 0.16, 0.56}
-    };
-    double[][] vectorValues = {
-        {-0.08, 0.26},
-        {0.07, 3.5},
-        {0.74, 1.39},
-        {-0.56, 0.60}
-    };
-
-    // Assuming each row will contain 4 matrix text fields, a spacer, and 2 vector text fields
-    for (int i = 0; i < matrixValues.length; i++) {
-      addMatrixVectorRow(i);  // Add a new row
-      for (int j = 0; j < 4; j++) {  // Set matrix values
-        TextField matrixField = (TextField) getNodeFromGridPane(affineGrid, j, i);
-        matrixField.setText(String.format("%.2f", matrixValues[i][j]));
-      }
-      for (int j = 0; j < 2; j++) {  // Set vector values
-        TextField vectorField = (TextField) getNodeFromGridPane(affineGrid, 5 + j, i);
-        vectorField.setText(String.format("%.2f", vectorValues[i][j]));
-      }
-    }
-
-  }
 
   private void redrawFractalIfNeeded() {
     if (currentChaosGame != null) {

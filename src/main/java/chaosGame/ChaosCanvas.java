@@ -108,7 +108,8 @@ public class ChaosCanvas {
       return 1;
     }
 
-    return canvas[(int) point.getX0()][(int) point.getX1()];
+    //return canvas[(int) point.getX0()][(int) point.getX1()];
+    return canvas[(int) Math.round(point.getX0())][(int) Math.round(point.getX1())];
   }
 
   public Vector2D pixelToCoordinate(Vector2D pixel) {
@@ -177,11 +178,12 @@ public class ChaosCanvas {
     transformCoordsToIndices = new AffineTransform2D(matrix, vector);
     point = transformCoordsToIndices.transform(point);
 
-    if (point.getX0() < 0 || point.getX0() >= height || point.getX1() < 0 || point.getX1() >= width) {
+    if (point.getX0() < 0 || Math.round(point.getX0()) >= height || point.getX1() < 0 || Math.round(point.getX1()) >= width) {
       return;
     }
 
-    canvas[(int) point.getX0()][(int) point.getX1()] += 1;
+    //canvas[(int) point.getX0()][(int) point.getX1()] += 1;
+    canvas[(int) Math.round(point.getX0())][(int) Math.round(point.getX1())] += 1;
   }
   /**
    * Returns the canvas as an array.
