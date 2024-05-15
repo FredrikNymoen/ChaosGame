@@ -2,13 +2,13 @@
   -fx-font-family: 'Arial Black', 'Arial Bold', sans-serif;
   -fx-font-weight: bold;
   -fx-font-size: 15px;
-  -fx-text-fill: black;
+  -fx-text-fill: #532200;
 }
 
 .small-label {
   -fx-font-family: 'Arial Black', 'Arial Bold', sans-serif;
   -fx-font-weight: bold;
-  -fx-text-fill: black;
+  -fx-text-fill: #532200;
 }
 
 .option-checkbox {
@@ -19,4 +19,71 @@
 
 -show-button{
   -fx-font-size: 18px;
+}
+
+
+.left-side{
+  -fx-background-color: #EFCFA0;
+}
+.scroll-pane{
+  -fx-background-color: #EFCFA0;
+}
+.root{
+  -fx-background-color: #EFCFA0;
+}
+
+
+.button {
+  /*-fx-background-color: #E1A140;
+  -fx-text-fill: #ffffff;
+  -fx-border-coelor: #C5B358;
+  -fx-border-width: 2;*/
+}
+
+.button {
+  -fx-padding: 10px 20px;
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+  -fx-border-radius: 5px;
+  -fx-background-radius: 5px;
+  -fx-cursor: hand;
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 4, 0, 0, 2);
+  -fx-transition: background-color 0.3s, color 0.3s, transform 0.3s;
+  -fx-background-color: #E1A140;
+  -fx-text-fill: white;
+}
+
+.button:hover {
+  -fx-background-color: #c89235;
+  -fx-scale-x: 1.05;
+  -fx-scale-y: 1.05;
+}
+
+
+.radio-button {
+  -fx-mark-color: #E1A140; /* Golden toggle mark */
+}
+
+.slider .thumb {
+  -fx-background-color: #E1A140; /* Slider thumb in gold */
+}
+.slider .track {
+  -fx-background-color: #914110; /* Golden track */
+}
+
+
+.separator {
+  -fx-background-color: #E1A140; /* Golden separator for visual structure */
+}
+
+
+.toggle-switch {
+  -fx-background-color: #E1A140;
+  -fx-padding: 5px;
+  -fx-text-fill: #ffffff;
+  -fx-font-size: 11.5px;
+}
+
+.toggle-switch:selected {
+  -fx-background-color: #914110;
 }

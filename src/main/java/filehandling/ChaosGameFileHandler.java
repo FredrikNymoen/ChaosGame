@@ -40,8 +40,10 @@ public class ChaosGameFileHandler {
 
     try (BufferedReader reader = Files.newBufferedReader(Paths.get(file.getAbsolutePath()))) {
       String line = reader.readLine();
+      int commaIndex = line.indexOf(",");
+      String typeOfTransformation = line.substring(0, commaIndex);
 
-      if ("Affine2D".equals(line)) {
+      if ("Affine2D".equals(typeOfTransformation)) {
         String[] minCoordsLine = reader.readLine().split(", ");
         String[] maxCoordsLine = reader.readLine().split(", ");
 
@@ -106,12 +108,12 @@ public class ChaosGameFileHandler {
    * @param path The path where the file will be created or overwritten.
    */
 
-  public void writeToFile(ChaosGameDescription description, String path) {
+  public void writeToFile(ChaosGameDescription description, String path, String affineType) {
     File file = new File(path);
 
     try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(file.getAbsolutePath()))) {
       if (description.getTransforms().get(0) instanceof AffineTransform2D) {
-        writer.write("Affine2D\n");
+        writer.write("Affine2D, " + affineType + "\n");
         writer.write(
             description.getMinCoords().getX0() + ", " + description.getMinCoords().getX1() + "\n");
         writer.write(
@@ -137,5 +139,43 @@ public class ChaosGameFileHandler {
     } catch(Exception e){
       System.out.println(e.getMessage());
     }
+  }
+
+
+  public String readAffineType(String path) {
+    File file = new File(path);
+    String affineType = null;
+
+    try (BufferedReader reader = Files.newBufferedReader(Paths.get(file.getAbsolutePath()))) {
+      String line = reader.readLine();
+      int commaIndex = line.indexOf(",");
+      affineType = line.substring(commaIndex + 2);
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
+
+    return affineType;
+  }
+
+  public void writeLineToFile(String path, String line) {
+    File file = new File(path);
+    try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(file.getAbsolutePath()))) {
+      writer.write(line);
+    } catch (Exception e) {
+    }
+  }
+
+  public boolean checkForMandelbrot(String path) {
+    boolean flag = false;
+    File file = new File(path);
+    String line = null;
+    try (BufferedReader reader = Files.newBufferedReader(Paths.get(file.getAbsolutePath()))) {
+      line = reader.readLine();
+      if(line.equals("Mandelbrot")) {
+        flag = true;
+      }
+    } catch (Exception e) {
+    }
+    return flag;
   }
 }

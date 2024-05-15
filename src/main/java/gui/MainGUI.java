@@ -1,6 +1,8 @@
 package gui;
 
 import chaosGame.ChaosGame;
+import chaosGame.ChaosGameDescription;
+import filehandling.ChaosGameFileHandler;
 import java.net.URL;
 import java.util.Properties;
 import java.io.FileInputStream;
@@ -15,6 +17,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -26,12 +29,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -45,6 +51,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.control.TextFormatter;
 import javafx.util.converter.IntegerStringConverter;
 import java.util.function.UnaryOperator;
+import transformations.AffineTransform2D;
+import transformations.JuliaTransform;
 
 public class MainGUI extends Application {
   private GridPane affineGrid; // This needs to be accessible by the button's event handler
@@ -56,7 +64,8 @@ public class MainGUI extends Application {
   private TextField minYField;
   private TextField maxXField;
   private TextField maxYField;
-  private TextField stepsField;
+  //private TextField stepsField;
+  private Slider stepsSlider;
   private TextField realPartField;
   private TextField imaginaryPartField;
   ChaosGameController controller = new ChaosGameController();
@@ -77,6 +86,8 @@ public class MainGUI extends Application {
   private final String settingsFilePath = "appSettings.properties";
   private boolean isAnimationPlaying = false;  // Now a field in the class
   private Timeline animationTimeline;  // Now a field in the class
+  private Button copyLastTransformationButton;
+  private ToggleButton toggleSwitch;
 
 
   public static void main(String[] args) {
@@ -90,7 +101,7 @@ public class MainGUI extends Application {
 
     configureScrollPane();
     configureTransformationButtonOptions();
-    configureStepsInput();
+    configureStepsSlider();
     configureCoordinateFields();
     configureJuliaConstantFields();
     configureAffineControls();
@@ -98,6 +109,7 @@ public class MainGUI extends Application {
     configureMakeFullFractalCheckbox();
     configureShowButton();
     configureMissingInputMessage();
+    configureCopyLastTransformationButton();
 
     setupLeftSide(root);
     setupRightSide(root);
@@ -108,10 +120,53 @@ public class MainGUI extends Application {
 
     Scene scene = new Scene(root);
     scene.getStylesheets().add(getClass().getResource("/chaosgame.css").toExternalForm());
-    primaryStage.setMaximized(true); // Set the stage to be maximized
     primaryStage.setTitle("Chaos game");
     primaryStage.setScene(scene);
+    primaryStage.setMaximized(true); // Set the stage to be maximized
     primaryStage.show();
+  }
+
+  private void configureCopyLastTransformationButton() {
+    ChaosGameFileHandler fileHandler = new ChaosGameFileHandler();
+    copyLastTransformationButton = new Button("Copy Last Shown Transformation");
+    copyLastTransformationButton.setOnAction(event -> {
+      if(fileHandler.checkForMandelbrot("file.csv")){
+        transformationsGroup.selectToggle(transformationsGroup.getToggles().get(5));
+      }
+      else {
+        ChaosGameDescription lastDescription = fileHandler.readFromFile("file.csv");
+        minXField.setText(String.valueOf(lastDescription.getMinCoords().getX0()));
+        minYField.setText(String.valueOf(lastDescription.getMinCoords().getX1()));
+        maxXField.setText(String.valueOf(lastDescription.getMaxCoords().getX0()));
+        maxYField.setText(String.valueOf(lastDescription.getMaxCoords().getX1()));
+
+        if (lastDescription.getTransforms().get(0) instanceof AffineTransform2D) {
+          switch (fileHandler.readAffineType("file.csv")) {
+            case "affine":
+              transformationsGroup.selectToggle(transformationsGroup.getToggles().get(0));
+              break;
+            case "barnsley":
+              transformationsGroup.selectToggle(transformationsGroup.getToggles().get(1));
+              break;
+            case "sierpinski":
+              transformationsGroup.selectToggle(transformationsGroup.getToggles().get(3));
+              break;
+            case "mapleTree":
+              transformationsGroup.selectToggle(transformationsGroup.getToggles().get(4));
+              break;
+          }
+        } else {
+          transformationsGroup.selectToggle(transformationsGroup.getToggles().get(2));
+          realPartField.setText(
+              ((JuliaTransform) lastDescription.getTransforms().get(0)).getPoint().getX0() + "");
+          imaginaryPartField.setText(
+              ((JuliaTransform) lastDescription.getTransforms().get(0)).getPoint().getX1() + "");
+        }
+      }
+    });
+
+
+
   }
 
   private void configureScrollPane() {
@@ -167,23 +222,33 @@ public class MainGUI extends Application {
     transformationBox.getChildren().addAll(topRow, bottomRow);
   }
 
-  private void configureStepsInput() {
+  private void configureStepsSlider() {
     // Steps input
     stepsBox = new VBox(5);
     stepsBox.setAlignment(Pos.CENTER);
+
     Label stepsLabel = new Label("Steps");
     stepsLabel.getStyleClass().add("bold-label");
-    stepsField = new TextField();
-    stepsField.setPromptText("(0-10000000)");
 
-    UnaryOperator<TextFormatter.Change> integerFilter = change -> {
-      String newText = change.getControlNewText();
-      return newText.matches("([1-9][0-9]{0,6}|10000000|0)?") ? change : null;
-    };
+    // Configure the slider
+    stepsSlider = new Slider(0, 10000000, 0); // Min, Max, Initial value
+    stepsSlider.setShowTickMarks(true);
+    stepsSlider.setMajorTickUnit(1000000);
+    stepsSlider.setMinorTickCount(4);
+    stepsSlider.setBlockIncrement(100000); // Block increment for faster sliding
 
-    stepsField.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), 0, integerFilter));
-    stepsBox.getChildren().addAll(stepsLabel, stepsField);
+    // Label to display the current value of the slider
+    Label stepsValueLabel = new Label("0");
+    stepsValueLabel.getStyleClass().add("small-label");
+
+    // Bind the slider's value to the label
+    stepsSlider.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+      stepsValueLabel.setText(String.format("%,d", newValue.intValue())); // Format the number with commas
+    });
+
+    stepsBox.getChildren().addAll(stepsLabel, stepsSlider, stepsValueLabel);
   }
+
 
   private void configureCoordinateFields() {
     coordGrid = new GridPane();
@@ -212,69 +277,34 @@ public class MainGUI extends Application {
     juliaLabel.getStyleClass().add("small-label");
     juliaGrid.add(juliaLabel, 0, 0, 2, 1);
 
-    realPartField = createDecimalTextField("0.28");
-    imaginaryPartField = createDecimalTextField("0.9");
-    juliaGrid.addRow(1, realPartField, imaginaryPartField);
-
-    Button juliaAnimationButton = new Button("Play Julia Animation");
-    juliaAnimationButton.setId("playPauseButton");  // Set an ID for possible CSS styling
-    configureJuliaAnimationButton(juliaAnimationButton);
-
-    juliaGrid.add(juliaAnimationButton, 0, 2, 2, 1);
-  }
-
-  private void configureJuliaAnimationButton(Button juliaAnimationButton) {
-    juliaAnimationButton.setOnAction(event -> {
-      if (!isAnimationPlaying) {
-        if (animationTimeline == null) {
-          animationTimeline = setupAnimation();  // Properly initialize the timeline
-        }
-        animationTimeline.play();
-        juliaAnimationButton.setText("Pause Julia Animation");
-        isAnimationPlaying = true;
+    toggleSwitch = new ToggleButton();
+    toggleSwitch.getStyleClass().add("toggle-switch");
+    if (toggleSwitch.isSelected()) {
+      toggleSwitch.setText("Draw Julia fractal with Convergence Iteration Mode (click to change)");
+    } else {
+    toggleSwitch.setText("Draw Julia fractal with steps (click to change)");
+    }
+    // Add an event handler to change the text when the button is toggled
+    toggleSwitch.setOnAction(event -> {
+      if (toggleSwitch.isSelected()) {
+        toggleSwitch.setText("Draw Julia fractal with Convergence Iteration Mode (click to change)");
+        stepsBox.setDisable(true);
+        coordGrid.setDisable(true);
       } else {
-        animationTimeline.pause();
-        juliaAnimationButton.setText("Play Julia Animation");
-        isAnimationPlaying = false;
+        toggleSwitch.setText("Draw Julia fractal with steps (click to change)");
+        stepsBox.setDisable(false);
+        coordGrid.setDisable(false);
       }
     });
+    toggleSwitch.setMaxWidth(Double.MAX_VALUE);
+    juliaGrid.setHgrow(toggleSwitch, Priority.ALWAYS);
+    juliaGrid.add(toggleSwitch, 0, 1, 4, 1);
+
+    realPartField = createDecimalTextField("0.0");
+    imaginaryPartField = createDecimalTextField("0.0");
+    juliaGrid.addRow(2, realPartField, imaginaryPartField);
+
   }
-
-  private Timeline setupAnimation() {
-    double[] time = {0};  // Time variable to evolve the pattern
-    double maxPartValue = 0.6; // Maximum absolute value for real or imaginary part
-    double maxDifference = 0.5; // Maximum difference allowed between real and imaginary parts
-
-    Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), e -> {
-      // Increment time for smooth oscillation
-      time[0] += 0.02;
-
-      // Generate complex patterns using trigonometric functions
-      // Ensure values do not exceed 0.65 in absolute terms
-      double realPart = maxPartValue * Math.sin(time[0]);
-      double imaginaryPart = maxPartValue * Math.cos(time[0]);
-
-      // Adjust imaginaryPart or realPart to ensure the difference does not exceed 0.9
-      if (Math.abs(realPart - imaginaryPart) > maxDifference) {
-        if (realPart > imaginaryPart) {
-          imaginaryPart = realPart - maxDifference; // Adjust down if necessary
-        } else {
-          imaginaryPart = realPart + maxDifference; // Adjust up if necessary
-        }
-        // Clamp the adjusted part to stay within the -0.65 to 0.65 range
-        imaginaryPart = Math.max(-maxPartValue, Math.min(maxPartValue, imaginaryPart));
-      }
-
-      // Update the GUI elements and fractal calculation on JavaFX thread
-
-      currentChaosGame = controller.juliaAnimation(new Complex(realPart, imaginaryPart));
-      drawFractal(currentChaosGame);
-    }));
-
-    timeline.setCycleCount(Timeline.INDEFINITE);
-    return timeline;
-  }
-
 
   private void configureAffineControls() {
     affineBox = new VBox(10);
@@ -311,7 +341,8 @@ public class MainGUI extends Application {
       }
       boolean allFieldsValid = true;
       double minX = 0, minY = 0, maxX = 0, maxY = 0;
-      int steps = parseStepsSafely(stepsField.getText());
+      //int steps = parseStepsSafely(stepsField.getText());
+      int steps = (int) stepsSlider.getValue();
 
       List<String> missingInputs = controller.checkForEmptyFields(transformationsGroup,
               affineGrid, realPartField, imaginaryPartField, steps);
@@ -329,9 +360,9 @@ public class MainGUI extends Application {
           textField.setStyle("-fx-border-color: red;");
         } else {
           switch (notFilled) {
-            case "Please fill in the number of steps.":
+            /*case "Please fill in the number of steps.":
               stepsField.setStyle("-fx-border-color: red;");
-              break;
+              break;*/
             case "Real part of the complex number is not a valid double.":
               realPartField.setStyle("-fx-border-color: red;");
               break;
@@ -388,7 +419,7 @@ public class MainGUI extends Application {
         Vector2D minCoords = new Vector2D(minX, minY);
         Vector2D maxCoords = new Vector2D(maxX, maxY);
         currentChaosGame = controller.handleTransformationSelection(transformationsGroup,
-                affineGrid, realPartField, imaginaryPartField, minCoords, maxCoords, steps);
+                affineGrid, juliaGrid, coordGrid, steps);
         drawFractal(currentChaosGame);
       } else {
         System.err.println("Please correct the highlighted errors.");
@@ -402,7 +433,7 @@ public class MainGUI extends Application {
         node.setStyle("");
       }
     }
-      stepsField.setStyle("");
+      //stepsField.setStyle("");
       affineGrid.setStyle("");
       affineBox.setStyle("");
       realPartField.setStyle("");
@@ -434,9 +465,10 @@ public class MainGUI extends Application {
   }
 
   private void setupLeftSide(BorderPane root) {
+    leftSide.getStyleClass().add("left-side");
     try{
       VBox spacingBox = new VBox();
-      spacingBox.setMinHeight(20); // Adjust as needed to create the desired space
+      spacingBox.setMinHeight(10); // Adjust as needed to create the desired space
       // Add the existing elements to the VBox
       leftSide.getChildren().addAll(
           transformationBox,
@@ -448,23 +480,25 @@ public class MainGUI extends Application {
           missingInputMessage,
           spacingBox,
           colorModeCheckbox,
-          makeFullFractalCheckbox
+          makeFullFractalCheckbox,
+          copyLastTransformationButton
       );
     } catch (Exception e) {
       System.out.println("Failed to add elements to the left side: " + e.getMessage());
     }
 
-    // Set the ScrollPane as the content of the left side
     scrollPane.setContent(leftSide);
     // Set preferred width for the left side
     double screenWidth = Screen.getPrimary().getBounds().getWidth();
-    scrollPane.setPrefWidth(screenWidth * 0.25);
-    // Add a vertical separator
+    scrollPane.setPrefWidth(screenWidth * 0.25);// Add a vertical separator
+    scrollPane.setFitToWidth(true); // Ensure the content fits the width of the ScrollPane
+    scrollPane.setFitToHeight(true);
     Separator separator = new Separator();
     separator.setOrientation(Orientation.VERTICAL);
 
     // Layout that contains the left side and the separator
     HBox leftLayout = new HBox(scrollPane, separator);
+    leftLayout.setHgrow(scrollPane, Priority.ALWAYS);
     // Add the left layout to the root
     root.setLeft(leftLayout);
   }
@@ -505,10 +539,10 @@ public class MainGUI extends Application {
         currentChaosGame.makeFullFractal();
         drawFractal(currentChaosGame);
       } else if (currentChaosGame != null && transformationsGroup.getSelectedToggle().getUserData().equals("Barnsley")) {
-        currentChaosGame.runStepsForBarnsley(Integer.parseInt(stepsField.getText()));
+        currentChaosGame.runStepsForBarnsley((int) stepsSlider.getValue());
         drawFractal(currentChaosGame);
       } else if (currentChaosGame != null) {
-        currentChaosGame.runSteps(Integer.parseInt(stepsField.getText()));
+        currentChaosGame.runSteps((int) stepsSlider.getValue());
         drawFractal(currentChaosGame);
       }
     });
@@ -577,15 +611,31 @@ public class MainGUI extends Application {
           case "Affine":
             affineBox.setDisable(false);
             juliaGrid.setDisable(true);
+            stepsBox.setDisable(false);
+            coordGrid.setDisable(false);
             break;
           case "Julia":
             juliaGrid.setDisable(false);
             affineBox.setDisable(true);
+            if(toggleSwitch.isSelected()){
+              stepsBox.setDisable(true);
+              coordGrid.setDisable(true);
+            } else {
+              stepsBox.setDisable(false);
+              coordGrid.setDisable(false);
+            }
             break;
-          default:
-            // Keep all specialized controls disabled if none of the above cases match
+          case "Mandelbrot":
             affineBox.setDisable(true);
             juliaGrid.setDisable(true);
+            stepsBox.setDisable(true);
+            coordGrid.setDisable(true);
+            break;
+          default:
+            affineBox.setDisable(true);
+            juliaGrid.setDisable(true);
+            stepsBox.setDisable(false);
+            coordGrid.setDisable(false);
             break;
         }
       }
@@ -669,7 +719,7 @@ public class MainGUI extends Application {
       minYField.setText(appSettings.getProperty("minY", "-1"));
       maxXField.setText(appSettings.getProperty("maxX", "4"));
       maxYField.setText(appSettings.getProperty("maxY", "10"));
-      stepsField.setText(appSettings.getProperty("steps", "0"));
+      stepsSlider.setValue(Double.parseDouble(appSettings.getProperty("steps", "0")));
       realPartField.setText(appSettings.getProperty("realPart", "0.285"));
       imaginaryPartField.setText(appSettings.getProperty("imaginaryPart", "0.01"));
       try {
@@ -695,7 +745,7 @@ public class MainGUI extends Application {
       appSettings.setProperty("minY", minYField.getText());
       appSettings.setProperty("maxX", maxXField.getText());
       appSettings.setProperty("maxY", maxYField.getText());
-      appSettings.setProperty("steps", stepsField.getText());
+      appSettings.setProperty("steps", stepsSlider.getValue() + "");
       appSettings.setProperty("realPart", realPartField.getText());
       appSettings.setProperty("imaginaryPart", imaginaryPartField.getText());
       appSettings.setProperty("transformation", ((RadioButton) transformationsGroup.getSelectedToggle()).getText());

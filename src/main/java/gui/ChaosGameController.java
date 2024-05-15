@@ -12,6 +12,7 @@ import java.util.List;
 import javafx.scene.Node;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import mathcore.Complex;
@@ -122,24 +123,22 @@ public class ChaosGameController {
    *
    * @param transformationsGroup the ToggleGroup containing the transformation selection
    * @param affineGrid           the GridPane containing the affine transformation values
-   * @param realPartField        the TextField containing the real part of the complex number for
-   *                             the Julia set
-   * @param imaginaryPartField   the TextField containing the imaginary part of the complex number
-   *                             for the Julia set
-   * @param minCoords            the minimum coordinates of the canvas
-   * @param maxCoords            the maximum coordinates of the canvas
    * @param steps                the number of steps to run the chaos game
    * @return ChaosGame the created chaos game
    */
 
 
   public ChaosGame handleTransformationSelection(ToggleGroup transformationsGroup,
-      GridPane affineGrid, TextField realPartField, TextField imaginaryPartField,
-      Vector2D minCoords, Vector2D maxCoords, int steps) {
+      GridPane affineGrid, GridPane juliaGrid, GridPane coordGrid, int steps) {
     ChaosGameDescriptionFactory factory = new ChaosGameDescriptionFactory();
     ChaosGameFileHandler fileHandler = new ChaosGameFileHandler();
     ChaosGameDescription description = null;
     Complex c = null;
+
+    Vector2D minCoords = new Vector2D(Double.parseDouble(((TextField) getNodeFromGridPane(coordGrid, 0, 1)).getText()),
+        Double.parseDouble(((TextField) getNodeFromGridPane(coordGrid, 1, 1)).getText()));
+    Vector2D maxCoords = new Vector2D(Double.parseDouble(((TextField) getNodeFromGridPane(coordGrid, 2, 1)).getText()),
+        Double.parseDouble(((TextField) getNodeFromGridPane(coordGrid, 3, 1)).getText()));
 
     RadioButton selectedButton = (RadioButton) transformationsGroup.getSelectedToggle();
     if (selectedButton != null) {
@@ -149,37 +148,48 @@ public class ChaosGameController {
           List<Vector2D> vectors = new ArrayList<>();
           getAffineTransformationValues(matrices, vectors, affineGrid);
           description = factory.affine(matrices, vectors, minCoords, maxCoords);
-          fileHandler.writeToFile(description, "file.csv");
+          fileHandler.writeToFile(description, "file.csv", "affine");
           break;
         case "Julia":
-          c = new Complex(Double.parseDouble(realPartField.getText()),
-              Double.parseDouble(imaginaryPartField.getText()));
+          c = new Complex(Double.parseDouble(((TextField) getNodeFromGridPane(juliaGrid, 0, 2)).getText()),
+              Double.parseDouble(((TextField) getNodeFromGridPane(juliaGrid, 1, 2)).getText()));
           description = factory.julia(minCoords, maxCoords, c);
+          fileHandler.writeToFile(description, "file.csv", "julia");
           break;
         case "Sierpinski":
           description = factory.sierpinski(minCoords, maxCoords);
-          //description = factory.mapleTree(minCoords, maxCoords);
-          fileHandler.writeToFile(description, "file.csv");
+          fileHandler.writeToFile(description, "file.csv", "sierpinski");
           break;
         case "Barnsley":
           description = factory.barnsley(minCoords, maxCoords);
-          fileHandler.writeToFile(description, "file.csv");
+          fileHandler.writeToFile(description, "file.csv", "barnsley");
           break;
         case "Maple-Tree":
           description = factory.mapleTree(minCoords, maxCoords);
-          fileHandler.writeToFile(description, "file.csv");
+          fileHandler.writeToFile(description, "file.csv", "mapleTree");
           break;
       }
     }
 
     ChaosGame chaosGame = null;
-    if (selectedButton.getText().equals("Julia")) {
-      chaosGame = chaosGameFactory.createJuliaChaosGame(c);
-    } else if(selectedButton.getText().equals("Mandelbrot")){
-      chaosGame = chaosGameFactory.createMandelbrotChaosGame();
-    }
-    else {
-      chaosGame = chaosGameFactory.createChaosGame(description, 900, 750, steps,selectedButton.getText().equals("Barnsley"));
+    String transformation = selectedButton.getText();
+    boolean isBarnsley = transformation.equals("Barnsley");
+    ToggleButton juliaToggleButton = (ToggleButton) getNodeFromGridPane(juliaGrid, 0, 1);
+    switch (transformation) {
+      case "Julia":
+        if (juliaToggleButton.isSelected()) {
+          chaosGame = chaosGameFactory.createJuliaChaosGame(c);
+        } else {
+          chaosGame = chaosGameFactory.createChaosGame(description, 900, 750, steps, isBarnsley);
+        }
+        break;
+      case "Mandelbrot":
+        chaosGame = chaosGameFactory.createMandelbrotChaosGame();
+        fileHandler.writeLineToFile("file.csv", "Mandelbrot");
+        break;
+      default:
+        chaosGame = chaosGameFactory.createChaosGame(description, 900, 750, steps, isBarnsley);
+        break;
     }
 
     return chaosGame;
@@ -231,11 +241,6 @@ public class ChaosGameController {
     } catch (NumberFormatException e) {
       return false; // Parsing failed, it's not a valid double
     }
-  }
-
-  public ChaosGame juliaAnimation(Complex c){
-    ChaosGame chaosGame = chaosGameFactory.createJuliaChaosGame(c);
-    return chaosGame;
   }
 
 }

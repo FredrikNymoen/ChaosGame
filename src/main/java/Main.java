@@ -169,7 +169,7 @@ public class Main {
     boolean gameRunning = true;
     while (gameRunning) {
       ChaosGameDescription description = gameQuestions();
-      fileHandler.writeToFile(description, "file.csv");
+      //fileHandler.writeToFile(description, "file.csv");
       description = fileHandler.readFromFile("file.csv");
       ChaosGame game = new ChaosGame(description, 250, 100);
       int iterations = askForIterations();
