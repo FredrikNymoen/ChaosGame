@@ -40,8 +40,15 @@ public class ChaosGameFileHandler {
 
     try (BufferedReader reader = Files.newBufferedReader(Paths.get(file.getAbsolutePath()))) {
       String line = reader.readLine();
+      String typeOfTransformation;
       int commaIndex = line.indexOf(",");
-      String typeOfTransformation = line.substring(0, commaIndex);
+      if (commaIndex != -1) {
+        // If a comma is found, extract the substring before the comma
+        typeOfTransformation = line.substring(0, commaIndex);
+      } else {
+        // If no comma is found, use the entire line
+        typeOfTransformation = line;
+      }
 
       if ("Affine2D".equals(typeOfTransformation)) {
         String[] minCoordsLine = reader.readLine().split(", ");
@@ -108,12 +115,12 @@ public class ChaosGameFileHandler {
    * @param path The path where the file will be created or overwritten.
    */
 
-  public void writeToFile(ChaosGameDescription description, String path, String affineType) {
+  public void writeToFile(ChaosGameDescription description, String path, String transformationtype) {
     File file = new File(path);
 
     try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(file.getAbsolutePath()))) {
       if (description.getTransforms().get(0) instanceof AffineTransform2D) {
-        writer.write("Affine2D, " + affineType + "\n");
+        writer.write("Affine2D, " + transformationtype + "\n");
         writer.write(
             description.getMinCoords().getX0() + ", " + description.getMinCoords().getX1() + "\n");
         writer.write(
@@ -128,7 +135,7 @@ public class ChaosGameFileHandler {
         }
       } else{
         JuliaTransform transformation = (JuliaTransform) description.getTransforms().get(0);
-        writer.write("Julia\n");
+        writer.write("Julia, " + transformationtype + "\n");
         writer.write(
             description.getMinCoords().getX0() + ", " + description.getMinCoords().getX1() + "\n");
         writer.write(
@@ -142,19 +149,19 @@ public class ChaosGameFileHandler {
   }
 
 
-  public String readAffineType(String path) {
+  public String readTransformationType(String path) {
     File file = new File(path);
-    String affineType = null;
+    String transformationType = null;
 
     try (BufferedReader reader = Files.newBufferedReader(Paths.get(file.getAbsolutePath()))) {
       String line = reader.readLine();
       int commaIndex = line.indexOf(",");
-      affineType = line.substring(commaIndex + 2);
+      transformationType = line.substring(commaIndex + 2);
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }
 
-    return affineType;
+    return transformationType;
   }
 
   public void writeLineToFile(String path, String line) {

@@ -1,6 +1,8 @@
 package gui;
 
 public interface ChaosGameObserver {
-  void update();
+  void onSliderValueChanged(int value);
+  void onCanvasSizeChanged();
+  void onTransformationSelected(String transformation);
 
 }

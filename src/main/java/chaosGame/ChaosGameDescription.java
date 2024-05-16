@@ -16,6 +16,7 @@ public class ChaosGameDescription {
   private Vector2D maxCoords;
   private List<Transform2D> transforms;
 
+
   /**
    * Constructor for the chaosGame.ChaosGameDescription class. With specified boundary cords and a list of transformations.
    * @param transforms the list of transformations to be applied
@@ -56,4 +57,5 @@ public class ChaosGameDescription {
   public Vector2D getMaxCoords() {
     return maxCoords;
   }
+
 }
