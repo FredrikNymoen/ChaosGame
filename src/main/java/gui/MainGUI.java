@@ -2,23 +2,15 @@ package gui;
 
 import chaosGame.ChaosGame;
 import chaosGame.ChaosGameDescription;
-import factory.ChaosGameDescriptionFactory;
 import filehandling.ChaosGameFileHandler;
 import filehandling.SettingsHandler;
-import java.net.URL;
 import java.util.Properties;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -28,7 +20,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
@@ -44,45 +35,37 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-import javafx.util.converter.DoubleStringConverter;
-import mathcore.Complex;
-import mathcore.Vector2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.control.TextFormatter;
-import javafx.util.converter.IntegerStringConverter;
-import java.util.function.UnaryOperator;
 import transformations.AffineTransform2D;
 import transformations.JuliaTransform;
 
 public class MainGUI extends Application implements ChaosGameObserver{
-  private GridPane affineGrid; // This needs to be accessible by the button's event handler
-  private ToggleGroup transformationsGroup;
-  private ScrollPane scrollPane; // ScrollPane for the left side
-  private Canvas fractalCanvas; // Canvas for drawing the fractal
-  private GraphicsContext gc; // GraphicsContext for fractalCanvas
-  private TextField minXField;
-  private TextField minYField;
-  private TextField maxXField;
-  private TextField maxYField;
-  private Slider stepsSlider;
-  private TextField realPartField;
-  private TextField imaginaryPartField;
-  ChaosGameController controller = new ChaosGameController();
-  private ChaosGame currentChaosGame;
-  
   private VBox leftSide;
+  private ScrollPane scrollPane; // ScrollPane for the left side
   private VBox transformationBox;
+  private ToggleGroup transformationsGroup;
   private VBox stepsBox;
+  private Slider stepsSlider;
   private GridPane coordGrid;
   private GridPane juliaGrid;
   private VBox affineBox; // Container for the affine transformation section
+  private GridPane affineGrid; // This needs to be accessible by the button's event handler
   private Button showButton;
-  private CheckBox colorModeCheckbox;  // Checkbox to toggle color mode
   private Button iterativeTransformationButton;
-  private Properties appSettings = new Properties();
+  private Canvas fractalCanvas; // Canvas for drawing the fractal
+  private GraphicsContext gc; // GraphicsContext for fractalCanvas
+
+  //private TextField realPartField;
+  //private TextField imaginaryPartField;
+  private ChaosGameController controller = new ChaosGameController();
+  private ChaosGame currentChaosGame;
+  
+
+
+  private CheckBox colorModeCheckbox;
+
   private Label missingInputMessage;
   private final String settingsFilePath = "appSettings.properties";
   private Button copyLastTransformationButton;
@@ -103,7 +86,7 @@ public class MainGUI extends Application implements ChaosGameObserver{
     configureTransformationButtonOptions();
     configureStepsSlider();
     configureCoordinateFields();
-    configureJuliaConstantFields();
+    configureJuliaFields();
     configureAffineControls();
     configureColorModeCheckbox();
     configureIterativeTransformationButton();
@@ -127,53 +110,62 @@ public class MainGUI extends Application implements ChaosGameObserver{
   }
 
   private void configureCopyLastTransformationButton() {
-    ChaosGameFileHandler fileHandler = new ChaosGameFileHandler();
     copyLastTransformationButton = new Button("Copy Last Shown Transformation");
     copyLastTransformationButton.getStyleClass().add("option-button");
     copyLastTransformationButton.setOnAction(event -> {
-      if(fileHandler.checkForMandelbrot("file.csv")){
-        transformationsGroup.selectToggle(transformationsGroup.getToggles().get(4));
-      }
-      else {
-        ChaosGameDescription lastDescription = fileHandler.readFromFile("file.csv");
-        minXField.setText(String.valueOf(lastDescription.getMinCoords().getX0()));
-        minYField.setText(String.valueOf(lastDescription.getMinCoords().getX1()));
-        maxXField.setText(String.valueOf(lastDescription.getMaxCoords().getX0()));
-        maxYField.setText(String.valueOf(lastDescription.getMaxCoords().getX1()));
-
-        if (lastDescription.getTransforms().get(0) instanceof AffineTransform2D) {
-          switch (fileHandler.readTransformationType("file.csv")) {
-            case "affine":
-              transformationsGroup.selectToggle(transformationsGroup.getToggles().get(0));
-              copyLastAffineTransformation(lastDescription);
-              break;
-            case "barnsley":
-              transformationsGroup.selectToggle(transformationsGroup.getToggles().get(1));
-              break;
-            case "sierpinski":
-              transformationsGroup.selectToggle(transformationsGroup.getToggles().get(3));
-              break;
-            case "mapleTree":
-              transformationsGroup.selectToggle(transformationsGroup.getToggles().get(5));
-              break;
-          }
-        } else {
-          if(fileHandler.readTransformationType("file.csv").equals("convergence-mode")){
-            toggleSwitch.setSelected(true);
-            toggleSwitch.setText("Use Convergence Iteration mode (click to change)");
-          }
-          else{
-            toggleSwitch.setSelected(false);
-            toggleSwitch.setText("Use Steps mode (click to change)");
-          }
-          transformationsGroup.selectToggle(transformationsGroup.getToggles().get(2));
-          realPartField.setText(
-              ((JuliaTransform) lastDescription.getTransforms().get(0)).getPoint().getX0() + "");
-          imaginaryPartField.setText(
-              ((JuliaTransform) lastDescription.getTransforms().get(0)).getPoint().getX1() + "");
-        }
-      }
+      copyLastTransformation();
     });
+  }
+
+  public void copyLastTransformation() {
+    ChaosGameFileHandler fileHandler = new ChaosGameFileHandler();
+    if(fileHandler.checkForMandelbrot("file.csv")){
+      transformationsGroup.selectToggle(transformationsGroup.getToggles().get(4));
+    }
+    else {
+      ChaosGameDescription lastDescription = fileHandler.readFromFile("file.csv");
+      TextField[] coordinateFields = controller.getCoordinateTextFields(coordGrid);
+      coordinateFields[0].setText(String.valueOf(lastDescription.getMinCoords().getX0()));
+      coordinateFields[1].setText(String.valueOf(lastDescription.getMinCoords().getX1()));
+      coordinateFields[2].setText(String.valueOf(lastDescription.getMaxCoords().getX0()));
+      coordinateFields[3].setText(String.valueOf(lastDescription.getMaxCoords().getX1()));
+
+      if (lastDescription.getTransforms().get(0) instanceof AffineTransform2D) {
+        switch (fileHandler.readTransformationType("file.csv")) {
+          case "affine":
+            transformationsGroup.selectToggle(transformationsGroup.getToggles().get(0));
+            copyLastAffineTransformation(lastDescription);
+            break;
+          case "barnsley":
+            transformationsGroup.selectToggle(transformationsGroup.getToggles().get(1));
+            break;
+          case "sierpinski":
+            transformationsGroup.selectToggle(transformationsGroup.getToggles().get(3));
+            break;
+          case "mapleTree":
+            transformationsGroup.selectToggle(transformationsGroup.getToggles().get(5));
+            break;
+        }
+      } else {
+        if(fileHandler.readTransformationType("file.csv").equals("convergence-mode")){
+          toggleSwitch.setSelected(true);
+          toggleSwitch.setText("Use Convergence Iteration mode (click to change)");
+        }
+        else{
+          toggleSwitch.setSelected(false);
+          toggleSwitch.setText("Use Steps mode (click to change)");
+        }
+        transformationsGroup.selectToggle(transformationsGroup.getToggles().get(2));
+
+        TextField[] coordinateFieldsJulia = controller.getJuliaTextFields(juliaGrid);
+        TextField realPartField = coordinateFieldsJulia[0];
+        TextField imaginaryPartField = coordinateFieldsJulia[1];
+        realPartField.setText(
+            ((JuliaTransform) lastDescription.getTransforms().get(0)).getPoint().getX0() + "");
+        imaginaryPartField.setText(
+            ((JuliaTransform) lastDescription.getTransforms().get(0)).getPoint().getX1() + "");
+      }
+    }
   }
 
   private void copyLastAffineTransformation(ChaosGameDescription lastDescription) {
@@ -283,15 +275,15 @@ public class MainGUI extends Application implements ChaosGameObserver{
     coordGrid.add(minCoordLabel, 0, 0);
     coordGrid.add(maxCoordLabel, 2, 0);
 
-    minXField = controller.createDecimalTextField("-4");
-    minYField = controller.createDecimalTextField("-1");
-    maxXField = controller.createDecimalTextField("4");
-    maxYField = controller.createDecimalTextField("10");
+    TextField minXField = controller.createDecimalTextField("-4");
+    TextField minYField = controller.createDecimalTextField("-1");
+    TextField maxXField = controller.createDecimalTextField("4");
+    TextField maxYField = controller.createDecimalTextField("10");
 
     coordGrid.addRow(1, minXField, minYField, maxXField, maxYField);
   }
 
-  private void configureJuliaConstantFields() {
+  private void configureJuliaFields() {
     juliaGrid = new GridPane();
     juliaGrid.setHgap(10);
     juliaGrid.setVgap(10);
@@ -321,6 +313,9 @@ public class MainGUI extends Application implements ChaosGameObserver{
     juliaGrid.setHgrow(toggleSwitch, Priority.ALWAYS);
     juliaGrid.add(toggleSwitch, 0, 1, 4, 1);
 
+    TextField[] coordinateFieldsJulia = controller.getJuliaTextFields(juliaGrid);
+    TextField realPartField = coordinateFieldsJulia[0];
+    TextField imaginaryPartField = coordinateFieldsJulia[1];
     realPartField = controller.createDecimalTextField("0.0");
     imaginaryPartField = controller.createDecimalTextField("0.0");
     juliaGrid.addRow(2, realPartField, imaginaryPartField);
@@ -375,6 +370,10 @@ public class MainGUI extends Application implements ChaosGameObserver{
   private boolean isAllFieldsValid() {
     boolean allFieldsValid = true;
 
+    TextField[] coordinateFieldsJulia = controller.getJuliaTextFields(juliaGrid);
+    TextField realPartField = coordinateFieldsJulia[0];
+    TextField imaginaryPartField = coordinateFieldsJulia[1];
+
     List<String> missingInputs = controller.checkForEmptyFields(transformationsGroup,
             affineGrid, realPartField, imaginaryPartField);
 
@@ -401,6 +400,12 @@ public class MainGUI extends Application implements ChaosGameObserver{
       }
     }
 
+    TextField[] coordinateFields = controller.getCoordinateTextFields(coordGrid);
+    TextField minXField = coordinateFields[0];
+    TextField minYField = coordinateFields[1];
+    TextField maxXField = coordinateFields[2];
+    TextField maxYField = coordinateFields[3];
+
     // Validate and parse minimum coordinates
     if (minXField.getText().trim().isEmpty() || minYField.getText().trim().isEmpty()) {
       minXField.setStyle("-fx-border-color: red;");
@@ -408,8 +413,6 @@ public class MainGUI extends Application implements ChaosGameObserver{
       allFieldsValid = false;
     }
     else {
-      Double minX = Double.parseDouble(minXField.getText());
-      Double minY = Double.parseDouble(minYField.getText());
       minXField.setStyle("");
       minYField.setStyle("");
     }
@@ -421,8 +424,6 @@ public class MainGUI extends Application implements ChaosGameObserver{
       allFieldsValid = false;
     }
     else {
-      Double maxX = Double.parseDouble(maxXField.getText());
-      Double maxY = Double.parseDouble(maxYField.getText());
       maxXField.setStyle("");
       maxYField.setStyle("");
     }
@@ -437,10 +438,14 @@ public class MainGUI extends Application implements ChaosGameObserver{
         node.setStyle("");
       }
     }
-      affineGrid.setStyle("");
-      affineBox.setStyle("");
-      realPartField.setStyle("");
-      imaginaryPartField.setStyle("");
+    TextField[] coordinateFieldsJulia = controller.getJuliaTextFields(juliaGrid);
+    TextField realPartField = coordinateFieldsJulia[0];
+    TextField imaginaryPartField = coordinateFieldsJulia[1];
+
+    affineGrid.setStyle("");
+    affineBox.setStyle("");
+    realPartField.setStyle("");
+    imaginaryPartField.setStyle("");
   }
 
 
@@ -665,6 +670,15 @@ public class MainGUI extends Application implements ChaosGameObserver{
 
 
   private void loadSettings() {
+    TextField[] coordinateFields = controller.getCoordinateTextFields(coordGrid);
+    TextField minXField = coordinateFields[0];
+    TextField minYField = coordinateFields[1];
+    TextField maxXField = coordinateFields[2];
+    TextField maxYField = coordinateFields[3];
+    TextField[] coordinateFieldsJulia = controller.getJuliaTextFields(juliaGrid);
+    TextField realPartField = coordinateFieldsJulia[0];
+    TextField imaginaryPartField = coordinateFieldsJulia[1];
+
     Properties appSettings = settingsHandler.loadSettings();
     minXField.setText(appSettings.getProperty("minX", "-4"));
     minYField.setText(appSettings.getProperty("minY", "-1"));
@@ -689,6 +703,15 @@ public class MainGUI extends Application implements ChaosGameObserver{
   }
 
   private void saveSettings() {
+    TextField[] coordinateFields = controller.getCoordinateTextFields(coordGrid);
+    TextField minXField = coordinateFields[0];
+    TextField minYField = coordinateFields[1];
+    TextField maxXField = coordinateFields[2];
+    TextField maxYField = coordinateFields[3];
+    TextField[] coordinateFieldsJulia = controller.getJuliaTextFields(juliaGrid);
+    TextField realPartField = coordinateFieldsJulia[0];
+    TextField imaginaryPartField = coordinateFieldsJulia[1];
+
     Properties appSettings = new Properties();
     appSettings.setProperty("minX", minXField.getText());
     appSettings.setProperty("minY", minYField.getText());

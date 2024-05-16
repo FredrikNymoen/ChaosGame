@@ -284,4 +284,18 @@ public class ChaosGameController {
     return radioButton;
   }
 
+  public TextField[] getCoordinateTextFields(GridPane coordGrid){
+    TextField minXField = ((TextField) getNodeFromGridPane(coordGrid, 0, 1));
+    TextField minYField = ((TextField) getNodeFromGridPane(coordGrid, 1, 1));
+    TextField maxXField = ((TextField) getNodeFromGridPane(coordGrid, 2, 1));
+    TextField maxYField = ((TextField) getNodeFromGridPane(coordGrid, 3, 1));
+    return new TextField[]{minXField, minYField, maxXField, maxYField};
+  }
+
+  public TextField[] getJuliaTextFields(GridPane juliaGrid){
+    TextField realPartField = ((TextField) getNodeFromGridPane(juliaGrid, 0, 2));
+    TextField imaginaryPartField = ((TextField) getNodeFromGridPane(juliaGrid, 1, 2));
+    return new TextField[]{realPartField, imaginaryPartField};
+  }
+
 }
