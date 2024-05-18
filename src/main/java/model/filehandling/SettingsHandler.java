@@ -1,4 +1,4 @@
-package filehandling;
+package model.filehandling;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

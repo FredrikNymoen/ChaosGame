@@ -1,12 +1,12 @@
-import chaosGame.ChaosGameDescription;
-import filehandling.ChaosGameFileHandler;
-import mathcore.Matrix2x2;
-import mathcore.Vector2D;
+import model.chaosGame.ChaosGameDescription;
+import model.filehandling.ChaosGameFileHandler;
+import model.mathcore.Matrix2x2;
+import model.mathcore.Vector2D;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import transformations.AffineTransform2D;
-import transformations.Transform2D;
+import model.transformations.AffineTransform2D;
+import model.transformations.Transform2D;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -18,8 +18,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test class for the filehandling.ChaosGameFileHandler class.
- * This class tests the writeToFile and readFromFile methods of the filehandling.ChaosGameFileHandler class.
+ * Test class for the model.filehandling.ChaosGameFileHandler class.
+ * This class tests the writeToFile and readFromFile methods of the model.filehandling.ChaosGameFileHandler class.
  */
 
 class ChaosGameFileHandlerTest {
@@ -29,7 +29,7 @@ class ChaosGameFileHandlerTest {
     private Path tempFile;
 
     /**
-     * Sets up the filehandling.ChaosGameFileHandler with a temporary directory.
+     * Sets up the model.filehandling.ChaosGameFileHandler with a temporary directory.
      * It writes an affine transformation to a file and then reads it back from the file.
      * This method is called before each test.
      * @param tempDir The temporary directory used for the tests.
@@ -52,8 +52,8 @@ class ChaosGameFileHandlerTest {
     }
 
     /**
-     * Tests the writeToFile and readFromFile methods of the filehandling.ChaosGameFileHandler class with a positive test case.
-     * It writes a chaosGame.ChaosGameDescription to a file and then reads it back from the file.
+     * Tests the writeToFile and readFromFile methods of the model.filehandling.ChaosGameFileHandler class with a positive test case.
+     * It writes a model.chaosGame.ChaosGameDescription to a file and then reads it back from the file.
      * @throws Exception
      */
 
@@ -79,8 +79,8 @@ class ChaosGameFileHandlerTest {
     }
 
     /**
-     * Tests the writeToFile and readFromFile methods of the filehandling.ChaosGameFileHandler class.
-     * It writes a chaosGame.ChaosGameDescription to a file and then reads it back from the file.
+     * Tests the writeToFile and readFromFile methods of the model.filehandling.ChaosGameFileHandler class.
+     * It writes a model.chaosGame.ChaosGameDescription to a file and then reads it back from the file.
      * It then checks if the minCoords, maxCoords and transforms are equal.
      * @throws Exception
      */

@@ -1,4 +1,4 @@
-package mathcore;
+package model.mathcore;
 
 /**
  * A 2x2 matrix class that can multiply a 2D vector with the matrix.
@@ -15,7 +15,7 @@ public class Matrix2x2 {
   private double a11;
 
   /**
-   * Constructor for the mathcore.Matrix2x2 class.
+   * Constructor for the model.mathcore.Matrix2x2 class.
    *
    * @param a00 row one, column one in the matrix
    * @param a01 row one, column two in the matrix
@@ -33,7 +33,7 @@ public class Matrix2x2 {
    * Multiplies a 2D vector with the matrix. Then returns a new vector with the result.
    *
    * @param vector the vector to be multiplied with the matrix
-   * @return mathcore.Vector2D the result of the multiplication
+   * @return model.mathcore.Vector2D the result of the multiplication
    */
   public Vector2D multiply(Vector2D vector){
     double newX = a00 * vector.getX0() + a01 * vector.getX1();

@@ -1,11 +1,11 @@
-package transformations;
+package model.transformations;
 
 import java.util.List;
-import mathcore.Complex;
-import mathcore.Vector2D;
+import model.mathcore.Complex;
+import model.mathcore.Vector2D;
 
 /**
- * transformations.JuliaTransform class is responsible for transforming a mathcore.Vector2D point on the form z -> ±sqrt(z - c).
+ * model.transformations.JuliaTransform class is responsible for transforming a model.mathcore.Vector2D point on the form z -> ±sqrt(z - c).
  *
  * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0
@@ -17,7 +17,7 @@ public class JuliaTransform implements Transform2D {
   private int iterations;
 
   /**
-   * Constructor for transformations.JuliaTransform.
+   * Constructor for model.transformations.JuliaTransform.
    *
    * @param point the complex point
    * @param sign  determines the sign of the square root

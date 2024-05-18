@@ -1,6 +1,6 @@
-package transformations;
+package model.transformations;
 
-import mathcore.Vector2D;
+import model.mathcore.Vector2D;
 
 /**
  * An interface for 2D transformations.

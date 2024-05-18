@@ -1,6 +1,7 @@
-package filehandling;
+package model.filehandling;
 
-import chaosGame.ChaosGameDescription;
+import java.util.logging.Logger;
+import model.chaosGame.ChaosGameDescription;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -8,28 +9,28 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import mathcore.Complex;
-import mathcore.Matrix2x2;
-import mathcore.Vector2D;
-import transformations.AffineTransform2D;
-import transformations.JuliaTransform;
-import transformations.Transform2D;
+import model.mathcore.Complex;
+import model.mathcore.Matrix2x2;
+import model.mathcore.Vector2D;
+import model.transformations.AffineTransform2D;
+import model.transformations.JuliaTransform;
+import model.transformations.Transform2D;
 
 /**
- * A class that handles reading and writing to files for the chaosGame.ChaosGameDescription class.
+ * A class that handles reading and writing to files for the model.chaosGame.ChaosGameDescription class.
  * This class provides methods to serialize the configuration of a Chaos Game into
  * file and to deserialize it back into an object.
  */
 public class ChaosGameFileHandler {
 
   /**
-   * Reads a chaosGame.ChaosGameDescription from a specified file. This method parses the file
+   * Reads a model.chaosGame.ChaosGameDescription from a specified file. This method parses the file
    * assumed to be in a custom format that lists transformations and boundary coordinates
    * for the Chaos Game. The file can describe different types of transformations based
    * on its first line.
    *
    * @param path The path to the file containing the Chaos Game configuration.
-   * @return A new chaosGame.ChaosGameDescription object initialized with the parameters read from the file.
+   * @return A new model.chaosGame.ChaosGameDescription object initialized with the parameters read from the file.
    */
 
   public ChaosGameDescription readFromFile(String path) {
@@ -107,11 +108,11 @@ public class ChaosGameFileHandler {
   }
 
   /**
-   * Writes a given chaosGame.ChaosGameDescription to a specified file. This method serializes the
+   * Writes a given model.chaosGame.ChaosGameDescription to a specified file. This method serializes the
    * Chaos Game configuration into a custom format, allowing it to be read and reconstructed
    * later. The format includes information on transformations and boundary coordinates.
    *
-   * @param description The chaosGame.ChaosGameDescription object to be written to the file.
+   * @param description The model.chaosGame.ChaosGameDescription object to be written to the file.
    * @param path The path where the file will be created or overwritten.
    */
 
@@ -164,11 +165,13 @@ public class ChaosGameFileHandler {
     return transformationType;
   }
 
+
   public void writeLineToFile(String path, String line) {
     File file = new File(path);
     try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(file.getAbsolutePath()))) {
       writer.write(line);
     } catch (Exception e) {
+
     }
   }
 

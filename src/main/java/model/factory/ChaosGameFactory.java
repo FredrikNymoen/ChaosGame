@@ -1,10 +1,10 @@
-package factory;
+package model.factory;
 
-import chaosGame.ChaosCanvas;
-import chaosGame.ChaosGame;
-import chaosGame.ChaosGameDescription;
-import mathcore.Complex;
-import mathcore.Vector2D;
+import model.chaosGame.ChaosCanvas;
+import model.chaosGame.ChaosGame;
+import model.chaosGame.ChaosGameDescription;
+import model.mathcore.Complex;
+import model.mathcore.Vector2D;
 
 public class ChaosGameFactory {
 
@@ -74,7 +74,6 @@ public class ChaosGameFactory {
 
   public ChaosGame createMandelbrotChaosGame(){
     double r = 2; // Escape radius
-    System.out.println(r);
 
     ChaosGame chaosGame = new ChaosGame(900, 750);
     ChaosCanvas canvas = chaosGame.getCanvas();

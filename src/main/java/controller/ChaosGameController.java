@@ -1,11 +1,12 @@
-package gui;
+package controller;
 
-import chaosGame.ChaosCanvas;
-import chaosGame.ChaosGame;
-import chaosGame.ChaosGameDescription;
-import factory.ChaosGameDescriptionFactory;
-import factory.ChaosGameFactory;
-import filehandling.ChaosGameFileHandler;
+import java.util.HashMap;
+import java.util.Map;
+import model.chaosGame.ChaosGame;
+import model.chaosGame.ChaosGameDescription;
+import model.factory.ChaosGameDescriptionFactory;
+import model.factory.ChaosGameFactory;
+import model.filehandling.ChaosGameFileHandler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,9 +23,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.util.converter.DoubleStringConverter;
-import mathcore.Complex;
-import mathcore.Matrix2x2;
-import mathcore.Vector2D;
+import model.mathcore.Complex;
+import model.mathcore.Matrix2x2;
+import model.mathcore.Vector2D;
 
 /**
  * ChaosGameController class is used to control the chaos game GUI.
@@ -77,8 +78,6 @@ public class ChaosGameController {
 
       // Now you have the values for this row in matrixValues and vectorValues
       // Do whatever processing you need with these values
-      System.out.println("Matrix Values: " + Arrays.toString(matrixValues));
-      System.out.println("Vector Values: " + Arrays.toString(vectorValues));
       Matrix2x2 matrix = new Matrix2x2(matrixValues[0], matrixValues[1], matrixValues[2],
           matrixValues[3]);
       Vector2D vector = new Vector2D(vectorValues[0], vectorValues[1]);
@@ -107,20 +106,6 @@ public class ChaosGameController {
     return null;
   }
 
-  // Helper method to create a TextField with placeholder text
-
-  /**
-   * Helper method to create a TextField with placeholder text
-   *
-   * @param placeholder the placeholder text for the TextField
-   * @return TextField the created TextField
-   */
-  public TextField createTextFieldWithPlaceholder(String placeholder) {
-    TextField textField = new TextField();
-    textField.setPromptText(placeholder);
-    return textField;
-  }
-
 
   /**
    * Handles the selection of a transformation from a ToggleGroup. The method retrieves the selected
@@ -142,10 +127,15 @@ public class ChaosGameController {
     ChaosGameDescription description = null;
     Complex c = null;
 
-    Vector2D minCoords = new Vector2D(Double.parseDouble(((TextField) getNodeFromGridPane(coordGrid, 0, 1)).getText()),
-        Double.parseDouble(((TextField) getNodeFromGridPane(coordGrid, 1, 1)).getText()));
-    Vector2D maxCoords = new Vector2D(Double.parseDouble(((TextField) getNodeFromGridPane(coordGrid, 2, 1)).getText()),
-        Double.parseDouble(((TextField) getNodeFromGridPane(coordGrid, 3, 1)).getText()));
+    TextField[] coordFields = getCoordinateTextFields(coordGrid);
+    TextField minXField = coordFields[0];
+    TextField minYField = coordFields[1];
+    TextField maxXField = coordFields[2];
+    TextField maxYField = coordFields[3];
+    Vector2D minCoords = new Vector2D(Double.parseDouble(minXField.getText()),
+        Double.parseDouble(minYField.getText()));
+    Vector2D maxCoords = new Vector2D(Double.parseDouble(maxXField.getText()),
+        Double.parseDouble(maxYField.getText()));
 
     RadioButton selectedButton = (RadioButton) transformationsGroup.getSelectedToggle();
     if (selectedButton != null) {
@@ -158,8 +148,10 @@ public class ChaosGameController {
           fileHandler.writeToFile(description, "file.csv", "affine");
           break;
         case "Julia":
-          c = new Complex(Double.parseDouble(((TextField) getNodeFromGridPane(juliaGrid, 0, 2)).getText()),
-              Double.parseDouble(((TextField) getNodeFromGridPane(juliaGrid, 1, 2)).getText()));
+          TextField[] juliaFields = getJuliaTextFields(juliaGrid);
+          double realPart = Double.parseDouble(juliaFields[0].getText());
+          double imaginaryPart = Double.parseDouble(juliaFields[1].getText());
+          c = new Complex(realPart, imaginaryPart);
           description = factory.julia(minCoords, maxCoords, c);
           break;
         case "Sierpinski":
@@ -203,66 +195,6 @@ public class ChaosGameController {
     return chaosGame;
   }
 
-  public List<String> checkForEmptyFields(ToggleGroup transformationsGroup, GridPane affineGrid,
-                                          TextField realPartField, TextField imaginaryPartField) {
-    List<String> missingArray = new ArrayList<>();
-    RadioButton selectedButton = (RadioButton) transformationsGroup.getSelectedToggle();
-    if (selectedButton != null) {  // Make sure there is a selected toggle
-      switch (selectedButton.getText()) {
-        case "Affine":
-          for (int row = 0; row < affineGrid.getRowCount(); row++) {
-            for (int i = 0; i < 4; i++) {  // Check matrix elements
-              TextField textField = (TextField) getNodeFromGridPane(affineGrid, i, row);
-              if (!isDouble(textField.getText())) {
-                missingArray.add("(" + row + ", " + i + ")");
-              }
-            }
-            for (int i = 5; i < 7; i++) {  // Check vector elements
-              TextField textField = (TextField) getNodeFromGridPane(affineGrid, i, row);
-              if (!isDouble(textField.getText())) {
-                missingArray.add("(" + row + ", " + i + ")");
-              }
-            }
-          }
-          break;
-        case "Julia":
-          if (!isDouble(realPartField.getText())) {
-            missingArray.add("Real part");
-          }
-          if (!isDouble(imaginaryPartField.getText())) {
-            missingArray.add("Imaginary part");
-          }
-          break;
-      }
-    }
-    return missingArray;
-  }
-
-  public boolean isDouble(String text) {
-    try {
-      Double.parseDouble(text); // Try to parse the text to a double
-      return true; // Parsing succeeded, so it's a valid double
-    } catch (NumberFormatException e) {
-      return false; // Parsing failed, it's not a valid double
-    }
-  }
-
-
-  public Color getColorForValue(double intensity) {
-    if (intensity < 0.25) {
-      // Interpolate between blue (0) and green (0.25)
-      return Color.BLUE.interpolate(Color.GREEN, intensity * 4);
-    } else if (intensity < 0.5) {
-      // Interpolate between green (0.25) and yellow (0.5)
-      return Color.GREEN.interpolate(Color.YELLOW, (intensity - 0.25) * 4);
-    } else if (intensity < 0.75) {
-      // Interpolate between yellow (0.5) and orange (0.75)
-      return Color.YELLOW.interpolate(Color.ORANGE, (intensity - 0.5) * 4);
-    } else {
-      // Interpolate between orange (0.75) and red (1)
-      return Color.ORANGE.interpolate(Color.RED, (intensity - 0.75) * 4);
-    }
-  }
 
   public TextField createDecimalTextField(String defaultValue) {
     TextField textField = new TextField(defaultValue);
@@ -296,6 +228,22 @@ public class ChaosGameController {
     TextField realPartField = ((TextField) getNodeFromGridPane(juliaGrid, 0, 2));
     TextField imaginaryPartField = ((TextField) getNodeFromGridPane(juliaGrid, 1, 2));
     return new TextField[]{realPartField, imaginaryPartField};
+  }
+
+  public Map<String, TextField> getTextFieldsCoordAndJuliaMap(GridPane coordGrid, GridPane juliaGrid) {
+    Map<String, TextField> fields = new HashMap<>();
+
+    TextField[] coordinateFields = getCoordinateTextFields(coordGrid);
+    fields.put("minXField", coordinateFields[0]);
+    fields.put("minYField", coordinateFields[1]);
+    fields.put("maxXField", coordinateFields[2]);
+    fields.put("maxYField", coordinateFields[3]);
+
+    TextField[] coordinateFieldsJulia = getJuliaTextFields(juliaGrid);
+    fields.put("realPartField", coordinateFieldsJulia[0]);
+    fields.put("imaginaryPartField", coordinateFieldsJulia[1]);
+
+    return fields;
   }
 
 }

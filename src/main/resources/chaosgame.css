@@ -37,8 +37,6 @@
 
 .button:hover {
   -fx-background-color: #c89235;
-  /*-fx-scale-x: 1.05;*/
-  /*-fx-scale-y: 1.05;*/
 }
 
 
@@ -131,12 +129,15 @@
   -fx-text-fill: #4A2E19;
   -fx-border-color: #4A2E19;
 }
+.option-button:pressed{
+  -fx-background-color: #ad7e34;
+  -fx-text-fill: #4A2E19;
+  -fx-border-color: #4A2E19;
+}
 .iterativeTransformation-button{
   -fx-pref-height: 20px;
   -fx-font-size: 14.5px;
 }
-.iterativeTransformation-button:pressed{
-  -fx-background-color: #ad7e34;
-  -fx-text-fill: #4A2E19;
-  -fx-border-color: #4A2E19;
+.copy-button{
+  -fx-min-height: 50px;
 }
