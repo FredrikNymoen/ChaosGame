@@ -28,6 +28,8 @@ import util.Utility;
 /**
  * This class provides methods to create and configure the layout of the UI components
  * for the Chaos Game application.
+ * @author Fredrik Nymoen & Amund Larsen
+ * @version v1.0.0
  */
 public class Layout {
 

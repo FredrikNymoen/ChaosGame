@@ -9,11 +9,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import model.chaosGame.ChaosGame;
 import model.chaosGame.ChaosGameDescription;
-import view.Layout;
 
 /**
  * This interface defines the observer for the Chaos Game application.
  * It contains methods that handle various events and actions related to the chaos game and its UI components.
+ * @author Fredrik Nymoen & Amund Larsen
+ * @version v1.0.0
  */
 public interface ChaosGameObserver {
   /**

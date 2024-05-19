@@ -3,9 +3,7 @@ package view;
 import controller.HandleActionController;
 import controller.ValidationController;
 import java.util.Map;
-import javafx.geometry.Pos;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 import model.chaosGame.ChaosGame;
 import java.util.Properties;
 import javafx.application.Application;
@@ -33,6 +31,8 @@ import util.Utility;
 /**
  * The main graphical user interface class for the Chaos Game application.
  * This class sets up the layout, initializes components, and handles events.
+ * @author Fredrik Nymoen & Amund Larsen
+ * @version v1.0.0
  */
 public class MainGUI extends Application {
 
