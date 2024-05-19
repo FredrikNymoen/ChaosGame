@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import util.Utility;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,7 +39,7 @@ class ChaosGameFileHandlerTest {
 
     @BeforeEach
     void setUp(@TempDir Path tempDir) throws Exception {
-        fileHandler = new ChaosGameFileHandler();
+        fileHandler = new ChaosGameFileHandler(Utility.SHOWN_TRANSFORMATION_FILE_PATH);
         Vector2D minCoords = new Vector2D(0, 0);
         Vector2D maxCoords = new Vector2D(10, 10);
 
@@ -74,7 +75,7 @@ class ChaosGameFileHandlerTest {
         }
 
 
-        ChaosGameDescription readDescription = fileHandler.readFromFile(tempFile.toString());
+        ChaosGameDescription readDescription = fileHandler.readFromFile();
         assertNotNull(readDescription, "readFromFile should return a non-null description");
     }
 
@@ -92,7 +93,7 @@ class ChaosGameFileHandlerTest {
         assertTrue(Files.exists(tempFile), "File should exist");
         assertNotEquals(0, Files.size(tempFile), "File should not be empty");
 
-        ChaosGameDescription readDescription = fileHandler.readFromFile(tempFile.toString());
+        ChaosGameDescription readDescription = fileHandler.readFromFile();
         assertNotNull(readDescription, "readFromFile should return a non-null description");
 
         assertEquals(description.getMinCoords().getX0(), readDescription.getMinCoords().getX0(),

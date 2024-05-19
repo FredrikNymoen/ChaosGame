@@ -107,9 +107,11 @@ public class ChaosGame {
       for (int j = 0; j < description.getTransforms().size(); j++) {
         Transform2D transform = description.getTransforms().get(j);
         Vector2D newPoint = transform.transform(currentPoint);
-        if (canvas.getPixel(newPoint) >= 20) {
+
+        if(canvas.checkIfCoordAsPixelIsOutsideCanvas(newPoint) || canvas.getPixel(newPoint) >= 20){
           continue;
         }
+
         pointStack.push(newPoint);
         canvas.putPixel(newPoint);
       }

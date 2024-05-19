@@ -1,8 +1,10 @@
 package view;
 
+import java.util.function.UnaryOperator;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -10,6 +12,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
@@ -17,12 +21,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import controller.ChaosGameController;
 import javafx.stage.Screen;
+import javafx.util.converter.DoubleStringConverter;
 import util.Utility;
 
 public class Layout {
-  private ChaosGameController controller = new ChaosGameController();
 
   public ScrollPane createLeftsideScrollPane() {
     VBox leftSide = new VBox(10);
@@ -34,13 +37,22 @@ public class Layout {
     return scrollPane;
   }
 
+  public VBox createTransformationsBox(){
+    VBox transformationBox = new VBox(5);
+    transformationBox.setAlignment(Pos.CENTER);
+    Label transformationLabel = new Label("Transformations");
+    transformationLabel.getStyleClass().add(Utility.BOLD_LABEL);
+    transformationBox.getChildren().add(transformationLabel);
+    return transformationBox;
+  }
+
   public void addTransformationOptions(VBox transformationBox, ToggleGroup transformationsGroup){
     // Create and add radio buttons
     for (String[] row : Utility.TRANSFORMATIONS) {
       HBox rowBox = new HBox(10);
       rowBox.setAlignment(Pos.CENTER);
       for (String label : row) {
-        RadioButton radioButton = controller.createRadioButton(transformationsGroup, label);
+        RadioButton radioButton = createRadioButton(transformationsGroup, label);
         rowBox.getChildren().add(radioButton);
       }
       transformationBox.getChildren().add(rowBox);
@@ -52,7 +64,7 @@ public class Layout {
     stepsBox.setAlignment(Pos.CENTER);
 
     Label stepsLabel = new Label("Steps");
-    stepsLabel.getStyleClass().add("bold-label");
+    stepsLabel.getStyleClass().add(Utility.BOLD_LABEL);
 
     // Configure the slider
     Slider stepsSlider = new Slider(0, 10000000, 0); // Min, Max, Initial value
@@ -80,10 +92,10 @@ public class Layout {
     coordGrid.add(minCoordLabel, 0, 0);
     coordGrid.add(maxCoordLabel, 2, 0);
 
-    TextField minXField = controller.createDecimalTextField("-4");
-    TextField minYField = controller.createDecimalTextField("-1");
-    TextField maxXField = controller.createDecimalTextField("4");
-    TextField maxYField = controller.createDecimalTextField("10");
+    TextField minXField = createDecimalTextField("-4");
+    TextField minYField = createDecimalTextField("-1");
+    TextField maxXField = createDecimalTextField("4");
+    TextField maxYField = createDecimalTextField("10");
 
     coordGrid.addRow(1, minXField, minYField, maxXField, maxYField);
     return coordGrid;
@@ -109,8 +121,8 @@ public class Layout {
     juliaGrid.setHgrow(juliaToggleSwitch, Priority.ALWAYS);
     juliaGrid.add(juliaToggleSwitch, 0, 1, 4, 1);
 
-    TextField realPartField = controller.createDecimalTextField("0.0");
-    TextField imaginaryPartField = controller.createDecimalTextField("0.0");
+    TextField realPartField = createDecimalTextField("0.0");
+    TextField imaginaryPartField = createDecimalTextField("0.0");
     juliaGrid.addRow(2, realPartField, imaginaryPartField);
     return juliaGrid;
   }
@@ -134,6 +146,20 @@ public class Layout {
     return affineBox;
   }
 
+  public Button createIterativeTransformationButton(){
+    Button iterativeTransformationButton = new Button("Make fractal with Iterative Transformation mode");
+    iterativeTransformationButton.getStyleClass().add(Utility.OPTION_BUTTON);
+    iterativeTransformationButton.getStyleClass().add("iterativeTransformation-button");
+    return iterativeTransformationButton;
+  }
+
+  public Button createCopyLastTransformationButton(){
+    Button copyLastTransformationButton = new Button("Copy Last Shown Transformation");
+    copyLastTransformationButton.getStyleClass().add(Utility.OPTION_BUTTON);
+    copyLastTransformationButton.getStyleClass().add("copy-button");
+    return copyLastTransformationButton;
+  }
+
   public void setupLeftSideWithSeperatorLine(ScrollPane scrollPane, VBox leftSide, BorderPane root){
     scrollPane.setContent(leftSide);
     double screenWidth = Screen.getPrimary().getBounds().getWidth();
@@ -150,6 +176,25 @@ public class Layout {
   }
 
 
+  public TextField createDecimalTextField(String defaultValue) {
+    TextField textField = new TextField(defaultValue);
+    UnaryOperator<Change> decimalFilter = change -> change.getControlNewText().matches("-?((\\d*)|(\\d+\\.\\d*))") ? change : null;
+    textField.setTextFormatter(new TextFormatter<>(new DoubleStringConverter(), Double.parseDouble(defaultValue), decimalFilter));
+    return textField;
+  }
+
+  public HBox createCenteredHBox(Node node) {
+    HBox hbox = new HBox(node);
+    hbox.setAlignment(Pos.CENTER);
+    return hbox;
+  }
+
+  public RadioButton createRadioButton(ToggleGroup toggleGroup, String label) {
+    RadioButton radioButton = new RadioButton(label);
+    radioButton.setUserData(label);
+    radioButton.setToggleGroup(toggleGroup);
+    return radioButton;
+  }
 
 
 

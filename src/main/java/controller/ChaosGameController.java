@@ -1,7 +1,12 @@
 package controller;
 
+import exception.FileEmptyException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.control.CheckBox;
 import model.chaosGame.ChaosGame;
 import model.chaosGame.ChaosGameDescription;
 import model.factory.ChaosGameDescriptionFactory;
@@ -23,20 +28,33 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.util.converter.DoubleStringConverter;
+import model.filehandling.SettingsHandler;
 import model.mathcore.Complex;
 import model.mathcore.Matrix2x2;
 import model.mathcore.Vector2D;
+import util.ErrorHandling;
+import util.UIHelper;
+import util.Utility;
 
 /**
  * ChaosGameController class is used to control the chaos game GUI.
  * The class contains methods to get affine transformation values,
  * create a chaos game and handle transformation selection.
+ * @author Fredrik Nymoen & Amund Larsen
+ * @version v1.0.0
  */
 
 public class ChaosGameController {
-  private ChaosGameFactory chaosGameFactory;
+  private final ChaosGameFactory chaosGameFactory;
+  private final ChaosGameDescriptionFactory factory;
+  private final SettingsHandler settingsHandler;
+  private final ChaosGameFileHandler fileHandler;
+
   public ChaosGameController(){
     chaosGameFactory = new ChaosGameFactory();
+    factory = new ChaosGameDescriptionFactory();
+    settingsHandler = new SettingsHandler(Utility.SETTINGS_FILE_PATH);
+    fileHandler = new ChaosGameFileHandler(Utility.SHOWN_TRANSFORMATION_FILE_PATH);
   }
 
   /**
@@ -58,17 +76,13 @@ public class ChaosGameController {
 
       // Retrieve matrix values
       for (int i = 0; i < 4; i++) { // matrixValues indexes are 0 to 3
-        TextField textField = (TextField) getNodeFromGridPane(affineGrid, i, row);
-        try {
-          matrixValues[i] = Double.parseDouble(textField.getText());
-        } catch (NumberFormatException e) {
-          System.out.println("Invalid input for matrix values.");
-        }
+        TextField textField = (TextField) UIHelper.getNodeFromGridPane(affineGrid, i, row);
+        matrixValues[i] = Double.parseDouble(textField.getText());
       }
 
       // Retrieve vector values
       for (int i = 0; i < 2; i++) { // vectorValues indexes are 0 to 1, grid positions are 5 and 6
-        TextField textField = (TextField) getNodeFromGridPane(affineGrid, i + 5, row);
+        TextField textField = (TextField) UIHelper.getNodeFromGridPane(affineGrid, i + 5, row);
         try {
           vectorValues[i] = Double.parseDouble(textField.getText());
         } catch (NumberFormatException e) {
@@ -76,8 +90,6 @@ public class ChaosGameController {
         }
       }
 
-      // Now you have the values for this row in matrixValues and vectorValues
-      // Do whatever processing you need with these values
       Matrix2x2 matrix = new Matrix2x2(matrixValues[0], matrixValues[1], matrixValues[2],
           matrixValues[3]);
       Vector2D vector = new Vector2D(vectorValues[0], vectorValues[1]);
@@ -85,27 +97,6 @@ public class ChaosGameController {
       affineVectors.add(vector);
     }
   }
-
-  /**
-   * Gets a node from a GridPane at a specified column and row. The method iterates through the
-   * children of the GridPane and returns the node at the specified column and row. If no node is
-   * found, the method returns null.
-   *
-   * @param gridPane the GridPane to get the node from
-   * @param col      the column of the node
-   * @param row      the row of the node
-   * @return Node the node at the specified column and row
-   */
-
-  public Node getNodeFromGridPane(GridPane gridPane, int col, int row) {
-    for (Node node : gridPane.getChildren()) {
-      if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
-        return node;
-      }
-    }
-    return null;
-  }
-
 
   /**
    * Handles the selection of a transformation from a ToggleGroup. The method retrieves the selected
@@ -121,129 +112,176 @@ public class ChaosGameController {
 
 
   public ChaosGame handleTransformationSelection(ToggleGroup transformationsGroup,
-      GridPane affineGrid, GridPane juliaGrid, GridPane coordGrid, int steps) {
-    ChaosGameDescriptionFactory factory = new ChaosGameDescriptionFactory();
-    ChaosGameFileHandler fileHandler = new ChaosGameFileHandler();
+      GridPane affineGrid, GridPane juliaGrid, GridPane coordGrid, int steps) throws Exception{
+    ChaosGame chaosGame = null;
     ChaosGameDescription description = null;
     Complex c = null;
 
-    TextField[] coordFields = getCoordinateTextFields(coordGrid);
-    TextField minXField = coordFields[0];
-    TextField minYField = coordFields[1];
-    TextField maxXField = coordFields[2];
-    TextField maxYField = coordFields[3];
-    Vector2D minCoords = new Vector2D(Double.parseDouble(minXField.getText()),
-        Double.parseDouble(minYField.getText()));
-    Vector2D maxCoords = new Vector2D(Double.parseDouble(maxXField.getText()),
-        Double.parseDouble(maxYField.getText()));
+    try {
+      TextField[] coordFields = UIHelper.getCoordinateTextFields(coordGrid);
+      TextField minXField = coordFields[0];
+      TextField minYField = coordFields[1];
+      TextField maxXField = coordFields[2];
+      TextField maxYField = coordFields[3];
+      Vector2D minCoords = new Vector2D(Double.parseDouble(minXField.getText()),
+          Double.parseDouble(minYField.getText()));
+      Vector2D maxCoords = new Vector2D(Double.parseDouble(maxXField.getText()),
+          Double.parseDouble(maxYField.getText()));
 
-    RadioButton selectedButton = (RadioButton) transformationsGroup.getSelectedToggle();
-    if (selectedButton != null) {
-      switch (selectedButton.getText()) {
-        case "Affine":
-          List<Matrix2x2> matrices = new ArrayList<>();
-          List<Vector2D> vectors = new ArrayList<>();
-          getAffineTransformationValues(matrices, vectors, affineGrid);
-          description = factory.affine(matrices, vectors, minCoords, maxCoords);
-          fileHandler.writeToFile(description, "file.csv", "affine");
-          break;
+      RadioButton selectedButton = (RadioButton) transformationsGroup.getSelectedToggle();
+      if (selectedButton != null) {
+        switch (selectedButton.getText()) {
+          case "Affine":
+            List<Matrix2x2> matrices = new ArrayList<>();
+            List<Vector2D> vectors = new ArrayList<>();
+            getAffineTransformationValues(matrices, vectors, affineGrid);
+            description = factory.affine(matrices, vectors, minCoords, maxCoords);
+            writeToFile(description, "affine");
+            break;
+          case "Julia":
+            TextField[] juliaFields = UIHelper.getJuliaTextFields(juliaGrid);
+            double realPart = Double.parseDouble(juliaFields[0].getText());
+            double imaginaryPart = Double.parseDouble(juliaFields[1].getText());
+            c = new Complex(realPart, imaginaryPart);
+            description = factory.julia(minCoords, maxCoords, c);
+            break;
+          case "Sierpinski":
+            description = factory.sierpinski(minCoords, maxCoords);
+            writeToFile(description, "sierpinski");
+            break;
+          case "Barnsley":
+            description = factory.barnsley(minCoords, maxCoords);
+            writeToFile(description, "barnsley");
+            break;
+          case "Maple-Tree":
+            description = factory.mapleTree(minCoords, maxCoords);
+            writeToFile(description, "mapleTree");
+            break;
+        }
+      }
+
+      String transformation = selectedButton.getText();
+      boolean isBarnsley = transformation.equals("Barnsley");
+      ToggleButton juliaToggleButton = (ToggleButton) UIHelper.getNodeFromGridPane(juliaGrid, 0, 1);
+      switch (transformation) {
         case "Julia":
-          TextField[] juliaFields = getJuliaTextFields(juliaGrid);
-          double realPart = Double.parseDouble(juliaFields[0].getText());
-          double imaginaryPart = Double.parseDouble(juliaFields[1].getText());
-          c = new Complex(realPart, imaginaryPart);
-          description = factory.julia(minCoords, maxCoords, c);
+          if (juliaToggleButton.isSelected()) {
+            chaosGame = chaosGameFactory.createJuliaChaosGame(c);
+            writeToFile(description, "convergence-mode");
+          } else {
+            chaosGame = chaosGameFactory.createChaosGame(description, Utility.CHAOS_GAME_WIDTH,
+                Utility.CHAOS_GAME_HEIGHT, steps, isBarnsley);
+            writeToFile(description, "steps-mode");
+          }
           break;
-        case "Sierpinski":
-          description = factory.sierpinski(minCoords, maxCoords);
-          fileHandler.writeToFile(description, "file.csv", "sierpinski");
+        case "Mandelbrot":
+          chaosGame = chaosGameFactory.createMandelbrotChaosGame();
+          writeLineToFile("Mandelbrot");
           break;
-        case "Barnsley":
-          description = factory.barnsley(minCoords, maxCoords);
-          fileHandler.writeToFile(description, "file.csv", "barnsley");
-          break;
-        case "Maple-Tree":
-          description = factory.mapleTree(minCoords, maxCoords);
-          fileHandler.writeToFile(description, "file.csv", "mapleTree");
+        default:
+          chaosGame = chaosGameFactory.createChaosGame(description, Utility.CHAOS_GAME_WIDTH,
+              Utility.CHAOS_GAME_HEIGHT, steps, isBarnsley);
           break;
       }
     }
-
-    ChaosGame chaosGame = null;
-    String transformation = selectedButton.getText();
-    boolean isBarnsley = transformation.equals("Barnsley");
-    ToggleButton juliaToggleButton = (ToggleButton) getNodeFromGridPane(juliaGrid, 0, 1);
-    switch (transformation) {
-      case "Julia":
-        if (juliaToggleButton.isSelected()) {
-          chaosGame = chaosGameFactory.createJuliaChaosGame(c);
-          fileHandler.writeToFile(description, "file.csv", "convergence-mode");
-        } else {
-          chaosGame = chaosGameFactory.createChaosGame(description, 900, 750, steps, isBarnsley);
-          fileHandler.writeToFile(description, "file.csv", "steps-mode");
-        }
-        break;
-      case "Mandelbrot":
-        chaosGame = chaosGameFactory.createMandelbrotChaosGame();
-        fileHandler.writeLineToFile("file.csv", "Mandelbrot");
-        break;
-      default:
-        chaosGame = chaosGameFactory.createChaosGame(description, 900, 750, steps, isBarnsley);
-        break;
+    catch (IOException e) {
+      throw new IOException("File not found.");
+    }
+    catch (Exception e) {
+      throw new Exception(e.getMessage());
     }
 
     return chaosGame;
   }
 
 
-  public TextField createDecimalTextField(String defaultValue) {
-    TextField textField = new TextField(defaultValue);
-    UnaryOperator<Change> decimalFilter = change -> change.getControlNewText().matches("-?((\\d*)|(\\d+\\.\\d*))") ? change : null;
-    textField.setTextFormatter(new TextFormatter<>(new DoubleStringConverter(), Double.parseDouble(defaultValue), decimalFilter));
-    return textField;
+  public boolean checkForMandelbrot() throws Exception{
+    boolean flag = false;
+    try{
+      flag = fileHandler.checkForMandelbrot();
+    }
+    catch (IOException e) {
+      throw new IOException("File not found.");
+    } catch (Exception e) {
+      throw new Exception("Error reading file.");
+    }
+    return flag;
   }
 
-  public HBox createCenteredHBox(Node node) {
-    HBox hbox = new HBox(node);
-    hbox.setAlignment(Pos.CENTER);
-    return hbox;
+  public ChaosGameDescription readFromFile() throws Exception{
+    ChaosGameDescription chaosGameDescription = null;
+    try{
+      chaosGameDescription = fileHandler.readFromFile();
+    }
+    catch (IOException e) {
+      throw new IOException("File not found.");
+    } catch (FileEmptyException e) {
+      throw new FileEmptyException("File is empty.");
+    } catch (Exception e) {
+      throw new Exception("Error reading file.");
+    }
+    return chaosGameDescription;
   }
 
-  public RadioButton createRadioButton(ToggleGroup toggleGroup, String label) {
-    RadioButton radioButton = new RadioButton(label);
-    radioButton.setUserData(label);
-    radioButton.setToggleGroup(toggleGroup);
-    return radioButton;
+  public String readTransformationType() throws Exception{
+    String transformationType = null;
+    try{
+      transformationType = fileHandler.readTransformationType();
+    }
+    catch (IOException e) {
+      throw new IOException("File not found.");
+    } catch (Exception e) {
+      throw new Exception("Error reading file.");
+    }
+    return transformationType;
   }
 
-  public TextField[] getCoordinateTextFields(GridPane coordGrid){
-    TextField minXField = ((TextField) getNodeFromGridPane(coordGrid, 0, 1));
-    TextField minYField = ((TextField) getNodeFromGridPane(coordGrid, 1, 1));
-    TextField maxXField = ((TextField) getNodeFromGridPane(coordGrid, 2, 1));
-    TextField maxYField = ((TextField) getNodeFromGridPane(coordGrid, 3, 1));
-    return new TextField[]{minXField, minYField, maxXField, maxYField};
+  public void writeToFile(ChaosGameDescription description, String transformationType) throws Exception{
+    try{
+      fileHandler.writeToFile(description, transformationType);
+    }
+    catch (IOException e) {
+      throw new IOException("File not found.");
+    } catch (Exception e) {
+      throw new Exception("Error writing to file.");
+    }
   }
 
-  public TextField[] getJuliaTextFields(GridPane juliaGrid){
-    TextField realPartField = ((TextField) getNodeFromGridPane(juliaGrid, 0, 2));
-    TextField imaginaryPartField = ((TextField) getNodeFromGridPane(juliaGrid, 1, 2));
-    return new TextField[]{realPartField, imaginaryPartField};
+  public void writeLineToFile(String line) throws Exception{
+    try {
+      fileHandler.writeLineToFile(line);
+    }
+    catch (IOException e) {
+      System.out.println("File not found.");
+    } catch (Exception e) {
+      System.out.println("Error writing to file.");
+    }
   }
 
-  public Map<String, TextField> getTextFieldsCoordAndJuliaMap(GridPane coordGrid, GridPane juliaGrid) {
-    Map<String, TextField> fields = new HashMap<>();
 
-    TextField[] coordinateFields = getCoordinateTextFields(coordGrid);
-    fields.put("minXField", coordinateFields[0]);
-    fields.put("minYField", coordinateFields[1]);
-    fields.put("maxXField", coordinateFields[2]);
-    fields.put("maxYField", coordinateFields[3]);
-
-    TextField[] coordinateFieldsJulia = getJuliaTextFields(juliaGrid);
-    fields.put("realPartField", coordinateFieldsJulia[0]);
-    fields.put("imaginaryPartField", coordinateFieldsJulia[1]);
-
-    return fields;
+  public void saveSettings(Properties appSettings) throws Exception{
+    try {
+      settingsHandler.saveSettings(appSettings);
+    }
+    catch (IOException e) {
+      throw new IOException("File not found.");
+    } catch (Exception e) {
+      throw new Exception("Error writing to file.");
+    }
   }
 
+  public Properties loadSettings() throws Exception{
+    Properties appProperties = null;
+    try {
+      appProperties = settingsHandler.loadSettings();
+    }
+    catch (IOException e) {
+      throw new IOException("File not found.");
+    } catch (FileEmptyException e) {
+      throw new FileEmptyException("File is empty.");
+    } catch (Exception e) {
+      throw new Exception("Error reading file.");
+    }
+    return appProperties;
+  }
 }

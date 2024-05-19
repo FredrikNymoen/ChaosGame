@@ -6,20 +6,20 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
+import util.UIHelper;
 import util.Utility;
 
 public class ValidationController {
-  private ChaosGameController controller = new ChaosGameController();
+
   public boolean isAllFieldsValid(GridPane juliaGrid, ToggleGroup transformationsGroup, GridPane affineGrid, GridPane coordGrid) {
     boolean allFieldsValid = true;
 
-    TextField[] coordinateFieldsJulia = controller.getJuliaTextFields(juliaGrid);
+    TextField[] coordinateFieldsJulia = UIHelper.getJuliaTextFields(juliaGrid);
     TextField realPartField = coordinateFieldsJulia[0];
     TextField imaginaryPartField = coordinateFieldsJulia[1];
 
     List<String> missingInputs = checkForEmptyFields(transformationsGroup,
         affineGrid, realPartField, imaginaryPartField);
-    System.out.println(missingInputs);
 
     // Handle each case of missing inputs to update the GUI
     for (String notFilled : missingInputs) {
@@ -29,7 +29,7 @@ public class ValidationController {
         int row = Integer.parseInt(parts[0].substring(1));
         int col = Integer.parseInt(parts[1].substring(0, parts[1].length() - 1));
 
-        TextField textField = (TextField) controller.getNodeFromGridPane(affineGrid, col, row);
+        TextField textField = (TextField) UIHelper.getNodeFromGridPane(affineGrid, col, row);
         textField.setStyle(Utility.RED_BORDER);
       } else {
         switch (notFilled) {
@@ -43,33 +43,16 @@ public class ValidationController {
       }
     }
 
-    TextField[] coordinateFields = controller.getCoordinateTextFields(coordGrid);
+    TextField[] coordinateFields = UIHelper.getCoordinateTextFields(coordGrid);
     TextField minXField = coordinateFields[0];
     TextField minYField = coordinateFields[1];
     TextField maxXField = coordinateFields[2];
     TextField maxYField = coordinateFields[3];
 
     // Validate and parse minimum coordinates
-    if (minXField.getText().trim().isEmpty() || minYField.getText().trim().isEmpty()) {
-      minXField.setStyle(Utility.RED_BORDER);
-      minYField.setStyle(Utility.RED_BORDER);
-      allFieldsValid = false;
-    }
-    else {
-      minXField.setStyle("");
-      minYField.setStyle("");
-    }
+    allFieldsValid &= validateCoordFieldsAndSetStyle(minXField, minYField, allFieldsValid);
+    allFieldsValid &= validateCoordFieldsAndSetStyle(maxXField, maxYField, allFieldsValid);
 
-    // Validate and parse maximum coordinates
-    if (maxXField.getText().trim().isEmpty() || maxYField.getText().trim().isEmpty()) {
-      maxXField.setStyle(Utility.RED_BORDER);
-      maxYField.setStyle(Utility.RED_BORDER);
-      allFieldsValid = false;
-    }
-    else {
-      maxXField.setStyle("");
-      maxYField.setStyle("");
-    }
     return allFieldsValid;
   }
 
@@ -83,13 +66,13 @@ public class ValidationController {
         case "Affine":
           for (int row = 0; row < affineGrid.getRowCount(); row++) {
             for (int i = 0; i < 4; i++) {  // Check matrix elements
-              TextField textField = (TextField) controller.getNodeFromGridPane(affineGrid, i, row);
+              TextField textField = (TextField) UIHelper.getNodeFromGridPane(affineGrid, i, row);
               if (!isDouble(textField.getText())) {
                 missingArray.add("(" + row + ", " + i + ")");
               }
             }
             for (int i = 5; i < 7; i++) {  // Check vector elements
-              TextField textField = (TextField) controller.getNodeFromGridPane(affineGrid, i, row);
+              TextField textField = (TextField) UIHelper.getNodeFromGridPane(affineGrid, i, row);
               if (!isDouble(textField.getText())) {
                 missingArray.add("(" + row + ", " + i + ")");
               }
@@ -117,6 +100,18 @@ public class ValidationController {
     } catch (NumberFormatException e) {
       return false; // Parsing failed, it's not a valid double
     }
+  }
+
+  public boolean validateCoordFieldsAndSetStyle(TextField field1, TextField field2, boolean allFieldsValid) {
+    if (field1.getText().trim().isEmpty() || field2.getText().trim().isEmpty()) {
+      field1.setStyle(Utility.RED_BORDER);
+      field2.setStyle(Utility.RED_BORDER);
+      allFieldsValid = false;
+    } else {
+      field1.setStyle("");
+      field2.setStyle("");
+    }
+    return allFieldsValid;
   }
 
 }

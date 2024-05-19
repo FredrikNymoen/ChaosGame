@@ -1,5 +1,7 @@
 package model.filehandling;
 
+import exception.FileEmptyException;
+import java.io.IOException;
 import java.util.logging.Logger;
 import model.chaosGame.ChaosGameDescription;
 import java.io.BufferedReader;
@@ -15,6 +17,7 @@ import model.mathcore.Vector2D;
 import model.transformations.AffineTransform2D;
 import model.transformations.JuliaTransform;
 import model.transformations.Transform2D;
+import util.ErrorHandling;
 
 /**
  * A class that handles reading and writing to files for the model.chaosGame.ChaosGameDescription class.
@@ -22,6 +25,8 @@ import model.transformations.Transform2D;
  * file and to deserialize it back into an object.
  */
 public class ChaosGameFileHandler {
+  private final String filePath;
+  private final ErrorHandling errorHandling = new ErrorHandling();
 
   /**
    * Reads a model.chaosGame.ChaosGameDescription from a specified file. This method parses the file
@@ -29,18 +34,24 @@ public class ChaosGameFileHandler {
    * for the Chaos Game. The file can describe different types of transformations based
    * on its first line.
    *
-   * @param path The path to the file containing the Chaos Game configuration.
    * @return A new model.chaosGame.ChaosGameDescription object initialized with the parameters read from the file.
    */
+  public ChaosGameFileHandler(String filePath) {
+    this.filePath = filePath;
+  }
 
-  public ChaosGameDescription readFromFile(String path) {
-    File file = new File(path);
+  public ChaosGameDescription readFromFile() throws Exception{
+    File file = new File(filePath);
     ChaosGameDescription description = null;
     String[] transformationValues;
     List<Transform2D> transforms = new ArrayList<>();
 
     try (BufferedReader reader = Files.newBufferedReader(Paths.get(file.getAbsolutePath()))) {
       String line = reader.readLine();
+      if (line == null) {
+        throw new FileEmptyException("Chaos game file is empty.");
+      }
+
       String typeOfTransformation;
       int commaIndex = line.indexOf(",");
       if (commaIndex != -1) {
@@ -100,9 +111,15 @@ public class ChaosGameFileHandler {
         transforms.add(new JuliaTransform(point, 1));
         description = new ChaosGameDescription(transforms,minCoordsVector,maxCoordsVector);
       }
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
     }
+    catch (IOException e) {
+      throw new IOException("File not found.");
+    } catch (FileEmptyException e) {
+      throw new FileEmptyException("File is empty.");
+    } catch (Exception e) {
+      throw new Exception("Error reading file.");
+    }
+
 
     return description;
   }
@@ -113,11 +130,10 @@ public class ChaosGameFileHandler {
    * later. The format includes information on transformations and boundary coordinates.
    *
    * @param description The model.chaosGame.ChaosGameDescription object to be written to the file.
-   * @param path The path where the file will be created or overwritten.
    */
 
-  public void writeToFile(ChaosGameDescription description, String path, String transformationtype) {
-    File file = new File(path);
+  public void writeToFile(ChaosGameDescription description, String transformationtype) throws Exception{
+    File file = new File(filePath);
 
     try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(file.getAbsolutePath()))) {
       if (description.getTransforms().get(0) instanceof AffineTransform2D) {
@@ -144,48 +160,62 @@ public class ChaosGameFileHandler {
         writer.write(transformation.getPoint().getX0() + ", "
             + transformation.getPoint().getX1() + "\n");
         }
-    } catch(Exception e){
-      System.out.println(e.getMessage());
+    }
+    catch (IOException e) {
+      throw new IOException("File not found.");
+    } catch (Exception e) {
+      throw new Exception("Error writing to file.");
     }
   }
 
 
-  public String readTransformationType(String path) {
-    File file = new File(path);
+  public String readTransformationType() throws Exception{
+    File file = new File(filePath);
     String transformationType = null;
 
     try (BufferedReader reader = Files.newBufferedReader(Paths.get(file.getAbsolutePath()))) {
       String line = reader.readLine();
       int commaIndex = line.indexOf(",");
       transformationType = line.substring(commaIndex + 2);
+    }
+    catch (IOException e) {
+      throw new IOException("File not found.");
     } catch (Exception e) {
-      System.out.println(e.getMessage());
+      throw new Exception("Error reading file.");
     }
 
     return transformationType;
   }
 
 
-  public void writeLineToFile(String path, String line) {
-    File file = new File(path);
+  public void writeLineToFile(String line) throws Exception{
+    File file = new File(filePath);
     try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(file.getAbsolutePath()))) {
       writer.write(line);
+    }
+    catch (IOException e) {
+      throw new IOException("File not found.");
     } catch (Exception e) {
-
+      throw new Exception("Error writing to file.");
     }
   }
 
-  public boolean checkForMandelbrot(String path) {
+  public boolean checkForMandelbrot() throws Exception{
     boolean flag = false;
-    File file = new File(path);
+    File file = new File(filePath);
     String line = null;
     try (BufferedReader reader = Files.newBufferedReader(Paths.get(file.getAbsolutePath()))) {
       line = reader.readLine();
       if(line.equals("Mandelbrot")) {
         flag = true;
       }
-    } catch (Exception e) {
     }
+    catch (IOException e) {
+      throw new IOException("File not found.");
+    } catch (Exception e) {
+      throw new Exception("Error reading file.");
+    }
+
     return flag;
   }
 }

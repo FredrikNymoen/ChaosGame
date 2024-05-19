@@ -5,6 +5,7 @@ import model.chaosGame.ChaosGame;
 import model.chaosGame.ChaosGameDescription;
 import model.mathcore.Complex;
 import model.mathcore.Vector2D;
+import util.Utility;
 
 public class ChaosGameFactory {
 
@@ -33,7 +34,7 @@ public class ChaosGameFactory {
   public ChaosGame createJuliaChaosGame(Complex c) {
     double r = 2;
 
-    ChaosGame chaosGame = new ChaosGame(900, 750);
+    ChaosGame chaosGame = new ChaosGame(Utility.CHAOS_GAME_WIDTH, Utility.CHAOS_GAME_HEIGHT);
     ChaosCanvas canvas = chaosGame.getCanvas();
 
     // Assuming the fractal drawing's size for positioning
@@ -75,7 +76,7 @@ public class ChaosGameFactory {
   public ChaosGame createMandelbrotChaosGame(){
     double r = 2; // Escape radius
 
-    ChaosGame chaosGame = new ChaosGame(900, 750);
+    ChaosGame chaosGame = new ChaosGame(Utility.CHAOS_GAME_WIDTH, Utility.CHAOS_GAME_HEIGHT);
     ChaosCanvas canvas = chaosGame.getCanvas();
 
     double width = canvas.getCanvasArray()[0].length;
