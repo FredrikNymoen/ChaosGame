@@ -1,4 +1,4 @@
-package controller;
+package view;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;

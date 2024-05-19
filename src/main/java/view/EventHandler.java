@@ -1,6 +1,5 @@
 package view;
 
-import controller.ChaosGameObserver;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;

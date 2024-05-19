@@ -1,11 +1,12 @@
 package view;
 
-import controller.ChaosGameObserver;
 import controller.HandleActionController;
 import controller.ValidationController;
 import java.util.Map;
+import javafx.geometry.Pos;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import model.chaosGame.ChaosGame;
-import model.filehandling.SettingsHandler;
 import java.util.Properties;
 import javafx.application.Application;
 import javafx.beans.value.ObservableValue;
@@ -26,7 +27,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.canvas.Canvas;
-import util.ErrorHandling;
 import util.UIHelper;
 import util.Utility;
 
@@ -50,9 +50,9 @@ public class MainGUI extends Application{
   private Canvas fractalCanvas;
   private ChaosGame currentChaosGame;
 
-  private final ChaosGameObserver observer = new EventHandler();
   private final Layout layout = new Layout();
   private final ValidationController validationController = new ValidationController();
+  private final ChaosGameObserver observer = new EventHandler();
   private final HandleActionController handleActionController = new HandleActionController(observer);
 
 
@@ -77,6 +77,7 @@ public class MainGUI extends Application{
     configureShowButton();
     configureMissingInputMessage();
     configureCopyLastTransformationButton();
+    configureExitButton(root, primaryStage);
 
     configureLeftSide(root);
     configureRightSide(root);
@@ -114,7 +115,7 @@ public class MainGUI extends Application{
 
     // Bind the slider's value to the label
     stepsSlider.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue)
-        -> observer.onSliderValueChanged(stepsBox, newValue.intValue()));
+        -> handleActionController.onSliderValueChanged(stepsBox, newValue.intValue()));
   }
 
   public void configureCoordinateFields() {
@@ -126,18 +127,18 @@ public class MainGUI extends Application{
     juliaToggleSwitch = (ToggleButton) UIHelper.getNodeFromGridPane(juliaGrid, 0, 1);
 
     // Add an event handler to change the text when the button is toggled
-    juliaToggleSwitch.setOnAction(event -> observer.onJuliaToggleSwitched(juliaToggleSwitch, coordGrid, stepsBox, iterativeTransformationButton));
+    juliaToggleSwitch.setOnAction(event -> handleActionController.onJuliaToggleSwitched(juliaToggleSwitch, coordGrid, stepsBox, iterativeTransformationButton));
   }
 
   public void configureAffineBox() {
     affineBox = layout.createAffineBox();
     affineGrid = (GridPane) affineBox.getChildren().get(1);
-    observer.addMatrixVectorRow(0, affineGrid, layout);
+    handleActionController.addMatrixVectorRow(0, affineGrid, layout);
 
     Button addButton = (Button) ((HBox) affineBox.getChildren().get(2)).getChildren().get(0);
     Button removeButton = (Button) ((HBox) affineBox.getChildren().get(2)).getChildren().get(1);
-    addButton.setOnAction(event -> observer.addMatrixVectorRow(affineGrid.getRowCount(), affineGrid, layout));
-    removeButton.setOnAction(event -> observer.removeMatrixVectorRow(affineGrid));
+    addButton.setOnAction(event -> handleActionController.addMatrixVectorRow(affineGrid.getRowCount(), affineGrid, layout));
+    removeButton.setOnAction(event -> handleActionController.removeMatrixVectorRow(affineGrid));
   }
 
 
@@ -145,7 +146,7 @@ public class MainGUI extends Application{
     showButton = new Button("Show");
     showButton.getStyleClass().add("show-button");
     showButton.setOnAction(event -> {
-      observer.resetFieldsToDefaultStyle(affineGrid, juliaGrid, affineBox);  // Reset all fields to default style
+      handleActionController.resetFieldsToDefaultStyle(affineGrid, juliaGrid, affineBox);  // Reset all fields to default style
       boolean allFieldsValid = validationController.isAllFieldsValid(juliaGrid, transformationsGroup, affineGrid, coordGrid);
       missingInputMessage.setVisible(!allFieldsValid);
 
@@ -153,26 +154,16 @@ public class MainGUI extends Application{
       if (allFieldsValid) {
         int steps = (int) stepsSlider.getValue();
         // Reset all fields to default style
-        observer.resetFieldsToDefaultStyle(affineGrid, juliaGrid, affineBox);
+        handleActionController.resetFieldsToDefaultStyle(affineGrid, juliaGrid, affineBox);
         currentChaosGame = handleActionController.showButtonClicked(transformationsGroup,
                 affineGrid, juliaGrid, coordGrid, steps);
-        observer.drawFractal(fractalCanvas, currentChaosGame, colorModeCheckbox);
+        handleActionController.drawFractal(fractalCanvas, currentChaosGame, colorModeCheckbox);
       }
     });
   }
 
   public void configureIterativeTransformationButton() {
     iterativeTransformationButton = layout.createIterativeTransformationButton();
-    /*iterativeTransformationButton.setOnAction(event -> {
-      try{
-      currentChaosGame = controller.handleTransformationSelection(transformationsGroup, affineGrid, juliaGrid, coordGrid, (int) stepsSlider.getValue());
-      currentChaosGame.fractalWithIterationTransformation();
-      observer.drawFractal(fractalCanvas, currentChaosGame, colorModeCheckbox);
-      }
-      catch (Exception e) {
-        errorHandling.failedToMakeFractalWithIterativeTransformation(e);
-      }
-    });*/
     iterativeTransformationButton.setOnAction(event
         -> handleActionController.handleIterativeTransformation(transformationsGroup, affineGrid, juliaGrid, coordGrid, stepsSlider.getValue(), fractalCanvas, colorModeCheckbox));
   }
@@ -191,16 +182,20 @@ public class MainGUI extends Application{
 
   public void configureCopyLastTransformationButton() {
     copyLastTransformationButton = layout.createCopyLastTransformationButton();
-    /*try {
-      copyLastTransformationButton.setOnAction(event
-          -> observer.copyLastTransformation(transformationsGroup, coordGrid, affineGrid,
-              juliaGrid, juliaToggleSwitch, layout));
-    }
-    catch (Exception e) {
-      errorHandling.failedToCopyLastTransformation(e);
-    }*/
     copyLastTransformationButton.setOnAction(event -> handleActionController.handleCopyLastTransformation(
         transformationsGroup, coordGrid, affineGrid, juliaGrid, juliaToggleSwitch, layout));
+  }
+
+  public void configureExitButton(BorderPane root, Stage primaryStage) {
+    Button exitButton = new Button("Exit");
+    exitButton.setOnAction(event -> {
+      saveSettings();
+      primaryStage.close();
+    });
+
+    AnchorPane exitButtonPane = new AnchorPane(exitButton);
+    AnchorPane.setTopAnchor(exitButton, 10.0);
+    AnchorPane.setRightAnchor(exitButton, 10.0);
   }
 
 
@@ -245,8 +240,8 @@ public class MainGUI extends Application{
 
 
   public void setupListeners() {
-    fractalCanvas.widthProperty().addListener(obs -> observer.onCanvasSizeChanged(fractalCanvas, currentChaosGame, colorModeCheckbox));
-    fractalCanvas.heightProperty().addListener(obs -> observer.onCanvasSizeChanged(fractalCanvas, currentChaosGame, colorModeCheckbox));
+    fractalCanvas.widthProperty().addListener(obs -> handleActionController.onCanvasSizeChanged(fractalCanvas, currentChaosGame, colorModeCheckbox));
+    fractalCanvas.heightProperty().addListener(obs -> handleActionController.onCanvasSizeChanged(fractalCanvas, currentChaosGame, colorModeCheckbox));
     initializeRadioButtonListener();
   }
 
@@ -254,16 +249,6 @@ public class MainGUI extends Application{
     affineBox.setDisable(true);
     juliaGrid.setDisable(true);
     transformationsGroup.selectedToggleProperty().addListener((observable, oldToggle, newToggle) -> {
-      /*try {
-        if (newToggle != null) {
-          RadioButton selectedButton = (RadioButton) newToggle;
-          observer.onTransformationSelected(leftSide, selectedButton.getText());
-        }
-      }
-      catch (Exception e) {
-        errorHandling.failedToSelectTransformation(e);
-      }
-    });*/
       if (newToggle != null) {
         RadioButton selectedButton = (RadioButton) newToggle;
         handleActionController.handleTransformationSelected(leftSide, selectedButton.getText());
@@ -275,7 +260,6 @@ public class MainGUI extends Application{
   public void loadSettings() {
     Map<String, TextField> fields = UIHelper.getTextFieldsCoordAndJuliaMap(coordGrid, juliaGrid);
 
-    //Properties appSettings = settingsHandler.loadSettings();
     Properties appSettings = handleActionController.loadSettings();
     fields.get("minXField").setText(appSettings.getProperty("minX", "-4"));
     fields.get("minYField").setText(appSettings.getProperty("minY", "-1"));
@@ -314,7 +298,6 @@ public class MainGUI extends Application{
     appSettings.setProperty("transformation", ((RadioButton) transformationsGroup.getSelectedToggle()).getText());
     appSettings.setProperty("colorMode", String.valueOf(colorModeCheckbox.isSelected()));
     appSettings.setProperty("juliaToggleSwitch", String.valueOf(juliaToggleSwitch.isSelected()));
-    //settingsHandler.saveSettings(appSettings);
     handleActionController.saveSettings(appSettings);
   }
 

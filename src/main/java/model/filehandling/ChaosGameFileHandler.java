@@ -26,7 +26,6 @@ import util.ErrorHandling;
  */
 public class ChaosGameFileHandler {
   private final String filePath;
-  private final ErrorHandling errorHandling = new ErrorHandling();
 
   /**
    * Reads a model.chaosGame.ChaosGameDescription from a specified file. This method parses the file
