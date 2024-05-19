@@ -25,8 +25,17 @@ import javafx.stage.Screen;
 import javafx.util.converter.DoubleStringConverter;
 import util.Utility;
 
+/**
+ * This class provides methods to create and configure the layout of the UI components
+ * for the Chaos Game application.
+ */
 public class Layout {
 
+  /**
+   * Creates a ScrollPane for the left side of the UI.
+   *
+   * @return a configured ScrollPane instance
+   */
   public ScrollPane createLeftsideScrollPane() {
     VBox leftSide = new VBox(10);
     leftSide.setPadding(new Insets(10));
@@ -37,7 +46,12 @@ public class Layout {
     return scrollPane;
   }
 
-  public VBox createTransformationsBox(){
+  /**
+   * Creates a VBox for the transformation options.
+   *
+   * @return a configured VBox instance
+   */
+  public VBox createTransformationsBox() {
     VBox transformationBox = new VBox(5);
     transformationBox.setAlignment(Pos.CENTER);
     Label transformationLabel = new Label("Transformations");
@@ -46,7 +60,13 @@ public class Layout {
     return transformationBox;
   }
 
-  public void addTransformationOptions(VBox transformationBox, ToggleGroup transformationsGroup){
+  /**
+   * Adds transformation options to the specified VBox.
+   *
+   * @param transformationBox  the VBox to which the transformation options are added
+   * @param transformationsGroup the ToggleGroup for the transformation options
+   */
+  public void addTransformationOptions(VBox transformationBox, ToggleGroup transformationsGroup) {
     // Create and add radio buttons
     for (String[] row : Utility.TRANSFORMATIONS) {
       HBox rowBox = new HBox(10);
@@ -59,7 +79,12 @@ public class Layout {
     }
   }
 
-  public VBox createStepsBox(){
+  /**
+   * Creates a VBox for the steps slider and label.
+   *
+   * @return a configured VBox instance
+   */
+  public VBox createStepsBox() {
     VBox stepsBox = new VBox(5);
     stepsBox.setAlignment(Pos.CENTER);
 
@@ -81,7 +106,12 @@ public class Layout {
     return stepsBox;
   }
 
-  public GridPane createCoordGrid(){
+  /**
+   * Creates a GridPane for the coordinate inputs.
+   *
+   * @return a configured GridPane instance
+   */
+  public GridPane createCoordGrid() {
     GridPane coordGrid = new GridPane();
     coordGrid.setHgap(10);
     coordGrid.setVgap(10);
@@ -101,7 +131,12 @@ public class Layout {
     return coordGrid;
   }
 
-  public GridPane createJuliaGrid(){
+  /**
+   * Creates a GridPane for the Julia set inputs.
+   *
+   * @return a configured GridPane instance
+   */
+  public GridPane createJuliaGrid() {
     GridPane juliaGrid = new GridPane();
     juliaGrid.setHgap(10);
     juliaGrid.setVgap(10);
@@ -127,8 +162,12 @@ public class Layout {
     return juliaGrid;
   }
 
-
-  public VBox createAffineBox(){
+  /**
+   * Creates a VBox for the affine transformation inputs.
+   *
+   * @return a configured VBox instance
+   */
+  public VBox createAffineBox() {
     VBox affineBox = new VBox(10);
     Label affineMatrixAndVectorLabel = new Label("Affine matrices and vectors");
     affineMatrixAndVectorLabel.getStyleClass().add(Utility.SMALL_LABEL);
@@ -146,21 +185,38 @@ public class Layout {
     return affineBox;
   }
 
-  public Button createIterativeTransformationButton(){
+  /**
+   * Creates a button for initiating iterative transformation mode.
+   *
+   * @return a configured Button instance
+   */
+  public Button createIterativeTransformationButton() {
     Button iterativeTransformationButton = new Button("Make fractal with Iterative Transformation mode");
     iterativeTransformationButton.getStyleClass().add(Utility.OPTION_BUTTON);
     iterativeTransformationButton.getStyleClass().add("iterativeTransformation-button");
     return iterativeTransformationButton;
   }
 
-  public Button createCopyLastTransformationButton(){
+  /**
+   * Creates a button for copying the last transformation.
+   *
+   * @return a configured Button instance
+   */
+  public Button createCopyLastTransformationButton() {
     Button copyLastTransformationButton = new Button("Copy Last Shown Transformation");
     copyLastTransformationButton.getStyleClass().add(Utility.OPTION_BUTTON);
     copyLastTransformationButton.getStyleClass().add("copy-button");
     return copyLastTransformationButton;
   }
 
-  public void setupLeftSideWithSeperatorLine(ScrollPane scrollPane, VBox leftSide, BorderPane root){
+  /**
+   * Sets up the left side of the UI with a separator line.
+   *
+   * @param scrollPane the ScrollPane to be added to the left side
+   * @param leftSide   the VBox containing the left side UI elements
+   * @param root       the BorderPane root layout
+   */
+  public void setupLeftSideWithSeperatorLine(ScrollPane scrollPane, VBox leftSide, BorderPane root) {
     scrollPane.setContent(leftSide);
     double screenWidth = Screen.getPrimary().getBounds().getWidth();
     scrollPane.setPrefWidth(screenWidth * 0.25);
@@ -175,7 +231,12 @@ public class Layout {
     root.setLeft(leftLayout);
   }
 
-
+  /**
+   * Creates a TextField with a decimal number filter and a default value.
+   *
+   * @param defaultValue the default value for the TextField
+   * @return a configured TextField instance
+   */
   public TextField createDecimalTextField(String defaultValue) {
     TextField textField = new TextField(defaultValue);
     UnaryOperator<Change> decimalFilter = change -> change.getControlNewText().matches("-?((\\d*)|(\\d+\\.\\d*))") ? change : null;
@@ -183,19 +244,29 @@ public class Layout {
     return textField;
   }
 
+  /**
+   * Creates a centered HBox containing the specified Node.
+   *
+   * @param node the Node to be centered within the HBox
+   * @return a configured HBox instance
+   */
   public HBox createCenteredHBox(Node node) {
     HBox hbox = new HBox(node);
     hbox.setAlignment(Pos.CENTER);
     return hbox;
   }
 
+  /**
+   * Creates a RadioButton with the specified label and adds it to the specified ToggleGroup.
+   *
+   * @param toggleGroup the ToggleGroup to which the RadioButton is added
+   * @param label       the label for the RadioButton
+   * @return a configured RadioButton instance
+   */
   public RadioButton createRadioButton(ToggleGroup toggleGroup, String label) {
     RadioButton radioButton = new RadioButton(label);
     radioButton.setUserData(label);
     radioButton.setToggleGroup(toggleGroup);
     return radioButton;
   }
-
-
-
 }
