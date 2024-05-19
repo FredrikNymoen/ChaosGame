@@ -10,7 +10,10 @@ import java.util.logging.Logger;
  */
 public class ErrorHandling {
 
-  private Logger logger = Logger.getLogger(ErrorHandling.class.getName());
+  //Best practice to make a logger static final
+  //as it ensures that there is a single logger instance per class.
+  //You can create a non-static logger instance in a small application, but this is best practice.
+  private static final Logger logger = Logger.getLogger(ErrorHandling.class.getName());
 
   /**
    * Logs a severe error message indicating that a file was not found or an IO error occurred.
@@ -18,7 +21,7 @@ public class ErrorHandling {
    * @param e the exception that was thrown
    */
   public void fileNotFound(Exception e) {
-    logger.log(Level.SEVERE, "File not found or IO error: {0}", e.getMessage());
+    logger.log(Level.SEVERE, "File not found or IO error: " + e.getMessage());
   }
 
   /**
@@ -27,7 +30,7 @@ public class ErrorHandling {
    * @param e the exception that was thrown
    */
   public void fileIsEmpty(Exception e) {
-    logger.log(Level.WARNING, "File is empty or malformed: {0}", e.getMessage());
+    logger.log(Level.WARNING, "File is empty or malformed: " + e.getMessage());
   }
 
   /**
@@ -36,7 +39,7 @@ public class ErrorHandling {
    * @param e the exception that was thrown
    */
   public void error(Exception e) {
-    logger.log(Level.SEVERE, "An unexpected error occurred: {0}", e.getMessage());
+    logger.log(Level.SEVERE, "An unexpected error occurred: " + e.getMessage());
   }
 
   /**
@@ -45,7 +48,7 @@ public class ErrorHandling {
    * @param e the exception that was thrown
    */
   public void failedToSelectTransformation(Exception e) {
-    logger.log(Level.WARNING, "Failed to select transformation: {0}", e.getMessage());
+    logger.log(Level.WARNING, "Failed to select transformation: " + e.getMessage());
   }
 
   /**
@@ -54,7 +57,7 @@ public class ErrorHandling {
    * @param e the exception that was thrown
    */
   public void failedToCopyLastTransformation(Exception e) {
-    logger.log(Level.WARNING, "Failed to copy last transformation: {0}", e.getMessage());
+    logger.log(Level.WARNING, "Failed to copy last transformation: " + e.getMessage());
   }
 
   /**
@@ -63,6 +66,6 @@ public class ErrorHandling {
    * @param e the exception that was thrown
    */
   public void failedToMakeFractalWithIterativeTransformation(Exception e) {
-    logger.log(Level.WARNING, "Failed to make fractal with iterative transformation: {0}", e.getMessage());
+    logger.log(Level.WARNING, "Failed to make fractal with iterative transformation: " + e.getMessage());
   }
 }
