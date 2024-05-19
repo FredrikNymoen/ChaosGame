@@ -144,19 +144,6 @@ public class ChaosCanvas {
   }
 
 
-  /*public Vector2D pixelToCoordinate(Vector2D pixel) {
-
-    // Transform using AffineTransform2D (assuming it can take BigDecimal inputs, otherwise convert back to double)
-    BigDecimal pixelX = new BigDecimal(pixel.getX0(), mc);
-    BigDecimal pixelY = new BigDecimal(pixel.getX1(), mc);
-
-    BigDecimal transformedX = ia.multiply(pixelX, mc).add(ib.multiply(pixelY, mc)).add(subtractX);
-    BigDecimal transformedY = ic.multiply(pixelX, mc).add(id.multiply(pixelY, mc)).add(subtractY);
-
-    // Return new coordinates, converting BigDecimal back to double
-    return new Vector2D(transformedX.doubleValue(), transformedY.doubleValue());
-  }*/
-
   public Vector2D coordinateToPixel(Vector2D point) {
     Matrix2x2 matrix = new Matrix2x2(0, (height - 1) / (minCoords.getX1() - maxCoords.getX1()), (width - 1) / (maxCoords.getX0() - minCoords.getX0()), 0);
     Vector2D vector = new Vector2D(((height - 1) * maxCoords.getX1()) / (maxCoords.getX1() - minCoords.getX1()), ((width - 1) * minCoords.getX0()) / (minCoords.getX0() - maxCoords.getX0()));

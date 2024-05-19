@@ -9,12 +9,19 @@ import filehandling.ChaosGameFileHandler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.UnaryOperator;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.util.converter.DoubleStringConverter;
 import mathcore.Complex;
 import mathcore.Matrix2x2;
 import mathcore.Vector2D;
@@ -154,7 +161,6 @@ public class ChaosGameController {
           c = new Complex(Double.parseDouble(((TextField) getNodeFromGridPane(juliaGrid, 0, 2)).getText()),
               Double.parseDouble(((TextField) getNodeFromGridPane(juliaGrid, 1, 2)).getText()));
           description = factory.julia(minCoords, maxCoords, c);
-          fileHandler.writeToFile(description, "file.csv", "julia");
           break;
         case "Sierpinski":
           description = factory.sierpinski(minCoords, maxCoords);
@@ -179,8 +185,10 @@ public class ChaosGameController {
       case "Julia":
         if (juliaToggleButton.isSelected()) {
           chaosGame = chaosGameFactory.createJuliaChaosGame(c);
+          fileHandler.writeToFile(description, "file.csv", "convergence-mode");
         } else {
           chaosGame = chaosGameFactory.createChaosGame(description, 900, 750, steps, isBarnsley);
+          fileHandler.writeToFile(description, "file.csv", "steps-mode");
         }
         break;
       case "Mandelbrot":
@@ -196,11 +204,8 @@ public class ChaosGameController {
   }
 
   public List<String> checkForEmptyFields(ToggleGroup transformationsGroup, GridPane affineGrid,
-                                          TextField realPartField, TextField imaginaryPartField, int steps) {
+                                          TextField realPartField, TextField imaginaryPartField) {
     List<String> missingArray = new ArrayList<>();
-    if (steps == 0) {
-      missingArray.add("Please fill in the number of steps.");
-    }
     RadioButton selectedButton = (RadioButton) transformationsGroup.getSelectedToggle();
     if (selectedButton != null) {  // Make sure there is a selected toggle
       switch (selectedButton.getText()) {
@@ -209,26 +214,25 @@ public class ChaosGameController {
             for (int i = 0; i < 4; i++) {  // Check matrix elements
               TextField textField = (TextField) getNodeFromGridPane(affineGrid, i, row);
               if (!isDouble(textField.getText())) {
-                missingArray.add("Matrix element at (" + row + ", " + i + ") is invalid");
+                missingArray.add("(" + row + ", " + i + ")");
               }
             }
             for (int i = 5; i < 7; i++) {  // Check vector elements
               TextField textField = (TextField) getNodeFromGridPane(affineGrid, i, row);
               if (!isDouble(textField.getText())) {
-                missingArray.add("Vector element at (" + row + ", " + i + ") is invalid");
+                missingArray.add("(" + row + ", " + i + ")");
               }
             }
           }
           break;
         case "Julia":
           if (!isDouble(realPartField.getText())) {
-            missingArray.add("Real part of the complex number is not a valid double.");
+            missingArray.add("Real part");
           }
           if (!isDouble(imaginaryPartField.getText())) {
-            missingArray.add("Imaginary part of the complex number is not a valid double.");
+            missingArray.add("Imaginary part");
           }
           break;
-        // Add other cases if needed
       }
     }
     return missingArray;
@@ -241,6 +245,43 @@ public class ChaosGameController {
     } catch (NumberFormatException e) {
       return false; // Parsing failed, it's not a valid double
     }
+  }
+
+
+  public Color getColorForValue(double intensity) {
+    if (intensity < 0.25) {
+      // Interpolate between blue (0) and green (0.25)
+      return Color.BLUE.interpolate(Color.GREEN, intensity * 4);
+    } else if (intensity < 0.5) {
+      // Interpolate between green (0.25) and yellow (0.5)
+      return Color.GREEN.interpolate(Color.YELLOW, (intensity - 0.25) * 4);
+    } else if (intensity < 0.75) {
+      // Interpolate between yellow (0.5) and orange (0.75)
+      return Color.YELLOW.interpolate(Color.ORANGE, (intensity - 0.5) * 4);
+    } else {
+      // Interpolate between orange (0.75) and red (1)
+      return Color.ORANGE.interpolate(Color.RED, (intensity - 0.75) * 4);
+    }
+  }
+
+  public TextField createDecimalTextField(String defaultValue) {
+    TextField textField = new TextField(defaultValue);
+    UnaryOperator<Change> decimalFilter = change -> change.getControlNewText().matches("-?((\\d*)|(\\d+\\.\\d*))") ? change : null;
+    textField.setTextFormatter(new TextFormatter<>(new DoubleStringConverter(), Double.parseDouble(defaultValue), decimalFilter));
+    return textField;
+  }
+
+  public HBox createCenteredHBox(Node node) {
+    HBox hbox = new HBox(node);
+    hbox.setAlignment(Pos.CENTER);
+    return hbox;
+  }
+
+  public RadioButton createRadioButton(ToggleGroup toggleGroup, String label) {
+    RadioButton radioButton = new RadioButton(label);
+    radioButton.setUserData(label);
+    radioButton.setToggleGroup(toggleGroup);
+    return radioButton;
   }
 
 }

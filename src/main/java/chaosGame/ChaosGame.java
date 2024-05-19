@@ -20,8 +20,9 @@ public class ChaosGame {
   private ChaosCanvas canvas;
   private ChaosGameDescription description;
   private Vector2D currentPoint;
-  public Random random;
+  private Random random;
   private Stack<Vector2D> pointStack;
+
 
     /**
      * Constructor for the chaosGame.ChaosGame class. Constructs a new chaos game using a specified set of rules and dimensions
@@ -111,7 +112,7 @@ public class ChaosGame {
       for (int j = 0; j < description.getTransforms().size(); j++) {
         Transform2D transform = description.getTransforms().get(j);
         Vector2D newPoint = transform.transform(currentPoint);
-        if (canvas.getPixel(newPoint) >= 100) {
+        if (canvas.getPixel(newPoint) >= 20) {
           continue;
         }
         pointStack.push(newPoint);
@@ -136,6 +137,5 @@ public class ChaosGame {
       System.out.println();
     }
   }
-
 
 }
