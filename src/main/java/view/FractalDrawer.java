@@ -11,9 +11,19 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.paint.Color;
 import model.chaosGame.ChaosGame;
 
+/**
+ * This class handles the drawing of fractals on a canvas.
+ */
 public class FractalDrawer {
-  public void drawFractal(Canvas fractalCanvas, ChaosGame chaosGame, CheckBox colorModeCheckbox){
 
+  /**
+   * Draws the fractal on the specified canvas based on the ChaosGame data.
+   *
+   * @param fractalCanvas      the canvas on which the fractal is drawn
+   * @param chaosGame          the current chaos game instance containing fractal data
+   * @param colorModeCheckbox  the checkbox indicating whether color mode is enabled
+   */
+  public void drawFractal(Canvas fractalCanvas, ChaosGame chaosGame, CheckBox colorModeCheckbox) {
     GraphicsContext gc = fractalCanvas.getGraphicsContext2D();
     gc.clearRect(0, 0, fractalCanvas.getWidth(), fractalCanvas.getHeight());
 
@@ -45,22 +55,19 @@ public class FractalDrawer {
     // Adjust the drawing loop to position the fractal correctly
     for (int i = 0; i < fractalHeight; i++) {
       for (int j = 0; j < fractalWidth; j++) {
-
         int value = canvasArray[i][j];
-        if(colorModeCheckbox.isSelected() && value > 0){
+        if (colorModeCheckbox.isSelected() && value > 0) {
           int index = sortedValues.indexOf(value);
-          if(sortedValues.get(index) == 1){
+          if (sortedValues.get(index) == 1) {
             gc.setFill(Color.BLUE);
           } else {
             double intensity = (double) index / (sortedValues.size() - 1);
             Color color = getColorForValue(intensity);
             gc.setFill(color);
           }
-        }
-        else if (value > 0) { // assuming value 0 means no data
+        } else if (value > 0) { // assuming value 0 means no data
           gc.setFill(Color.BLACK);
-        }
-        else {
+        } else {
           gc.setFill(Color.WHITE); // Background color
         }
         gc.fillRect(startX + j, startY + i, 1, 1); // Draw pixel
@@ -68,6 +75,13 @@ public class FractalDrawer {
     }
   }
 
+  /**
+   * Returns a color for a given intensity value.
+   * The color transitions through blue, green, yellow, orange, and red based on the intensity.
+   *
+   * @param intensity a double value representing the intensity (ranging from 0.0 to 1.0)
+   * @return a Color object representing the interpolated color
+   */
   public Color getColorForValue(double intensity) {
     if (intensity < 0.25) {
       // Interpolate between blue (0) and green (0.25)

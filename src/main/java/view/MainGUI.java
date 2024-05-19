@@ -30,7 +30,12 @@ import javafx.scene.canvas.Canvas;
 import util.UIHelper;
 import util.Utility;
 
-public class MainGUI extends Application{
+/**
+ * The main graphical user interface class for the Chaos Game application.
+ * This class sets up the layout, initializes components, and handles events.
+ */
+public class MainGUI extends Application {
+
   private VBox leftSide;
   private ScrollPane scrollPane;
   private VBox transformationBox;
@@ -55,12 +60,21 @@ public class MainGUI extends Application{
   private final ChaosGameObserver observer = new EventHandler();
   private final HandleActionController handleActionController = new HandleActionController(observer);
 
-
-
+  /**
+   * The main method to launch the JavaFX application.
+   *
+   * @param args command-line arguments
+   */
   public static void main(String[] args) {
     launch(args);
   }
 
+  /**
+   * The start method is the main entry point for the JavaFX application.
+   * It sets up the primary stage and initializes all UI components.
+   *
+   * @param primaryStage the primary stage for this application
+   */
   @Override
   public void start(Stage primaryStage) {
     BorderPane root = new BorderPane();
@@ -94,22 +108,27 @@ public class MainGUI extends Application{
     primaryStage.show();
   }
 
+  /**
+   * Configures the scroll pane for the left side of the layout.
+   */
   public void configureScrollPane() {
-    // Scrollable Left side layout
     scrollPane = layout.createLeftsideScrollPane();
     leftSide = (VBox) scrollPane.getContent();
   }
 
+  /**
+   * Configures the transformation button options.
+   */
   public void configureTransformationButtonOptions() {
-    // Transformation checkboxes
     transformationBox = layout.createTransformationsBox();
     transformationsGroup = new ToggleGroup();
     layout.addTransformationOptions(transformationBox, transformationsGroup);
   }
 
-
+  /**
+   * Configures the steps input box and binds the slider's value to a label.
+   */
   public void configureStepsBox() {
-    // Steps input
     stepsBox = layout.createStepsBox();
     stepsSlider = (Slider) stepsBox.getChildren().get(1);
 
@@ -118,10 +137,16 @@ public class MainGUI extends Application{
         -> handleActionController.onSliderValueChanged(stepsBox, newValue.intValue()));
   }
 
+  /**
+   * Configures the coordinate input fields.
+   */
   public void configureCoordinateFields() {
     coordGrid = layout.createCoordGrid();
   }
 
+  /**
+   * Configures the Julia set input fields and toggle button.
+   */
   public void configureJuliaFields() {
     juliaGrid = layout.createJuliaGrid();
     juliaToggleSwitch = (ToggleButton) UIHelper.getNodeFromGridPane(juliaGrid, 0, 1);
@@ -130,6 +155,9 @@ public class MainGUI extends Application{
     juliaToggleSwitch.setOnAction(event -> handleActionController.onJuliaToggleSwitched(juliaToggleSwitch, coordGrid, stepsBox, iterativeTransformationButton));
   }
 
+  /**
+   * Configures the affine transformation input box and buttons.
+   */
   public void configureAffineBox() {
     affineBox = layout.createAffineBox();
     affineGrid = (GridPane) affineBox.getChildren().get(1);
@@ -141,7 +169,9 @@ public class MainGUI extends Application{
     removeButton.setOnAction(event -> handleActionController.removeMatrixVectorRow(affineGrid));
   }
 
-
+  /**
+   * Configures the show button and its action handler.
+   */
   public void configureShowButton() {
     showButton = new Button("Show");
     showButton.getStyleClass().add("show-button");
@@ -153,39 +183,56 @@ public class MainGUI extends Application{
       // Proceed only if all fields are valid
       if (allFieldsValid) {
         int steps = (int) stepsSlider.getValue();
-        // Reset all fields to default style
         handleActionController.resetFieldsToDefaultStyle(affineGrid, juliaGrid, affineBox);
         currentChaosGame = handleActionController.showButtonClicked(transformationsGroup,
-                affineGrid, juliaGrid, coordGrid, steps);
+            affineGrid, juliaGrid, coordGrid, steps);
         handleActionController.drawFractal(fractalCanvas, currentChaosGame, colorModeCheckbox);
       }
     });
   }
 
+  /**
+   * Configures the iterative transformation button and its action handler.
+   */
   public void configureIterativeTransformationButton() {
     iterativeTransformationButton = layout.createIterativeTransformationButton();
     iterativeTransformationButton.setOnAction(event
         -> handleActionController.handleIterativeTransformation(transformationsGroup, affineGrid, juliaGrid, coordGrid, stepsSlider.getValue(), fractalCanvas, colorModeCheckbox));
   }
 
+  /**
+   * Configures the label for displaying missing input messages.
+   */
   public void configureMissingInputMessage() {
     missingInputMessage = new Label("Please fill in all required fields.");
     missingInputMessage.setStyle("-fx-text-fill: red;");
     missingInputMessage.setVisible(false);
   }
 
+  /**
+   * Configures the color mode checkbox.
+   */
   public void configureColorModeCheckbox() {
     colorModeCheckbox = new CheckBox("Enable Heatmap Color Mode");
     colorModeCheckbox.setSelected(false);
     colorModeCheckbox.getStyleClass().add("heatmap-checkbox");
   }
 
+  /**
+   * Configures the button for copying the last transformation.
+   */
   public void configureCopyLastTransformationButton() {
     copyLastTransformationButton = layout.createCopyLastTransformationButton();
     copyLastTransformationButton.setOnAction(event -> handleActionController.handleCopyLastTransformation(
         transformationsGroup, coordGrid, affineGrid, juliaGrid, juliaToggleSwitch, layout));
   }
 
+  /**
+   * Configures the exit button and its action handler.
+   *
+   * @param root         the root layout
+   * @param primaryStage the primary stage of the application
+   */
   public void configureExitButton(BorderPane root, Stage primaryStage) {
     Button exitButton = new Button("Exit");
     exitButton.setOnAction(event -> {
@@ -198,7 +245,11 @@ public class MainGUI extends Application{
     AnchorPane.setRightAnchor(exitButton, 10.0);
   }
 
-
+  /**
+   * Configures the left side of the layout with various components.
+   *
+   * @param root the root layout
+   */
   public void configureLeftSide(BorderPane root) {
     leftSide.getStyleClass().add("left-side");
     VBox spacingBox = new VBox();
@@ -229,6 +280,11 @@ public class MainGUI extends Application{
     layout.setupLeftSideWithSeperatorLine(scrollPane, leftSide, root);
   }
 
+  /**
+   * Configures the right side of the layout with the fractal canvas.
+   *
+   * @param root the root layout
+   */
   public void configureRightSide(BorderPane root) {
     fractalCanvas = new Canvas();
 
@@ -238,14 +294,19 @@ public class MainGUI extends Application{
     root.setRight(fractalCanvas);
   }
 
-
+  /**
+   * Sets up listeners for various components.
+   */
   public void setupListeners() {
     fractalCanvas.widthProperty().addListener(obs -> handleActionController.onCanvasSizeChanged(fractalCanvas, currentChaosGame, colorModeCheckbox));
     fractalCanvas.heightProperty().addListener(obs -> handleActionController.onCanvasSizeChanged(fractalCanvas, currentChaosGame, colorModeCheckbox));
     initializeRadioButtonListener();
   }
 
-  public void initializeRadioButtonListener(){
+  /**
+   * Initializes the listener for the radio button group.
+   */
+  public void initializeRadioButtonListener() {
     affineBox.setDisable(true);
     juliaGrid.setDisable(true);
     transformationsGroup.selectedToggleProperty().addListener((observable, oldToggle, newToggle) -> {
@@ -256,7 +317,9 @@ public class MainGUI extends Application{
     });
   }
 
-
+  /**
+   * Loads the application settings from a properties file.
+   */
   public void loadSettings() {
     Map<String, TextField> fields = UIHelper.getTextFieldsCoordAndJuliaMap(coordGrid, juliaGrid);
 
@@ -270,8 +333,7 @@ public class MainGUI extends Application{
     fields.get("imaginaryPartField").setText(appSettings.getProperty("imaginaryPart", "0.01"));
     try {
       RadioButton selectedButton = (RadioButton) transformationsGroup.getToggles().stream()
-          .filter(
-              t -> t.getUserData().equals(appSettings.getProperty("transformation", "Affine")))
+          .filter(t -> t.getUserData().equals(appSettings.getProperty("transformation", "Affine")))
           .findFirst().orElse(null);
       if (selectedButton != null) {
         transformationsGroup.selectToggle(selectedButton);
@@ -283,7 +345,9 @@ public class MainGUI extends Application{
     juliaToggleSwitch.setSelected(Boolean.parseBoolean(appSettings.getProperty("juliaToggleSwitch", "false")));
   }
 
-
+  /**
+   * Saves the application settings to a properties file.
+   */
   public void saveSettings() {
     Map<String, TextField> fields = UIHelper.getTextFieldsCoordAndJuliaMap(coordGrid, juliaGrid);
 
@@ -300,5 +364,4 @@ public class MainGUI extends Application{
     appSettings.setProperty("juliaToggleSwitch", String.valueOf(juliaToggleSwitch.isSelected()));
     handleActionController.saveSettings(appSettings);
   }
-
 }
