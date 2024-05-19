@@ -14,7 +14,6 @@ import model.chaosGame.ChaosGame;
 import model.chaosGame.ChaosGameDescription;
 import util.ErrorHandling;
 import view.ChaosGameObserver;
-import view.EventHandler;
 import view.Layout;
 
 public class HandleActionController {

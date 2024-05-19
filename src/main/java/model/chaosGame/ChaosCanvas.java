@@ -1,19 +1,14 @@
 package model.chaosGame;
 
-import static java.lang.Math.round;
-
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.util.HashMap;
-import java.util.Map;
 import model.mathcore.Matrix2x2;
 import model.mathcore.Vector2D;
 import model.transformations.AffineTransform2D;
 
 /**
- * model.chaosGame.ChaosCanvas class is used to represent a canvas and perform operations on it.
- * The canvas is represented as a 2D array of integers.
- * The canvas is used to represent the Mandelbrot set, Julia set, Burning Ship set, Tricorn set and Multibrot set.
+ * The ChaosCanvas class is used to represent a canvas for the chaos game.
+ * The canvas is represented as a 2D array of integers, where each integer represents the number of times a pixel has been visited.
+ * @author Fredrik Nymoen & Amund Larsen
+ * @version v1.0.0
  */
 public class ChaosCanvas {
   private int[][] canvas;
@@ -26,14 +21,12 @@ public class ChaosCanvas {
 
 
   /**
-     * Constructor for the model.chaosGame.ChaosCanvas class.
-     *
-     * @param width the width of the canvas
-     * @param height the height of the canvas
-     * @param minCoords the minimum coordinates of the canvas
-     * @param maxCoords the maximum coordinates of the canvas
-     */
-
+   * Constructor for ChaosCanvas.
+   * @param width the width of the canvas
+   * @param height the height of the canvas
+   * @param minCoords the minimum coordinates of the canvas
+   * @param maxCoords the maximum coordinates of the canvas
+   */
   public ChaosCanvas(int width, int height, Vector2D minCoords, Vector2D maxCoords) {
     this.width = width;
     this.height = height;
@@ -43,7 +36,10 @@ public class ChaosCanvas {
     initializeTransforms();
   }
 
-  private void initializeTransforms() {
+  /**
+   * Initializes the transforms from coordinates to indices and vice versa.
+   */
+  public void initializeTransforms() {
     Matrix2x2 matrix = new Matrix2x2(0, (height - 1) / (minCoords.getX1() - maxCoords.getX1()),
         (width - 1) / (maxCoords.getX0() - minCoords.getX0()), 0);
     Vector2D vector = new Vector2D(((height - 1) * maxCoords.getX1()) / (maxCoords.getX1() - minCoords.getX1()),
@@ -63,11 +59,11 @@ public class ChaosCanvas {
     transformIndicesToCoords = new AffineTransform2D(inverseMatrix, subtractVector);
   }
 
-    /**
-     * Returns a pixel from the canvas. Is only used for testing the putPixel method.
-     *
-     * @return int the width of the canvas
-     */
+  /**
+   * Returns the pixel value at a given point.
+   * @param point the point to get the pixel value from
+   * @return int the pixel value
+   */
   public int getPixel(Vector2D point) {
     point = transformCoordsToIndices.transform(point);
 
@@ -78,21 +74,28 @@ public class ChaosCanvas {
     return canvas[(int) Math.round(point.getX0())][(int) Math.round(point.getX1())];
   }
 
+  /**
+   * Converts a pixel to a coordinate.
+   * @param pixel the pixel to convert
+   * @return
+   */
   public Vector2D pixelToCoordinate(Vector2D pixel) {
     return transformIndicesToCoords.transform(pixel);
   }
 
-
+  /**
+   * Converts a coordinate to a pixel.
+   * @param point the point to convert
+   * @return Vector2D the converted point
+   */
   public Vector2D coordinateToPixel(Vector2D point) {
     return transformCoordsToIndices.transform(point);
   }
 
-
-     /**
-      * Puts a pixel on the canvas.
-      *
-      * @param point the point to put the pixel on
-      */
+  /**
+   * Increments the pixel value at a given point.
+   * @param point the point to increment the pixel value at
+   */
   public void putPixel(Vector2D point){
     point = transformCoordsToIndices.transform(point);
 
@@ -102,18 +105,18 @@ public class ChaosCanvas {
 
     canvas[(int) Math.round(point.getX0())][(int) Math.round(point.getX1())] += 1;
   }
+
   /**
    * Returns the canvas as an array.
-   *
    * @return int[][] the canvas
    */
-
   public int[][] getCanvasArray(){
     return canvas;
   }
-    /**
-     * Clears the canvas by going through the canvas and setting all pixels to 0.
-     */
+
+  /**
+   * Clears the canvas by going through the canvas and setting all pixels to 0.
+   */
   public void clear(){
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
@@ -122,7 +125,11 @@ public class ChaosCanvas {
     }
   }
 
-
+  /**
+   * Checks if a pixel is outside the canvas.
+   * @param point the point to check
+   * @return boolean true if the pixel is outside the canvas, false otherwise
+   */
   public boolean isPixelOutsideCanvas(Vector2D point) {
     boolean flag = false;
 
@@ -132,6 +139,11 @@ public class ChaosCanvas {
     return flag;
   }
 
+  /**
+   * Checks if a coordinate as pixel is outside the canvas.
+   * @param point the point to convert to pixel and check
+   * @return boolean true if the pixel is outside the canvas, false otherwise
+   */
   public boolean checkIfCoordAsPixelIsOutsideCanvas(Vector2D point) {
     point = transformCoordsToIndices.transform(point);
     boolean flag = false;

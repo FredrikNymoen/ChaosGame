@@ -11,9 +11,9 @@ import model.transformations.JuliaTransform;
 import model.transformations.Transform2D;
 
 /**
- * ChaosGameDescriptionFactory class is used to create ChaosGameDescription objects.
- * The class contains methods to create ChaosGameDescription objects for the Sierpinski triangle,
- * Barnsley fern, Julia set and affine transformations.
+ * The ChaosGameDescriptionFactory class is used to create ChaosGameDescription objects for different fractals.
+ * @author Fredrik Nymoen & Amund Larsen
+ * @version v1.0.0
  */
 
 public class ChaosGameDescriptionFactory {

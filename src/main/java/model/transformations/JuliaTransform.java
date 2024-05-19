@@ -10,14 +10,12 @@ import model.mathcore.Vector2D;
  * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0
  */
-
 public class JuliaTransform implements Transform2D {
   private Complex point;
   private int sign;
-  private int iterations;
 
   /**
-   * Constructor for model.transformations.JuliaTransform.
+   * Constructor for JuliaTransform.
    *
    * @param point the complex point
    * @param sign  determines the sign of the square root
@@ -33,14 +31,6 @@ public class JuliaTransform implements Transform2D {
    * @param point the point to transform
    * @return the transformed point
    */
-  /*@Override
-  public Vector2D transform(Vector2D point) {
-    Complex z = new Complex(point.getX0(), point.getX1());
-    // Beregner ±sqrt(z - c)
-    Complex result = z.subtract(this.point).sqrt().multiply(sign);
-    return new Vector2D(result.getX0(), result.getX1());
-  }*/
-
   @Override
   public Vector2D transform(Vector2D point) {
     Complex z = new Complex(point.getX0(), point.getX1());
@@ -60,6 +50,11 @@ public class JuliaTransform implements Transform2D {
     return new Vector2D(selectedRoot.getX0(), selectedRoot.getX1());
   }
 
+  /**
+   * Returns the complex point of the transformation.
+   *
+   * @return the complex point of the transformation.
+   */
   public Complex getPoint() {
     return point;
   }

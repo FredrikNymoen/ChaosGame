@@ -4,21 +4,20 @@ import model.mathcore.Matrix2x2;
 import model.mathcore.Vector2D;
 
 /**
- * model.transformations.AffineTransform2D class is responsible for the affine transformation of a 2D vector on the form x -> Ax + b.
+ * AffineTransform2D class is responsible for the affine transformation of a 2D vector on the form x -> Ax + b.
  *
  * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0
  */
-
 public class AffineTransform2D implements Transform2D {
   private Matrix2x2 matrix;
   private Vector2D vector;
 
   /**
-   * Constructor for model.transformations.AffineTransform2D.
+   * Constructor for AffineTransform2D.
    *
-   * @param matrix the matrix
-   * @param vector the vector
+   * @param matrix the matrix of the affine transformation
+   * @param vector the vector of the affine transformation
    */
   public AffineTransform2D(Matrix2x2 matrix, Vector2D vector) {
     this.matrix = matrix;
@@ -27,7 +26,6 @@ public class AffineTransform2D implements Transform2D {
 
   /**
    * Transforms a 2D vector.
-   *
    * @param point the point to transform
    * @return the transformed point
    */
@@ -36,10 +34,18 @@ public class AffineTransform2D implements Transform2D {
     return matrix.multiply(point).add(vector);
   }
 
+  /**
+   * Returns the matrix of the affine transformation.
+   * @return the matrix of the affine transformation
+   */
   public Matrix2x2 getMatrix() {
     return matrix;
   }
 
+  /**
+   * Returns the vector of the affine transformation.
+   * @return the vector of the affine transformation
+   */
   public Vector2D getVector() {
     return vector;
   }

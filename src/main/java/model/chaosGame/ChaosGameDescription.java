@@ -5,10 +5,10 @@ import model.mathcore.Vector2D;
 import model.transformations.Transform2D;
 
 /**
- * Provides the configuration for a Chaos Game.
- * This includes the geometric transformations to be applied and the boundaries for plotting the results.
- * This description encapsulates
- * all necessary data to set up and run a specific instance of a Chaos Game.
+ * The ChaosGameDescription class is used to represent a description of a chaos game.
+ * The description contains a list of transformations and the boundary coordinates of the canvas.
+ * @author Fredrik Nymoen & Amund Larsen
+ * @version v1.0.0
  */
 public class ChaosGameDescription {
 
@@ -18,7 +18,7 @@ public class ChaosGameDescription {
 
 
   /**
-   * Constructor for the model.chaosGame.ChaosGameDescription class. With specified boundary cords and a list of transformations.
+   * Constructor for the ChaosGameDescription class. With specified boundary cords and a list of transformations.
    * @param transforms the list of transformations to be applied
    * @param minCoords the minimum coordinates of the canvas
    * @param maxCoords the maximum coordinates of the canvas
@@ -35,7 +35,6 @@ public class ChaosGameDescription {
    *
    * @return List<Transform2D> the list of transformations for the chaos game
    */
-
   public List<Transform2D> getTransforms() {
     return transforms;
   }

@@ -8,9 +8,10 @@ import model.mathcore.Vector2D;
 import model.transformations.Transform2D;
 
 /**
- * model.chaosGame.ChaosGame class is used to represent a chaos game where you can generate fractals or other complex structures
- * through repeated application of random transformations. It uses model.chaosGame.ChaosCanvas where the results of these
- * transformations are plotted.
+ * The ChaosGame class is used to represent a chaos game.
+ * The chaos game is a mathematical game that generates a fractal using a set of rules and transformations.
+ * @author Fredrik Nymoen & Amund Larsen
+ * @version v1.0.0
  */
 public class ChaosGame {
   private ChaosCanvas canvas;
@@ -20,15 +21,12 @@ public class ChaosGame {
   private Stack<Vector2D> pointStack;
 
 
-    /**
-     * Constructor for the model.chaosGame.ChaosGame class. Constructs a new chaos game using a specified set of rules and dimensions
-     * for the canvas.
-     *
-     * @param description the description of the chaos game
-     * @param width the width of the canvas
-     * @param height the height of the canvas
-     */
-
+  /**
+   * Constructor for ChaosGame.
+   * @param description the description of the chaos game
+   * @param width the width of the canvas
+   * @param height the height of the canvas
+   */
   public ChaosGame(ChaosGameDescription description, int width, int height) {
     this.description = description;
     this.canvas = new ChaosCanvas(width, height, description.getMinCoords(), description.getMaxCoords());
@@ -38,6 +36,11 @@ public class ChaosGame {
     pointStack.push(currentPoint);
   }
 
+  /**
+   * Constructor for ChaosGame.
+   * @param width the width of the canvas
+   * @param height the height of the canvas
+   */
   public ChaosGame(int width, int height) {
     this.canvas = new ChaosCanvas(width, height, new Vector2D(-2, -2), new Vector2D(2, 2));
     this.currentPoint = new Vector2D(0, 0);
@@ -47,20 +50,19 @@ public class ChaosGame {
   }
 
   /**
-   * Returns the canvas of the chaos game.
-   *
-   * @return model.chaosGame.ChaosCanvas the canvas of the chaos game
+   * Gets the canvas of the chaos game.
+   * @return the canvas of the chaos game
    */
   public ChaosCanvas getCanvas() {
     return canvas;
   }
-    /**
-     * Runs a specified number of steps in the Chaos Game. Each step a random transformation is selected and applied
-     * to the current point, where the result is plotted on the canvas.
-     *
-     * @param steps the number of steps to run the chaos game
-     */
 
+  /**
+   * Runs a specified number of steps in the Chaos Game. Each step a random transformation is selected and applied
+   * to the current point, where the result is plotted on the canvas.
+   *
+   * @param steps the number of steps to run the chaos game
+   */
   public void runSteps(int steps) {
       canvas.clear();
       for (int i = 0; i < steps; i++) {
@@ -71,6 +73,12 @@ public class ChaosGame {
       }
   }
 
+  /**
+   * Runs a specified number of steps in the Barnsley Fern Chaos Game.
+   * Each step a transformation is selected based on a probability distribution and applied to the current point,
+   *
+   * @param steps the number of steps to run the chaos game
+   */
   public void runStepsForBarnsley(int steps){
     canvas.clear();
     for (int i = 0; i < steps; i++) {
@@ -99,6 +107,10 @@ public class ChaosGame {
     }
   }
 
+  /**
+   * Runs the chaos game with iterative transformation.
+   * The chaos game is run by applying all transformations to the current point and plotting the result on the canvas.
+   */
   public void fractalWithIterationTransformation() {
     canvas.clear();
     do {
