@@ -2,42 +2,58 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <!-- Maven Model Version -->
   <modelVersion>4.0.0</modelVersion>
 
+  <!-- Project Coordinates -->
   <groupId>no.ntnu.IDATG2003.Amund_Fredrik</groupId>
   <artifactId>Prog_2_prosjekt</artifactId>
   <version>1.0-SNAPSHOT</version>
 
+  <!-- Project Properties -->
   <properties>
+    <!-- Compiler Settings -->
     <maven.compiler.source>20</maven.compiler.source>
     <maven.compiler.target>20</maven.compiler.target>
+    <!-- Encoding for Source Files -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+
+  <!-- Project Dependencies -->
   <dependencies>
+    <!-- JUnit 5 for testing -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
       <version>5.10.1</version>
       <scope>test</scope>
     </dependency>
+
+    <!-- JavaFX Controls -->
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
       <version>20.0.2</version>
     </dependency>
+
+    <!-- JUnit 4 for legacy tests -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.13.2</version>
       <scope>test</scope>
     </dependency>
-    <!-- For the UIHelperTest  -->
+
+    <!-- TestFX Core for JavaFX testing -->
     <dependency>
       <groupId>org.testfx</groupId>
       <artifactId>testfx-core</artifactId>
       <version>4.0.16-alpha</version>
       <scope>test</scope>
     </dependency>
+
+    <!-- TestFX JUnit5 for JavaFX testing with JUnit 5 -->
     <dependency>
       <groupId>org.testfx</groupId>
       <artifactId>testfx-junit5</artifactId>
@@ -46,29 +62,39 @@
     </dependency>
   </dependencies>
 
+  <!-- Build Configuration -->
   <build>
     <plugins>
+      <!-- JavaFX Maven Plugin -->
       <plugin>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-maven-plugin</artifactId>
         <version>0.0.8</version>
         <configuration>
+          <!-- Main class for JavaFX application -->
           <mainClass>view.MainGUI</mainClass>
         </configuration>
       </plugin>
+
+      <!-- Maven Compiler Plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.12.1</version>
         <configuration>
+          <!-- Java release version -->
           <release>20</release>
         </configuration>
       </plugin>
+
+      <!-- Maven Surefire Plugin for running tests -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.2.3</version>
       </plugin>
+
+      <!-- Maven Javadoc Plugin for generating documentation -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
