@@ -2,17 +2,18 @@ package factory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import chaosGame.ChaosGameDescription;
+import model.chaosGame.ChaosGameDescription;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import mathcore.Complex;
-import mathcore.Matrix2x2;
-import mathcore.Vector2D;
+import model.factory.ChaosGameDescriptionFactory;
+import model.mathcore.Complex;
+import model.mathcore.Matrix2x2;
+import model.mathcore.Vector2D;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import transformations.AffineTransform2D;
-import transformations.Transform2D;
+import model.transformations.AffineTransform2D;
+import model.transformations.Transform2D;
 
 public class ChaosGameDescriptionFactoryTest {
 

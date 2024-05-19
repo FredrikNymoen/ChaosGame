@@ -2,13 +2,14 @@ package transformations;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import mathcore.Matrix2x2;
-import mathcore.Vector2D;
+import model.mathcore.Matrix2x2;
+import model.mathcore.Vector2D;
+import model.transformations.AffineTransform2D;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Test class for transformations.AffineTransform2D
+ * Test class for model.transformations.AffineTransform2D
  *
  * @author Amund Larsen & Fredrik Nymoen
  * @version v.1.0.0
@@ -28,8 +29,8 @@ class AffineTransform2DTest {
   }
 
   /**
-   * Tests the transform method in the transformations.AffineTransform2D class with a positive test.
-   * The test makes a point and transforms it with the transformations.AffineTransform2D.
+   * Tests the transform method in the model.transformations.AffineTransform2D class with a positive test.
+   * The test makes a point and transforms it with the model.transformations.AffineTransform2D.
    * Then it checks if the result is as expected. For both X0 and X1.
    */
   @Test
@@ -42,8 +43,8 @@ class AffineTransform2DTest {
   }
 
   /**
-   * Tests the transform method in the transformations.AffineTransform2D class with a negative test.
-   * The test makes a point and transforms it with the transformations.AffineTransform2D.
+   * Tests the transform method in the model.transformations.AffineTransform2D class with a negative test.
+   * The test makes a point and transforms it with the model.transformations.AffineTransform2D.
    * Then it checks if the result is not as expected. For both X0 and X1.
    */
   @Test

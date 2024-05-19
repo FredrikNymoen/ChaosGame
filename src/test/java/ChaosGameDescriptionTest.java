@@ -1,8 +1,8 @@
-import chaosGame.ChaosGameDescription;
-import mathcore.Vector2D;
+import model.chaosGame.ChaosGameDescription;
+import model.mathcore.Vector2D;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import transformations.Transform2D;
+import model.transformations.Transform2D;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +10,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test class for the chaosGame.ChaosGameDescription class.
- * This class tests the getTransforms, getMinCoords and getMaxCoords methods of the chaosGame.ChaosGameDescription class.
+ * Test class for the model.chaosGame.ChaosGameDescription class.
+ * This class tests the getTransforms, getMinCoords and getMaxCoords methods of the model.chaosGame.ChaosGameDescription class.
  */
 
 class ChaosGameDescriptionTest {
@@ -22,7 +22,7 @@ class ChaosGameDescriptionTest {
     private Vector2D maxCoords;
 
     /**
-     * Sets up the chaosGame.ChaosGameDescription with a list of transformations, min and max coordinates.
+     * Sets up the model.chaosGame.ChaosGameDescription with a list of transformations, min and max coordinates.
      * This method is called before each test.
      */
 
@@ -36,7 +36,7 @@ class ChaosGameDescriptionTest {
         description = new ChaosGameDescription(transforms, minCoords, maxCoords);
     }
     /**
-     * Tests the chaosGame.ChaosGameDescription creation with a positive test case.
+     * Tests the model.chaosGame.ChaosGameDescription creation with a positive test case.
      * It checks if the transforms returns the correct list of transformations.
      */
 

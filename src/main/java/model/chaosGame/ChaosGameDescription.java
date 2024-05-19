@@ -1,8 +1,8 @@
-package chaosGame;
+package model.chaosGame;
 
 import java.util.List;
-import mathcore.Vector2D;
-import transformations.Transform2D;
+import model.mathcore.Vector2D;
+import model.transformations.Transform2D;
 
 /**
  * Provides the configuration for a Chaos Game.
@@ -18,7 +18,7 @@ public class ChaosGameDescription {
 
 
   /**
-   * Constructor for the chaosGame.ChaosGameDescription class. With specified boundary cords and a list of transformations.
+   * Constructor for the model.chaosGame.ChaosGameDescription class. With specified boundary cords and a list of transformations.
    * @param transforms the list of transformations to be applied
    * @param minCoords the minimum coordinates of the canvas
    * @param maxCoords the maximum coordinates of the canvas

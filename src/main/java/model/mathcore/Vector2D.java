@@ -1,4 +1,4 @@
-package mathcore;
+package model.mathcore;
 
 /**
  * A class representing a 2D vector.
@@ -15,7 +15,7 @@ public class Vector2D{
   private double x1;
 
   /**
-   * Constructor for the mathcore.Vector2D class.
+   * Constructor for the model.mathcore.Vector2D class.
    *
    * @param x0 the x-coordinate of the vector
    * @param x1 the y-coordinate of the vector
@@ -49,7 +49,7 @@ public class Vector2D{
   /**
    * Adds two vectors together and returns a new vector with the result.
    * @param other the vector to be added to the vector
-   * @return mathcore.Vector2D which is a new vector with the result of the addition
+   * @return model.mathcore.Vector2D which is a new vector with the result of the addition
    */
 
   public Vector2D add(Vector2D other) {
@@ -59,7 +59,7 @@ public class Vector2D{
   /**
    * Subtracts one vector from another and returns a new vector with the result.
    * @param other the vector to be subtracted from the vector
-   * @return mathcore.Vector2D which is a new vector with the result of the subtraction
+   * @return model.mathcore.Vector2D which is a new vector with the result of the subtraction
    */
 
   public Vector2D subtract(Vector2D other) {

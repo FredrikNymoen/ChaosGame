@@ -1,10 +1,10 @@
-package mathcore;
+package model.mathcore;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * mathcore.Complex class is used to represent complex numbers and perform sqrt operation on them.
+ * model.mathcore.Complex class is used to represent complex numbers and perform sqrt operation on them.
  *
  * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0
@@ -12,7 +12,7 @@ import java.util.List;
 public class Complex extends Vector2D {
 
   /**
-   * Constructor for mathcore.Complex.
+   * Constructor for model.mathcore.Complex.
    *
    * @param realpart       the real part of the complex number
    * @param imaginarypart  the imaginary part of the complex number

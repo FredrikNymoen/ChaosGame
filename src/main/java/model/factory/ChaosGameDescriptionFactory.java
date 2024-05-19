@@ -1,16 +1,14 @@
-package factory;
+package model.factory;
 
-import chaosGame.ChaosCanvas;
-import chaosGame.ChaosGame;
-import chaosGame.ChaosGameDescription;
+import model.chaosGame.ChaosGameDescription;
 import java.util.ArrayList;
 import java.util.List;
-import mathcore.Complex;
-import mathcore.Matrix2x2;
-import mathcore.Vector2D;
-import transformations.AffineTransform2D;
-import transformations.JuliaTransform;
-import transformations.Transform2D;
+import model.mathcore.Complex;
+import model.mathcore.Matrix2x2;
+import model.mathcore.Vector2D;
+import model.transformations.AffineTransform2D;
+import model.transformations.JuliaTransform;
+import model.transformations.Transform2D;
 
 /**
  * ChaosGameDescriptionFactory class is used to create ChaosGameDescription objects.
