@@ -1,10 +1,13 @@
 package controller;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import javafx.application.Platform;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.UIHelper;
@@ -24,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ValidationControllerTest {
 
   private ValidationController validationController;
+
 
   /**
    * Sets up the test environment before each test.
@@ -173,8 +177,8 @@ public class ValidationControllerTest {
   private void addTestDataToJuliaGrid(GridPane juliaGrid, String realPart, String imaginaryPart) {
     TextField realPartField = new TextField(realPart);
     TextField imaginaryPartField = new TextField(imaginaryPart);
-    juliaGrid.add(realPartField, 0, 2);
-    juliaGrid.add(imaginaryPartField, 1, 2);
+    juliaGrid.add(realPartField, 0, 2); // Adding to row 2, column 0
+    juliaGrid.add(imaginaryPartField, 1, 2); // Adding to row 2, column 1
   }
 
   /**
