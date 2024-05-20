@@ -2,44 +2,29 @@ package controller;
 
 import exception.FileEmptyException;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.control.CheckBox;
 import model.chaosGame.ChaosGame;
 import model.chaosGame.ChaosGameDescription;
 import model.factory.ChaosGameDescriptionFactory;
 import model.factory.ChaosGameFactory;
 import model.filehandling.ChaosGameFileHandler;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.function.UnaryOperator;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
-import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.util.converter.DoubleStringConverter;
 import model.filehandling.SettingsHandler;
 import model.mathcore.Complex;
 import model.mathcore.Matrix2x2;
 import model.mathcore.Vector2D;
-import util.ErrorHandling;
 import util.UIHelper;
 import util.Utility;
 
 /**
  * ChaosGameController class is used to control the chaos game GUI.
- * The class contains methods to get affine transformation values,
- * create a chaos game and handle transformation selection.
+ * The class contains methods to create a chaos game and read- and write to file.
  * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0
  */
@@ -50,6 +35,9 @@ public class ChaosGameController {
   private final SettingsHandler settingsHandler;
   private final ChaosGameFileHandler fileHandler;
 
+  /**
+   * Constructor for ChaosGameController.
+   */
   public ChaosGameController(){
     chaosGameFactory = new ChaosGameFactory();
     factory = new ChaosGameDescriptionFactory();
@@ -57,16 +45,14 @@ public class ChaosGameController {
     fileHandler = new ChaosGameFileHandler(Utility.SHOWN_TRANSFORMATION_FILE_PATH);
   }
 
-  /**
-   * Gets the affine transformation values from the affine grid. The affine grid is a GridPane
-   * containing text fields for the matrix and vector values. The method retrieves the values from
-   * the grid and stores them in lists.
+/**
+   * Gets the affine transformation values from the affineGrid and stores them in a list of
+   * Matrix2x2 and Vector2D objects.
    *
    * @param affineMatrices the list to store the affine matrices
    * @param affineVectors  the list to store the affine vectors
-   * @param affineGrid     the grid containing the affine transformation values
+   * @param affineGrid     the GridPane containing the affine transformation values
    */
-
   public void getAffineTransformationValues(List<Matrix2x2> affineMatrices,
       List<Vector2D> affineVectors, GridPane affineGrid) {
     // Assuming there are 4 rows, and each row has 4 matrix fields followed by 2 vector fields
@@ -83,11 +69,7 @@ public class ChaosGameController {
       // Retrieve vector values
       for (int i = 0; i < 2; i++) { // vectorValues indexes are 0 to 1, grid positions are 5 and 6
         TextField textField = (TextField) UIHelper.getNodeFromGridPane(affineGrid, i + 5, row);
-        try {
-          vectorValues[i] = Double.parseDouble(textField.getText());
-        } catch (NumberFormatException e) {
-          System.out.println("Invalid input for vector values.");
-        }
+        vectorValues[i] = Double.parseDouble(textField.getText());
       }
 
       Matrix2x2 matrix = new Matrix2x2(matrixValues[0], matrixValues[1], matrixValues[2],
@@ -98,19 +80,19 @@ public class ChaosGameController {
     }
   }
 
+
   /**
-   * Handles the selection of a transformation from a ToggleGroup. The method retrieves the selected
-   * RadioButton from the ToggleGroup and creates a ChaosGameDescription based on the selected
-   * transformation. The ChaosGameDescription is then written to a file and a ChaosGame object is
-   * created.
+   * Handles the selection of a transformation and creates a ChaosGame object based on the selected
+   * transformation.
    *
    * @param transformationsGroup the ToggleGroup containing the transformation selection
    * @param affineGrid           the GridPane containing the affine transformation values
+   * @param juliaGrid            the GridPane containing the Julia transformation values
+   * @param coordGrid            the GridPane containing the coordinate values
    * @param steps                the number of steps to run the chaos game
-   * @return ChaosGame the created chaos game
+   * @return ChaosGame the ChaosGame object created based on the selected transformation
+   * @throws Exception if an error occurs
    */
-
-
   public ChaosGame handleTransformationSelection(ToggleGroup transformationsGroup,
       GridPane affineGrid, GridPane juliaGrid, GridPane coordGrid, int steps) throws Exception{
     ChaosGame chaosGame = null;
@@ -166,7 +148,7 @@ public class ChaosGameController {
       switch (transformation) {
         case "Julia":
           if (juliaToggleButton.isSelected()) {
-            chaosGame = chaosGameFactory.createJuliaChaosGame(c);
+            chaosGame = chaosGameFactory.createJuliaChaosGameWithConvergenceMode(c);
             writeToFile(description, "convergence-mode");
           } else {
             chaosGame = chaosGameFactory.createChaosGame(description, Utility.CHAOS_GAME_WIDTH,
@@ -195,6 +177,11 @@ public class ChaosGameController {
   }
 
 
+  /**
+   * Checks if the file contains a Mandelbrot description.
+   * @return boolean true if the file contains a Mandelbrot description, false otherwise
+   * @throws Exception if an error occurs
+   */
   public boolean checkForMandelbrot() throws Exception{
     boolean flag = false;
     try{
@@ -208,6 +195,11 @@ public class ChaosGameController {
     return flag;
   }
 
+  /**
+   * Reads a ChaosGameDescription object from a file.
+   * @return ChaosGameDescription the ChaosGameDescription object read from the file
+   * @throws Exception if an error occurs
+   */
   public ChaosGameDescription readFromFile() throws Exception{
     ChaosGameDescription chaosGameDescription = null;
     try{
@@ -223,6 +215,11 @@ public class ChaosGameController {
     return chaosGameDescription;
   }
 
+  /**
+   * Reads the transformation type from a file.
+   * @return String the transformation type read from the file
+   * @throws Exception if an error occurs
+   */
   public String readTransformationType() throws Exception{
     String transformationType = null;
     try{
@@ -236,6 +233,12 @@ public class ChaosGameController {
     return transformationType;
   }
 
+  /**
+   * Writes a ChaosGameDescription object to a file.
+   * @param description the ChaosGameDescription object to write to the file
+   * @param transformationType the transformation type to write to the file
+   * @throws Exception if an error occurs
+   */
   public void writeToFile(ChaosGameDescription description, String transformationType) throws Exception{
     try{
       fileHandler.writeToFile(description, transformationType);
@@ -247,18 +250,28 @@ public class ChaosGameController {
     }
   }
 
+  /**
+   * Writes a line to a file.
+   * @param line the line to write to the file
+   * @throws Exception if an error occurs
+   */
   public void writeLineToFile(String line) throws Exception{
     try {
       fileHandler.writeLineToFile(line);
     }
     catch (IOException e) {
-      System.out.println("File not found.");
+      throw new IOException("File not found.");
     } catch (Exception e) {
-      System.out.println("Error writing to file.");
+      throw new Exception("Error writing to file.");
     }
   }
 
 
+  /**
+   * Saves the application settings to a file.
+   * @param appSettings the application settings to save
+   * @throws Exception if an error occurs
+   */
   public void saveSettings(Properties appSettings) throws Exception{
     try {
       settingsHandler.saveSettings(appSettings);
@@ -270,6 +283,11 @@ public class ChaosGameController {
     }
   }
 
+  /**
+   * Loads the application settings from a file.
+   * @return Properties the application settings loaded from the file
+   * @throws Exception if an error occurs
+   */
   public Properties loadSettings() throws Exception{
     Properties appProperties = null;
     try {

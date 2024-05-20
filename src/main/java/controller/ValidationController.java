@@ -9,8 +9,22 @@ import javafx.scene.layout.GridPane;
 import util.UIHelper;
 import util.Utility;
 
+/**
+ * ValidationController class is used to validate user input in the GUI.
+ * The class checks if all fields are valid and updates the GUI accordingly.
+ * @author Fredrik Nymoen & Amund Larsen
+ * @version v1.0.0
+ */
 public class ValidationController {
 
+  /**
+   * Checks if all fields are valid and updates the GUI accordingly.
+   * @param juliaGrid the GridPane containing the Julia set fields
+   * @param transformationsGroup the ToggleGroup containing the transformation options
+   * @param affineGrid the GridPane containing the affine transformation fields
+   * @param coordGrid the GridPane containing the coordinate fields
+   * @return true if all fields are valid, false otherwise
+   */
   public boolean isAllFieldsValid(GridPane juliaGrid, ToggleGroup transformationsGroup, GridPane affineGrid, GridPane coordGrid) {
     boolean allFieldsValid = true;
 
@@ -23,7 +37,7 @@ public class ValidationController {
 
     // Handle each case of missing inputs to update the GUI
     for (String notFilled : missingInputs) {
-      allFieldsValid = false; // Mark as invalid since there's an error
+      allFieldsValid = false; // At least one field is not valid
       if (notFilled.startsWith("(")){
         String[] parts = notFilled.split("[, ]+");
         int row = Integer.parseInt(parts[0].substring(1));
@@ -49,7 +63,7 @@ public class ValidationController {
     TextField maxXField = coordinateFields[2];
     TextField maxYField = coordinateFields[3];
 
-    // Validate and parse minimum coordinates
+    // Validate and parse the coordinate fields
     allFieldsValid &= validateCoordFieldsAndSetStyle(minXField, minYField, allFieldsValid);
     allFieldsValid &= validateCoordFieldsAndSetStyle(maxXField, maxYField, allFieldsValid);
 
@@ -57,6 +71,14 @@ public class ValidationController {
   }
 
 
+  /**
+   * Checks for empty fields in the GUI and returns a list of missing fields.
+   * @param transformationsGroup the ToggleGroup containing the transformation options
+   * @param affineGrid the GridPane containing the affine transformation fields
+   * @param realPartField the TextField containing the real part of the Julia set
+   * @param imaginaryPartField the TextField containing the imaginary part of the Julia set
+   * @return a list of missing fields
+   */
   public List<String> checkForEmptyFields(ToggleGroup transformationsGroup, GridPane affineGrid,
       TextField realPartField, TextField imaginaryPartField) {
     List<String> missingArray = new ArrayList<>();
@@ -92,16 +114,28 @@ public class ValidationController {
     return missingArray;
   }
 
-
+  /**
+   * Checks if a string can be parsed to a double.
+   * @param text the string to check
+   * @return true if the string can be parsed to a double, false otherwise
+   */
   public boolean isDouble(String text) {
+    boolean flag = true;
     try {
       Double.parseDouble(text); // Try to parse the text to a double
-      return true; // Parsing succeeded, so it's a valid double
     } catch (NumberFormatException e) {
-      return false; // Parsing failed, it's not a valid double
+      flag = false;
     }
+    return flag;
   }
 
+  /**
+   * Validates the coordinate fields and sets the style of the fields accordingly.
+   * @param field1 the first coordinate field
+   * @param field2 the second coordinate field
+   * @param allFieldsValid true if all fields are valid, false otherwise
+   * @return true if all fields are valid, false otherwise
+   */
   public boolean validateCoordFieldsAndSetStyle(TextField field1, TextField field2, boolean allFieldsValid) {
     if (field1.getText().trim().isEmpty() || field2.getText().trim().isEmpty()) {
       field1.setStyle(Utility.RED_BORDER);

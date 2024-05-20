@@ -7,6 +7,8 @@ import java.util.logging.Logger;
  * This class handles logging various types of errors and warnings.
  * It provides methods for logging specific error messages related to file operations,
  * transformation selection, copying transformations, and iterative transformations.
+ * @author Fredrik Nymoen & Amund Larsen
+ * @version v1.0.0
  */
 public class ErrorHandling {
 

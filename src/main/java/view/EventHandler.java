@@ -22,10 +22,19 @@ import util.UIHelper;
  * This class implements the ChaosGameObserver interface to handle various events
  * and actions related to the Chaos Game application. It manages the UI components
  * and interactions to facilitate the drawing and transformation of fractals.
+ * @author Fredrik Nymoen & Amund Larsen
+ * @version v1.0.0
  */
 public class EventHandler implements ChaosGameObserver {
 
-  private FractalDrawer fractalDrawer = new FractalDrawer();
+  private FractalDrawer fractalDrawer;
+
+  /**
+   * Constructor for the EventHandler class.
+   */
+  public EventHandler(){
+    fractalDrawer = new FractalDrawer();
+  }
 
   /**
    * Handles the selection of a transformation type.

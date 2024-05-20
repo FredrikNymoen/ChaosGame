@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * model.mathcore.Complex class is used to represent complex numbers and perform sqrt operation on them.
+ * Complex class is used to represent complex numbers and perform sqrt operation on them.
  *
  * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0
@@ -12,7 +12,7 @@ import java.util.List;
 public class Complex extends Vector2D {
 
   /**
-   * Constructor for model.mathcore.Complex.
+   * Complex constructor that takes in the real and imaginary part of the complex number.
    *
    * @param realpart       the real part of the complex number
    * @param imaginarypart  the imaginary part of the complex number
@@ -38,11 +38,21 @@ public class Complex extends Vector2D {
     return new Complex(sign * getX0(), sign * getX1());
   }
 
+  /**
+   * Subtract the complex number c from another complex number.
+   * @param other the vector that is subtracted from the complex number c.
+   * @return the result of the subtraction
+   */
   @Override
   public Complex subtract(Vector2D other) {
     return new Complex(getX0() - other.getX0(), getX1() - other.getX1());
   }
 
+  /**
+   * Returns the fourth roots of the complex number.
+   *
+   * @return the fourth roots of the complex number
+   */
   public List<Complex> getFourthRoots() {
     List<Complex> roots = new ArrayList<>();
 
@@ -60,6 +70,13 @@ public class Complex extends Vector2D {
     return roots; // Return all four roots
   }
 
+  /**
+   * Returns the polar representation of the complex number.
+   *
+   * @param rootModulus the modulus of the complex number
+   * @param rootArgument the argument of the complex number
+   * @return the complex number in polar form
+   */
   private Complex polar(double rootModulus, double rootArgument) {
     double realPart = rootModulus * Math.cos(rootArgument); // Real part of the complex number
     double imaginaryPart = rootModulus * Math.sin(rootArgument); // Imaginary part of the complex number
@@ -67,10 +84,20 @@ public class Complex extends Vector2D {
     return new Complex(realPart, imaginaryPart);
   }
 
+  /**
+   * Returns the argument of the complex number.
+   *
+   * @return the argument of the complex number
+   */
   private double getArgument() {
     return Math.atan2(getX1(), getX0());
   }
 
+  /**
+   * Returns the modulus of the complex number.
+   *
+   * @return the modulus of the complex number
+   */
   private double getModulus() {
     return Math.sqrt(Math.pow(getX0(), 2) + Math.pow(getX1(), 2));
   }

@@ -2,6 +2,8 @@ package util;
 
 /**
  * A utility class that holds constants used throughout the Chaos Game application.
+ * @author Fredrik Nymoen & Amund Larsen
+ * @version v1.0.0
  */
 public class Utility {
   /** The name of the application. */

@@ -1,3 +1,5 @@
+package model.chaosGame;
+
 import model.chaosGame.ChaosGameDescription;
 import model.mathcore.Vector2D;
 import org.junit.jupiter.api.BeforeEach;

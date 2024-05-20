@@ -13,6 +13,8 @@ import model.chaosGame.ChaosGame;
 
 /**
  * This class handles the drawing of fractals on a canvas.
+ * @author Fredrik Nymoen & Amund Larsen
+ * @version v1.0.0
  */
 public class FractalDrawer {
 

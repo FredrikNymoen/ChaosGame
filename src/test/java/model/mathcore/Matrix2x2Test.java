@@ -1,4 +1,4 @@
-package mathcore;
+package model.mathcore;
 
 import static org.junit.jupiter.api.Assertions.*;
 

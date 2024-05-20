@@ -9,6 +9,8 @@ import javafx.scene.layout.GridPane;
 /**
  * A utility class that provides helper methods for UI-related tasks,
  * specifically for interacting with GridPane and TextField elements.
+ * @author Fredrik Nymoen & Amund Larsen
+ * @version v1.0.0
  */
 public class UIHelper {
 

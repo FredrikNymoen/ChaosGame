@@ -6,7 +6,6 @@ import model.mathcore.Vector2D;
  * An interface for 2D transformations.
  *
  * @author Amund Larsen & Fredrik Nymoen
- *
  * @version v.1.0.0
  *
  */

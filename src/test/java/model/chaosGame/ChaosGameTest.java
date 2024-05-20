@@ -1,3 +1,5 @@
+package model.chaosGame;
+
 import model.chaosGame.ChaosGame;
 import model.chaosGame.ChaosGameDescription;
 import model.mathcore.Matrix2x2;

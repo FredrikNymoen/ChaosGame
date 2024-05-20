@@ -2,7 +2,6 @@ package model.filehandling;
 
 import exception.FileEmptyException;
 import java.io.IOException;
-import java.util.logging.Logger;
 import model.chaosGame.ChaosGameDescription;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -17,30 +16,32 @@ import model.mathcore.Vector2D;
 import model.transformations.AffineTransform2D;
 import model.transformations.JuliaTransform;
 import model.transformations.Transform2D;
-import util.ErrorHandling;
 
 /**
- * A class that handles reading and writing to files for the model.chaosGame.ChaosGameDescription class.
- * This class provides methods to serialize the configuration of a Chaos Game into
- * file and to deserialize it back into an object.
+ * The ChaosGameFileHandler class is used to read and write Chaos Game configurations to and from files.
+ * @author Fredrik Nymoen & Amund Larsen
+ * @version v1.0.0
  */
 public class ChaosGameFileHandler {
-  private final String filePath;
+  private final String fileName;
 
   /**
-   * Reads a model.chaosGame.ChaosGameDescription from a specified file. This method parses the file
-   * assumed to be in a custom format that lists transformations and boundary coordinates
-   * for the Chaos Game. The file can describe different types of transformations based
-   * on its first line.
-   *
-   * @return A new model.chaosGame.ChaosGameDescription object initialized with the parameters read from the file.
+   * Constructor for ChaosGameFileHandler.
+   * @param fileName the name of the file to be read from or written to
    */
-  public ChaosGameFileHandler(String filePath) {
-    this.filePath = filePath;
+  public ChaosGameFileHandler(String fileName) {
+    this.fileName = fileName;
   }
 
+  /**
+   * Reads a Chaos Game configuration from a specified file. This method deserializes the
+   * Chaos Game configuration from a custom format, allowing it to be reconstructed as a
+   * ChaosGameDescription object.
+   * @throws Exception if the file is not found, empty, or if an error occurs while reading the file
+   * @return a ChaosGameDescription object representing the Chaos Game configuration
+   */
   public ChaosGameDescription readFromFile() throws Exception{
-    File file = new File(filePath);
+    File file = new File(fileName);
     ChaosGameDescription description = null;
     String[] transformationValues;
     List<Transform2D> transforms = new ArrayList<>();
@@ -123,16 +124,15 @@ public class ChaosGameFileHandler {
     return description;
   }
 
-  /**
-   * Writes a given model.chaosGame.ChaosGameDescription to a specified file. This method serializes the
-   * Chaos Game configuration into a custom format, allowing it to be read and reconstructed
-   * later. The format includes information on transformations and boundary coordinates.
-   *
-   * @param description The model.chaosGame.ChaosGameDescription object to be written to the file.
-   */
 
+  /**
+   * Writes a Chaos Game configuration to a specified file.
+   * @param description the ChaosGameDescription object to be written to the file.
+   * @param transformationtype the type of transformation.
+   * @throws Exception if the file is not found or an error occurs while writing to the file.
+   */
   public void writeToFile(ChaosGameDescription description, String transformationtype) throws Exception{
-    File file = new File(filePath);
+    File file = new File(fileName);
 
     try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(file.getAbsolutePath()))) {
       if (description.getTransforms().get(0) instanceof AffineTransform2D) {
@@ -167,9 +167,13 @@ public class ChaosGameFileHandler {
     }
   }
 
-
+  /**
+   * Reads the transformation type from a specified file.
+   * @return the transformation type
+   * @throws Exception if the file is not found or an error occurs while reading the file.
+   */
   public String readTransformationType() throws Exception{
-    File file = new File(filePath);
+    File file = new File(fileName);
     String transformationType = null;
 
     try (BufferedReader reader = Files.newBufferedReader(Paths.get(file.getAbsolutePath()))) {
@@ -186,9 +190,13 @@ public class ChaosGameFileHandler {
     return transformationType;
   }
 
-
+  /**
+   * Writes a line to a specified file.
+   * @param line the line to be written to the file
+   * @throws Exception if the file is not found or an error occurs while writing to the file.
+   */
   public void writeLineToFile(String line) throws Exception{
-    File file = new File(filePath);
+    File file = new File(fileName);
     try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(file.getAbsolutePath()))) {
       writer.write(line);
     }
@@ -199,9 +207,14 @@ public class ChaosGameFileHandler {
     }
   }
 
+  /**
+   * Checks if the file contains a Mandelbrot configuration.
+   * @return true if the file contains a Mandelbrot configuration, false otherwise
+   * @throws Exception if the file is not found or an error occurs while reading the file.
+   */
   public boolean checkForMandelbrot() throws Exception{
     boolean flag = false;
-    File file = new File(filePath);
+    File file = new File(fileName);
     String line = null;
     try (BufferedReader reader = Files.newBufferedReader(Paths.get(file.getAbsolutePath()))) {
       line = reader.readLine();

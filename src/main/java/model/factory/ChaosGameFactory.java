@@ -7,6 +7,11 @@ import model.mathcore.Complex;
 import model.mathcore.Vector2D;
 import util.Utility;
 
+/**
+ * The ChaosGameFactory class is used to create ChaosGame objects with specified parameters.
+ * @author Fredrik Nymoen & Amund Larsen
+ * @version v1.0.0
+ */
 public class ChaosGameFactory {
 
   /**
@@ -18,6 +23,7 @@ public class ChaosGameFactory {
    * @param width       the width of the canvas
    * @param height      the height of the canvas
    * @param steps       the number of steps to run the chaos game
+   * @param isBarnsleyTransformation whether to use Barnsley transformation or not
    * @return ChaosGame the created chaos game
    */
   public ChaosGame createChaosGame(ChaosGameDescription description, int width, int height,
@@ -31,7 +37,13 @@ public class ChaosGameFactory {
     return chaosGame;
   }
 
-  public ChaosGame createJuliaChaosGame(Complex c) {
+  /**
+   * Creates a julia chaos game with convergence mode.
+   * Convergence mode checks if the coordinates to the pixel converges. If it does, the pixel is included in the fractal.
+   * @param c the complex number c
+   * @return ChaosGame the created chaos game
+   */
+  public ChaosGame createJuliaChaosGameWithConvergenceMode(Complex c) {
     double r = 2;
 
     ChaosGame chaosGame = new ChaosGame(Utility.CHAOS_GAME_WIDTH, Utility.CHAOS_GAME_HEIGHT);
@@ -73,6 +85,11 @@ public class ChaosGameFactory {
     return chaosGame;
   }
 
+  /**
+   * Creates a mandelbrot chaos game.
+   * Checks if the coordinates to the pixel converges. If it does, the pixel is included in the fractal.
+   * @return ChaosGame the created chaos game
+   */
   public ChaosGame createMandelbrotChaosGame(){
     double r = 2; // Escape radius
 
