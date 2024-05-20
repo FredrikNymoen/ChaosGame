@@ -1,3 +1,5 @@
+package model.chaosGame;
+
 import model.chaosGame.ChaosCanvas;
 import model.chaosGame.ChaosGame;
 import model.mathcore.Vector2D;

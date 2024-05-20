@@ -3,7 +3,11 @@ package view;
 import controller.HandleActionController;
 import controller.ValidationController;
 import java.util.Map;
+import javafx.animation.FadeTransition;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 import model.chaosGame.ChaosGame;
 import java.util.Properties;
 import javafx.application.Application;
@@ -35,7 +39,6 @@ import util.Utility;
  * @version v1.0.0
  */
 public class MainGUI extends Application {
-
   private VBox leftSide;
   private ScrollPane scrollPane;
   private VBox transformationBox;
@@ -52,6 +55,7 @@ public class MainGUI extends Application {
   private Label missingInputMessage;
   private CheckBox colorModeCheckbox;
   private Button copyLastTransformationButton;
+  private Button exitButton;
   private Canvas fractalCanvas;
   private ChaosGame currentChaosGame;
 
@@ -91,7 +95,7 @@ public class MainGUI extends Application {
     configureShowButton();
     configureMissingInputMessage();
     configureCopyLastTransformationButton();
-    configureExitButton(root, primaryStage);
+    configureExitButton(primaryStage);
 
     configureLeftSide(root);
     configureRightSide(root);
@@ -104,9 +108,10 @@ public class MainGUI extends Application {
     scene.getStylesheets().add(getClass().getResource("/chaosgame.css").toExternalForm());
     primaryStage.setTitle(Utility.APPLICATION_NAME);
     primaryStage.setScene(scene);
-    primaryStage.setMaximized(true); // Set the stage to be maximized
+    primaryStage.setFullScreen(true); // Set the stage to full screen
     primaryStage.show();
   }
+
 
   /**
    * Configures the scroll pane for the left side of the layout.
@@ -230,19 +235,15 @@ public class MainGUI extends Application {
   /**
    * Configures the exit button and its action handler.
    *
-   * @param root         the root layout
    * @param primaryStage the primary stage of the application
    */
-  public void configureExitButton(BorderPane root, Stage primaryStage) {
-    Button exitButton = new Button("Exit");
+  public void configureExitButton(Stage primaryStage) {
+    exitButton = new Button("Exit");
+    exitButton.getStyleClass().add("exit-button");
     exitButton.setOnAction(event -> {
       saveSettings();
       primaryStage.close();
     });
-
-    AnchorPane exitButtonPane = new AnchorPane(exitButton);
-    AnchorPane.setTopAnchor(exitButton, 10.0);
-    AnchorPane.setRightAnchor(exitButton, 10.0);
   }
 
   /**
@@ -261,6 +262,7 @@ public class MainGUI extends Application {
     HBox centeredColorModeCheckboxBox = layout.createCenteredHBox(colorModeCheckbox);
     HBox centeredIterativeTransformationBox = layout.createCenteredHBox(iterativeTransformationButton);
     HBox centeredCopyTransformationButtonBox = layout.createCenteredHBox(copyLastTransformationButton);
+    HBox centeredExitButtonBox = layout.createCenteredHBox(exitButton);
 
     leftSide.getChildren().addAll(
         transformationBox,
@@ -274,7 +276,8 @@ public class MainGUI extends Application {
         spacingBox,
         centeredColorModeCheckboxBox,
         centeredCopyTransformationButtonBox,
-        spacingBox2
+        spacingBox2,
+        centeredExitButtonBox
     );
 
     layout.setupLeftSideWithSeperatorLine(scrollPane, leftSide, root);

@@ -1,3 +1,5 @@
+package model.filehandling;
+
 import model.chaosGame.ChaosGameDescription;
 import model.filehandling.ChaosGameFileHandler;
 import model.mathcore.Matrix2x2;
