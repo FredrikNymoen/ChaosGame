@@ -36,9 +36,7 @@ class SettingsHandlerTest {
    */
   @AfterEach
   void tearDown() {
-    if (tempFile.exists()) {
-      tempFile.delete();
-    }
+
   }
 
   /**
@@ -65,10 +63,8 @@ class SettingsHandlerTest {
    * It verifies that a FileEmptyException is thrown.
    */
   @Test
-  public void testLoadSettingsFileEmptyException() throws IOException {
-    Exception exception = assertThrows(FileEmptyException.class, () -> {
-      settingsHandler.loadSettings();
-    });
+  void testLoadSettingsFileEmptyException() {
+    Exception exception = assertThrows(FileEmptyException.class, () -> settingsHandler.loadSettings());
 
     String expectedMessage = "Settings file is empty.";
     String actualMessage = exception.getMessage();
@@ -102,19 +98,16 @@ class SettingsHandlerTest {
    * It verifies that an IOException is thrown when the file path is invalid.
    */
   @Test
-  public void testSaveSettingsIOException() {
+  void testSaveSettingsIOException() {
     SettingsHandler invalidSettingsHandler = new SettingsHandler("/invalid/path/to/settings.properties");
     Properties propertiesToSave = new Properties();
     propertiesToSave.setProperty("key1", "value1");
 
-    Exception exception = assertThrows(IOException.class, () -> {
-      invalidSettingsHandler.saveSettings(propertiesToSave);
-    });
+    Exception exception = assertThrows(IOException.class, () -> invalidSettingsHandler.saveSettings(propertiesToSave));
 
     String expectedMessage = "Error writing to file:";
     String actualMessage = exception.getMessage();
 
     assertTrue(actualMessage.contains(expectedMessage));
   }
-
 }

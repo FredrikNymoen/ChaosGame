@@ -2,7 +2,6 @@ package model.mathcore;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import model.mathcore.Complex;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
