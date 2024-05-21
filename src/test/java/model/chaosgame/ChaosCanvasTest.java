@@ -1,14 +1,12 @@
-package model.chaosGame;
+package model.chaosgame;
 
-import model.chaosGame.ChaosCanvas;
-import model.chaosGame.ChaosGame;
 import model.mathcore.Vector2D;
 
 import static org.junit.Assert.*;
 
 /**
- * Test class for the model.chaosGame.ChaosCanvas class.
- * This class tests the putPixel and getPixel methods of the model.chaosGame.ChaosCanvas class.
+ * Test class for the model.chaosgame.ChaosCanvas class.
+ * This class tests the putPixel and getPixel methods of the model.chaosgame.ChaosCanvas class.
  * It also tests the clear method and the boundaries of the canvas.
  */
 
@@ -34,7 +32,7 @@ class ChaosCanvasTest {
     }
 
     /**
-     * Tests the putPixel and getPixel methods of the model.chaosGame.ChaosCanvas class with a positive test
+     * Tests the putPixel and getPixel methods of the model.chaosgame.ChaosCanvas class with a positive test
      * case. It creates a point within the canvas, puts a pixel on that point and then checks if the
      * pixel is set to 1.
      */
@@ -50,7 +48,7 @@ class ChaosCanvasTest {
     }
 
     /**
-     * Tests the putPixel and getPixel methods of the model.chaosGame.ChaosCanvas class with a negative test
+     * Tests the putPixel and getPixel methods of the model.chaosgame.ChaosCanvas class with a negative test
      * case. It creates a point within the canvas, puts a pixel on that point and then checks if the
      * pixel is set to 0.
      */
@@ -65,7 +63,7 @@ class ChaosCanvasTest {
     }
 
     /**
-     * Tests the clear method of the model.chaosGame.ChaosCanvas class with a positive test case. It creates
+     * Tests the clear method of the model.chaosgame.ChaosCanvas class with a positive test case. It creates
      * a point within the canvas, puts a pixel on that point and then clears the canvas. It then
      * checks if all the pixels are set to 0.
      */
@@ -84,7 +82,7 @@ class ChaosCanvasTest {
     }
 
     /**
-     * Tests the clear method of the model.chaosGame.ChaosCanvas class with a negative test case. It creates
+     * Tests the clear method of the model.chaosgame.ChaosCanvas class with a negative test case. It creates
      * a point within the canvas, puts a pixel on that point and then clears the canvas. It then
      * checks if all the pixels are set to 0.
      */

@@ -3,12 +3,7 @@ package view;
 import controller.HandleActionController;
 import controller.ValidationController;
 import java.util.Map;
-import javafx.animation.FadeTransition;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.util.Duration;
-import model.chaosGame.ChaosGame;
+import model.chaosgame.ChaosGame;
 import java.util.Properties;
 import javafx.application.Application;
 import javafx.beans.value.ObservableValue;
@@ -301,8 +296,10 @@ public class MainGUI extends Application {
    * Sets up listeners for various components.
    */
   public void setupListeners() {
-    fractalCanvas.widthProperty().addListener(obs -> handleActionController.onCanvasSizeChanged(fractalCanvas, currentChaosGame, colorModeCheckbox));
-    fractalCanvas.heightProperty().addListener(obs -> handleActionController.onCanvasSizeChanged(fractalCanvas, currentChaosGame, colorModeCheckbox));
+    fractalCanvas.widthProperty().addListener(obs
+        -> handleActionController.onCanvasSizeChanged(fractalCanvas, currentChaosGame, colorModeCheckbox));
+    fractalCanvas.heightProperty().addListener(obs
+        -> handleActionController.onCanvasSizeChanged(fractalCanvas, currentChaosGame, colorModeCheckbox));
     initializeRadioButtonListener();
   }
 

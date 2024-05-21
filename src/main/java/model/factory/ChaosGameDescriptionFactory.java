@@ -1,6 +1,6 @@
 package model.factory;
 
-import model.chaosGame.ChaosGameDescription;
+import model.chaosgame.ChaosGameDescription;
 import java.util.ArrayList;
 import java.util.List;
 import model.mathcore.Complex;
@@ -32,13 +32,11 @@ public class ChaosGameDescriptionFactory {
     Vector2D transformationVector2 = new Vector2D(0.25, 0.5);
     Vector2D transformationVector3 = new Vector2D(0.5, 0);
 
-    AffineTransform2D transformation1 = new AffineTransform2D(transformationMatrix1, transformationVector1);
-    AffineTransform2D transformation2 = new AffineTransform2D(transformationMatrix1, transformationVector2);
-    AffineTransform2D transformation3 = new AffineTransform2D(transformationMatrix1, transformationVector3);
-    List<Transform2D> affineTransforms = new ArrayList<>();
-    affineTransforms.add(transformation1);
-    affineTransforms.add(transformation2);
-    affineTransforms.add(transformation3);
+    List<Transform2D> affineTransforms = createAffineTransforms(
+        new Matrix2x2[]{transformationMatrix1, transformationMatrix1, transformationMatrix1},
+        new Vector2D[]{transformationVector1, transformationVector2, transformationVector3}
+    );
+
     return new ChaosGameDescription(affineTransforms, minCoordsVector, maxCoordsVector);
   }
 
@@ -59,19 +57,11 @@ public class ChaosGameDescriptionFactory {
     Vector2D transformationVector2 = new Vector2D(0, 1.6);
     Vector2D transformationVector3 = new Vector2D(0, 0.44);
 
-    AffineTransform2D transformation1 = new AffineTransform2D(transformationMatrix1,
-        transformationVector1);
-    AffineTransform2D transformation2 = new AffineTransform2D(transformationMatrix2,
-        transformationVector2);
-    AffineTransform2D transformation3 = new AffineTransform2D(transformationMatrix3,
-        transformationVector2);
-    AffineTransform2D transformation4 = new AffineTransform2D(transformationMatrix4,
-        transformationVector3);
-    List<Transform2D> affineTransforms = new ArrayList<>();
-    affineTransforms.add(transformation1);
-    affineTransforms.add(transformation2);
-    affineTransforms.add(transformation3);
-    affineTransforms.add(transformation4);
+    List<Transform2D> affineTransforms = createAffineTransforms(
+        new Matrix2x2[]{transformationMatrix1, transformationMatrix2, transformationMatrix3, transformationMatrix4},
+        new Vector2D[]{transformationVector1, transformationVector2, transformationVector2, transformationVector3}
+    );
+
     return new ChaosGameDescription(affineTransforms, minCoordsVector, maxCoordsVector);
   }
 
@@ -92,19 +82,12 @@ public class ChaosGameDescriptionFactory {
     Vector2D transformationVector3 = new Vector2D(0.74, 1.39);
     Vector2D transformationVector4 = new Vector2D(-0.56, 0.60);
 
-    AffineTransform2D transformation1 = new AffineTransform2D(transformationMatrix1,
-        transformationVector1);
-    AffineTransform2D transformation2 = new AffineTransform2D(transformationMatrix2,
-        transformationVector2);
-    AffineTransform2D transformation3 = new AffineTransform2D(transformationMatrix3,
-        transformationVector3);
-    AffineTransform2D transformation4 = new AffineTransform2D(transformationMatrix4,
-        transformationVector4);
-    List<Transform2D> affineTransforms = new ArrayList<>();
-    affineTransforms.add(transformation1);
-    affineTransforms.add(transformation2);
-    affineTransforms.add(transformation3);
-    affineTransforms.add(transformation4);
+    List<Transform2D> affineTransforms = createAffineTransforms(
+        new Matrix2x2[]{transformationMatrix1, transformationMatrix2,
+            transformationMatrix3, transformationMatrix4},
+        new Vector2D[]{transformationVector1, transformationVector2,
+            transformationVector3, transformationVector4});
+
     return new ChaosGameDescription(affineTransforms, minCoordsVector, maxCoordsVector);
   }
 
@@ -146,6 +129,20 @@ public class ChaosGameDescriptionFactory {
       affineTransforms.add(new AffineTransform2D(matrices.get(i), vectors.get(i)));
     }
     return new ChaosGameDescription(affineTransforms, minCoordsVector, maxCoordsVector);
+  }
+
+  /**
+   * Creates a list of affine transformations.
+   * @param matrices the list of matrices
+   * @param vectors the list of vectors
+   * @return a list of affine transformations
+   */
+  public List<Transform2D> createAffineTransforms(Matrix2x2[] matrices, Vector2D[] vectors) {
+    List<Transform2D> affineTransforms = new ArrayList<>();
+    for (int i = 0; i < matrices.length; i++) {
+      affineTransforms.add(new AffineTransform2D(matrices[i], vectors[i]));
+    }
+    return affineTransforms;
   }
 
 }

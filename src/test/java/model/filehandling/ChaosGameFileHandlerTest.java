@@ -1,7 +1,6 @@
 package model.filehandling;
 
-import model.chaosGame.ChaosGameDescription;
-import model.filehandling.ChaosGameFileHandler;
+import model.chaosgame.ChaosGameDescription;
 import model.mathcore.Matrix2x2;
 import model.mathcore.Vector2D;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,7 +55,7 @@ class ChaosGameFileHandlerTest {
 
     /**
      * Tests the writeToFile and readFromFile methods of the model.filehandling.ChaosGameFileHandler class with a positive test case.
-     * It writes a model.chaosGame.ChaosGameDescription to a file and then reads it back from the file.
+     * It writes a model.chaosgame.ChaosGameDescription to a file and then reads it back from the file.
      * @throws Exception
      */
 
@@ -83,7 +82,7 @@ class ChaosGameFileHandlerTest {
 
     /**
      * Tests the writeToFile and readFromFile methods of the model.filehandling.ChaosGameFileHandler class.
-     * It writes a model.chaosGame.ChaosGameDescription to a file and then reads it back from the file.
+     * It writes a model.chaosgame.ChaosGameDescription to a file and then reads it back from the file.
      * It then checks if the minCoords, maxCoords and transforms are equal.
      * @throws Exception
      */

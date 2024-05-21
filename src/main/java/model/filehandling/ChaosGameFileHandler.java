@@ -2,7 +2,7 @@ package model.filehandling;
 
 import exception.FileEmptyException;
 import java.io.IOException;
-import model.chaosGame.ChaosGameDescription;
+import model.chaosgame.ChaosGameDescription;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
