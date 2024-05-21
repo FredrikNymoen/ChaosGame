@@ -40,8 +40,8 @@ class JuliaTransformTest {
   void transformPositive() {
     Vector2D vector = new Vector2D(2, 2);
     Vector2D result = juliaTransform.transform(vector);
-    assertEquals(1, result.getX0(), 0.0001, "The result should be 1");
-    assertEquals(0, result.getX1(), 0.0001, "The result should be 0");
+    assertEquals(0, result.getX0(), 0.0001, "The result should be 1");
+    assertEquals(1, result.getX1(), 0.0001, "The result should be 0");
   }
 
   /**

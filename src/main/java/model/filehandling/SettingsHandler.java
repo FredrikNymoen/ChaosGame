@@ -9,15 +9,18 @@ import java.util.Properties;
 
 /**
  * The SettingsHandler class is used to read and write application settings to and from files.
+ *
  * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0
  */
 public class SettingsHandler {
-  private Properties appSettings = new Properties();
+
   private final String settingsFilePath;
+  private final Properties appSettings = new Properties();
 
   /**
    * Constructor for SettingsHandler.
+   *
    * @param settingsFilePath the path to the settings file
    */
   public SettingsHandler(String settingsFilePath) {
@@ -26,23 +29,22 @@ public class SettingsHandler {
 
   /**
    * Loads application settings from a specified file.
-   * @throws Exception if the file is not found, empty, or if an error occurs while reading the file
+   *
    * @return a Properties object representing the application settings
+   * @throws Exception if the file is not found, empty, or if an error occurs while reading the
+   *                   file
    */
-  public Properties loadSettings() throws Exception{
+  public Properties loadSettings() throws Exception {
     try (FileInputStream fis = new FileInputStream(settingsFilePath)) {
       if (fis.available() == 0) {
         throw new FileEmptyException("Settings file is empty.");
       }
       appSettings.load(fis);
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       throw new IOException("File not found.");
-    }
-    catch (FileEmptyException e) {
+    } catch (FileEmptyException e) {
       throw new FileEmptyException("Settings file is empty.");
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       throw new Exception("Error reading file.");
     }
     return appSettings;
@@ -50,14 +52,14 @@ public class SettingsHandler {
 
   /**
    * Saves application settings to a specified file.
+   *
    * @param appSettings the application settings to be saved
    * @throws Exception if an error occurs while writing the settings to the file
    */
-  public void saveSettings(Properties appSettings) throws Exception{
+  public void saveSettings(Properties appSettings) throws Exception {
     try (FileOutputStream fos = new FileOutputStream(settingsFilePath)) {
       appSettings.store(fos, "Application Settings");
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       throw new IOException("File not found.");
     } catch (Exception e) {
       throw new Exception("Error writing to file.");

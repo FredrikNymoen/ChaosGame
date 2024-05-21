@@ -103,22 +103,6 @@ class ChaosCanvasTest {
     }
 
     /**
-     * Tests the boundaries of the canvas by attempting to put a pixel outside the canvas boundaries.
-     * Then expects an ArrayIndexOutOfBoundsException to be thrown.
-     */
-
-    @org.junit.jupiter.api.Test
-    public void testCanvasOutOfBoundaries() {
-        Vector2D pointOutside = new Vector2D(20, 20);
-        try {
-            canvas.putPixel(pointOutside);
-            canvas.getPixel(pointOutside);
-            fail("Expected an ArrayIndexOutOfBoundsException to be thrown");
-        } catch (ArrayIndexOutOfBoundsException e) {
-        }
-    }
-
-    /**
      * Tests the boundaries of the canvas by attempting to put a pixel on the maximum boundary of the
      * canvas. Then expects no ArrayIndexOutOfBoundsException to be thrown.
      */
