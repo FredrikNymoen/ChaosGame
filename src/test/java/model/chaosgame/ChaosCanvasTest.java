@@ -1,8 +1,8 @@
 package model.chaosgame;
 
 import model.mathcore.Vector2D;
+import org.junit.jupiter.api.Assertions;
 
-import static org.junit.Assert.*;
 
 /**
  * Test class for the model.chaosgame.ChaosCanvas class.
@@ -13,8 +13,6 @@ import static org.junit.Assert.*;
 class ChaosCanvasTest {
 
     private ChaosCanvas canvas;
-    private Vector2D minCoords;
-    private Vector2D maxCoords;
     private int width;
     private int height;
 
@@ -26,8 +24,8 @@ class ChaosCanvasTest {
     void setUp() {
         width = 10;
         height = 10;
-        minCoords = new Vector2D(0, 0);
-        maxCoords = new Vector2D(10, 10);
+        Vector2D minCoords = new Vector2D(0, 0);
+        Vector2D maxCoords = new Vector2D(10, 10);
         canvas = new ChaosCanvas(width, height, minCoords, maxCoords);
     }
 
@@ -36,15 +34,12 @@ class ChaosCanvasTest {
      * case. It creates a point within the canvas, puts a pixel on that point and then checks if the
      * pixel is set to 1.
      */
-
-    //Noe rart med getPixel metoden. Vet ikke helt hva som er galt, eller putPixel metoden.
-    //Klarer hvertfall ikke å finne point i canvaset.
     @org.junit.jupiter.api.Test
     void testPutPixelPositive() {
         Vector2D point = new Vector2D(5.0, 9.0);
         canvas.putPixel(point);
         int pixelValue = canvas.getPixel(point);
-        assertEquals("Pixel should be set to 1", 1, pixelValue);
+        Assertions.assertEquals(1, pixelValue, "Pixel should be set to 1");
     }
 
     /**
@@ -59,7 +54,7 @@ class ChaosCanvasTest {
         Vector2D point = new Vector2D(5, 9);
         canvas.putPixel(point);
         int pixelValue = canvas.getPixel(point);
-        assertNotEquals("Pixel should not be set to 1", 0, pixelValue);
+        Assertions.assertNotEquals(0, pixelValue, "Pixel should not be set to 1");
     }
 
     /**
@@ -76,7 +71,7 @@ class ChaosCanvasTest {
         int[][] canvasArray = canvas.getCanvasArray();
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                assertEquals("Canvas should be cleared to 0", 0, canvasArray[i][j]);
+                Assertions.assertEquals(0, canvasArray[i][j], "Canvas should be cleared to 0");
             }
         }
     }
@@ -95,7 +90,7 @@ class ChaosCanvasTest {
         int[][] canvasArray = canvas.getCanvasArray();
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                assertNotEquals("Canvas should be cleared to 0", 1, canvasArray[i][j]);
+                Assertions.assertNotEquals(1, canvasArray[i][j], "Canvas should be cleared to 0");
             }
         }
     }
@@ -106,21 +101,19 @@ class ChaosCanvasTest {
      */
 
     @org.junit.jupiter.api.Test
-    public void testCanvasOnMaxBoundary() {
+    void testCanvasOnMaxBoundary() {
         Vector2D pointOnBoundary = new Vector2D(9, 9);
         try {
             canvas.putPixel(pointOnBoundary);
             canvas.getPixel(pointOnBoundary);
-            System.out.println(canvas.getPixel(pointOnBoundary));
-            System.out.println(pointOnBoundary.getX0() + " " + pointOnBoundary.getX1());
         } catch (ArrayIndexOutOfBoundsException e) {
-            fail(
+            Assertions.fail(
                 "Should not throw ArrayIndexOutOfBoundsException when putting a pixel on the boundary");
         }
     }
 
     @org.junit.jupiter.api.Test
-    public void testPixelToCoordinate() {
+    void testPixelToCoordinate() {
         ChaosGame chaosGame = new ChaosGame(900, 750);
         ChaosCanvas chaosCanvas = chaosGame.getCanvas();
         Vector2D vector = new Vector2D(4.5, -1.5);
@@ -128,12 +121,12 @@ class ChaosCanvasTest {
         Vector2D pixel = chaosCanvas.coordinateToPixel(vector);
         Vector2D coords = chaosCanvas.pixelToCoordinate(pixel);
 
-        assertEquals(vector.getX0(),coords.getX0(),0.000001);
-        assertEquals(vector.getX1(),coords.getX1(),0.000001);
+        Assertions.assertEquals(vector.getX0(), coords.getX0(), 0.000001);
+        Assertions.assertEquals(vector.getX1(), coords.getX1(), 0.000001);
     }
 
     @org.junit.jupiter.api.Test
-    public void testCoordinateToPixel() {
+    void testCoordinateToPixel() {
         ChaosGame chaosGame = new ChaosGame(900, 750);
         ChaosCanvas chaosCanvas = chaosGame.getCanvas();
         Vector2D vector = new Vector2D(4.5, -10.5);
@@ -145,9 +138,7 @@ class ChaosCanvasTest {
         pixel2 = chaosCanvas.coordinateToPixel(coord);
 
 
-        assertEquals(pixel2.getX0(),pixel.getX0(),0.000001);
-        assertEquals(pixel2.getX1(),pixel.getX1(),0.000001);
+        Assertions.assertEquals(pixel2.getX0(), pixel.getX0(), 0.000001);
+        Assertions.assertEquals(pixel2.getX1(), pixel.getX1(), 0.000001);
     }
-
-
 }

@@ -74,5 +74,4 @@ private Vector2D maxCoordsVector;
       // Further assertions depend on the behavior of your ChaosGameDescription class
     }
 
-
   }
