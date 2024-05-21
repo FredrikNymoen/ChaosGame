@@ -1,15 +1,15 @@
 package model.filehandling;
 
 import exception.FileEmptyException;
-import java.io.IOException;
-import model.chaosgame.ChaosGameDescription;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import model.chaosGame.ChaosGameDescription;
 import model.mathcore.Complex;
 import model.mathcore.Matrix2x2;
 import model.mathcore.Vector2D;
@@ -18,15 +18,19 @@ import model.transformations.JuliaTransform;
 import model.transformations.Transform2D;
 
 /**
- * The ChaosGameFileHandler class is used to read and write Chaos Game configurations to and from files.
+ * The ChaosGameFileHandler class is used to read and write Chaos Game configurations to and from
+ * files.
+ *
  * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0
  */
 public class ChaosGameFileHandler {
+
   private final String fileName;
 
   /**
    * Constructor for ChaosGameFileHandler.
+   *
    * @param fileName the name of the file to be read from or written to
    */
   public ChaosGameFileHandler(String fileName) {
@@ -34,13 +38,15 @@ public class ChaosGameFileHandler {
   }
 
   /**
-   * Reads a Chaos Game configuration from a specified file. This method deserializes the
-   * Chaos Game configuration from a custom format, allowing it to be reconstructed as a
-   * ChaosGameDescription object.
-   * @throws Exception if the file is not found, empty, or if an error occurs while reading the file
+   * Reads a Chaos Game configuration from a specified file. This method deserializes the Chaos Game
+   * configuration from a custom format, allowing it to be reconstructed as a ChaosGameDescription
+   * object.
+   *
    * @return a ChaosGameDescription object representing the Chaos Game configuration
+   * @throws Exception if the file is not found, empty, or if an error occurs while reading the
+   *                   file
    */
-  public ChaosGameDescription readFromFile() throws Exception{
+  public ChaosGameDescription readFromFile() throws Exception {
     File file = new File(fileName);
     ChaosGameDescription description = null;
     String[] transformationValues;
@@ -109,10 +115,9 @@ public class ChaosGameFileHandler {
             Double.parseDouble(pointValues[1])
         );
         transforms.add(new JuliaTransform(point, 1));
-        description = new ChaosGameDescription(transforms,minCoordsVector,maxCoordsVector);
+        description = new ChaosGameDescription(transforms, minCoordsVector, maxCoordsVector);
       }
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       throw new IOException("File not found.");
     } catch (FileEmptyException e) {
       throw new FileEmptyException("File is empty.");
@@ -120,18 +125,19 @@ public class ChaosGameFileHandler {
       throw new Exception("Error reading file.");
     }
 
-
     return description;
   }
 
 
   /**
    * Writes a Chaos Game configuration to a specified file.
-   * @param description the ChaosGameDescription object to be written to the file.
+   *
+   * @param description        the ChaosGameDescription object to be written to the file.
    * @param transformationtype the type of transformation.
    * @throws Exception if the file is not found or an error occurs while writing to the file.
    */
-  public void writeToFile(ChaosGameDescription description, String transformationtype) throws Exception{
+  public void writeToFile(ChaosGameDescription description, String transformationtype)
+      throws Exception {
     File file = new File(fileName);
 
     try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(file.getAbsolutePath()))) {
@@ -149,7 +155,7 @@ public class ChaosGameFileHandler {
               + ", " + ((AffineTransform2D) transformation).getVector().getX0()
               + ", " + ((AffineTransform2D) transformation).getVector().getX1() + "\n");
         }
-      } else{
+      } else {
         JuliaTransform transformation = (JuliaTransform) description.getTransforms().get(0);
         writer.write("Julia, " + transformationtype + "\n");
         writer.write(
@@ -158,9 +164,8 @@ public class ChaosGameFileHandler {
             description.getMaxCoords().getX0() + ", " + description.getMaxCoords().getX1() + "\n");
         writer.write(transformation.getPoint().getX0() + ", "
             + transformation.getPoint().getX1() + "\n");
-        }
-    }
-    catch (IOException e) {
+      }
+    } catch (IOException e) {
       throw new IOException("File not found.");
     } catch (Exception e) {
       throw new Exception("Error writing to file.");
@@ -169,10 +174,11 @@ public class ChaosGameFileHandler {
 
   /**
    * Reads the transformation type from a specified file.
+   *
    * @return the transformation type
    * @throws Exception if the file is not found or an error occurs while reading the file.
    */
-  public String readTransformationType() throws Exception{
+  public String readTransformationType() throws Exception {
     File file = new File(fileName);
     String transformationType = null;
 
@@ -180,8 +186,7 @@ public class ChaosGameFileHandler {
       String line = reader.readLine();
       int commaIndex = line.indexOf(",");
       transformationType = line.substring(commaIndex + 2);
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       throw new IOException("File not found.");
     } catch (Exception e) {
       throw new Exception("Error reading file.");
@@ -192,15 +197,15 @@ public class ChaosGameFileHandler {
 
   /**
    * Writes a line to a specified file.
+   *
    * @param line the line to be written to the file
    * @throws Exception if the file is not found or an error occurs while writing to the file.
    */
-  public void writeLineToFile(String line) throws Exception{
+  public void writeLineToFile(String line) throws Exception {
     File file = new File(fileName);
     try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(file.getAbsolutePath()))) {
       writer.write(line);
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       throw new IOException("File not found.");
     } catch (Exception e) {
       throw new Exception("Error writing to file.");
@@ -209,20 +214,20 @@ public class ChaosGameFileHandler {
 
   /**
    * Checks if the file contains a Mandelbrot configuration.
+   *
    * @return true if the file contains a Mandelbrot configuration, false otherwise
    * @throws Exception if the file is not found or an error occurs while reading the file.
    */
-  public boolean checkForMandelbrot() throws Exception{
+  public boolean checkForMandelbrot() throws Exception {
     boolean flag = false;
     File file = new File(fileName);
     String line = null;
     try (BufferedReader reader = Files.newBufferedReader(Paths.get(file.getAbsolutePath()))) {
       line = reader.readLine();
-      if(line.equals("Mandelbrot")) {
+      if (line.equals("Mandelbrot")) {
         flag = true;
       }
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       throw new IOException("File not found.");
     } catch (Exception e) {
       throw new Exception("Error reading file.");

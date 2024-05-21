@@ -4,15 +4,14 @@ package model.mathcore;
  * A 2x2 matrix class that can multiply a 2D vector with the matrix.
  *
  * @author Amund Larsen & Fredrik Nymoen
- *
  * @version v.1.0.0
- *
  */
 public class Matrix2x2 {
-  private double a00;
-  private double a01;
-  private double a10;
-  private double a11;
+
+  private final double a00;
+  private final double a01;
+  private final double a10;
+  private final double a11;
 
   /**
    * Constructor for the Matrix2x2 class.
@@ -35,7 +34,7 @@ public class Matrix2x2 {
    * @param vector the vector to be multiplied with the matrix
    * @return Vector2D the result of the multiplication
    */
-  public Vector2D multiply(Vector2D vector){
+  public Vector2D multiply(Vector2D vector) {
     double newX = a00 * vector.getX0() + a01 * vector.getX1();
     double newY = a10 * vector.getX0() + a11 * vector.getX1();
     return new Vector2D(newX, newY);

@@ -14,8 +14,8 @@ public class Complex extends Vector2D {
   /**
    * Complex constructor that takes in the real and imaginary part of the complex number.
    *
-   * @param realpart       the real part of the complex number
-   * @param imaginarypart  the imaginary part of the complex number
+   * @param realpart      the real part of the complex number
+   * @param imaginarypart the imaginary part of the complex number
    */
   public Complex(double realpart, double imaginarypart) {
     super(realpart, imaginarypart);
@@ -27,9 +27,11 @@ public class Complex extends Vector2D {
    * @return the square root of the complex number
    */
   public Complex sqrt() {
-    double magnitude = Math.sqrt(Math.pow(getX0(), 2) + Math.pow(getX1(), 2)); // Length of the vector
+    double magnitude = Math.sqrt(
+        Math.pow(getX0(), 2) + Math.pow(getX1(), 2)); // Length of the vector
     double realPart = Math.sqrt((magnitude + getX0()) / 2); // Real part of result of square root
-    double imaginaryPart = Math.signum(getX1()) * Math.sqrt((magnitude - getX0()) / 2); // Imaginary part of result of square root
+    double imaginaryPart = Math.signum(getX1()) * Math.sqrt(
+        (magnitude - getX0()) / 2); // Imaginary part of result of square root
 
     return new Complex(realPart, imaginaryPart);
   }
@@ -40,6 +42,7 @@ public class Complex extends Vector2D {
 
   /**
    * Subtract the complex number c from another complex number.
+   *
    * @param other the vector that is subtracted from the complex number c.
    * @return the result of the subtraction
    */
@@ -59,11 +62,12 @@ public class Complex extends Vector2D {
     double r = getModulus(); // Modulus of the complex number
     double theta = getArgument(); // Argument of the complex number
 
-    double rootModulus = Math.pow(r, 1/4.0); // Modulus for the fourth roots
+    double rootModulus = Math.pow(r, 1 / 4.0); // Modulus for the fourth roots
 
     for (int k = 0; k < 4; k++) {
       double rootArgument = (theta + 2 * Math.PI * k) / 4; // Angle for each root
-      Complex root = polar(rootModulus, rootArgument); // Compute the complex number from polar coordinates
+      Complex root = polar(rootModulus,
+          rootArgument); // Compute the complex number from polar coordinates
       roots.add(root);
     }
 
@@ -73,13 +77,14 @@ public class Complex extends Vector2D {
   /**
    * Returns the polar representation of the complex number.
    *
-   * @param rootModulus the modulus of the complex number
+   * @param rootModulus  the modulus of the complex number
    * @param rootArgument the argument of the complex number
    * @return the complex number in polar form
    */
   private Complex polar(double rootModulus, double rootArgument) {
     double realPart = rootModulus * Math.cos(rootArgument); // Real part of the complex number
-    double imaginaryPart = rootModulus * Math.sin(rootArgument); // Imaginary part of the complex number
+    double imaginaryPart =
+        rootModulus * Math.sin(rootArgument); // Imaginary part of the complex number
 
     return new Complex(realPart, imaginaryPart);
   }

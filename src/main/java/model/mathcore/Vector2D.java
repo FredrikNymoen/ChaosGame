@@ -5,13 +5,12 @@ package model.mathcore;
  *
  * @author Amund Larsen & Fredrik Nymoen
  * @version v.1.0.0
- *
  */
-public class Vector2D{
+public class Vector2D {
 
-  private double x0;
+  private final double x0;
 
-  private double x1;
+  private final double x1;
 
   /**
    * Constructor for the Vector2D class.
@@ -45,6 +44,7 @@ public class Vector2D{
 
   /**
    * Adds two vectors together and returns a new vector with the result.
+   *
    * @param other the vector to be added to the vector
    * @return model.mathcore.Vector2D which is a new vector with the result of the addition
    */
@@ -54,6 +54,7 @@ public class Vector2D{
 
   /**
    * Subtracts one vector from another and returns a new vector with the result.
+   *
    * @param other the vector to be subtracted from the vector
    * @return model.mathcore.Vector2D which is a new vector with the result of the subtraction
    */

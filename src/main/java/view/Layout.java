@@ -26,8 +26,9 @@ import javafx.util.converter.DoubleStringConverter;
 import util.Utility;
 
 /**
- * This class provides methods to create and configure the layout of the UI components
- * for the Chaos Game application.
+ * This class provides methods to create and configure the layout of the UI components for the Chaos
+ * Game application.
+ *
  * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0
  */
@@ -65,7 +66,7 @@ public class Layout {
   /**
    * Adds transformation options to the specified VBox.
    *
-   * @param transformationBox  the VBox to which the transformation options are added
+   * @param transformationBox    the VBox to which the transformation options are added
    * @param transformationsGroup the ToggleGroup for the transformation options
    */
   public void addTransformationOptions(VBox transformationBox, ToggleGroup transformationsGroup) {
@@ -155,7 +156,7 @@ public class Layout {
     }
 
     juliaToggleSwitch.setMaxWidth(Double.MAX_VALUE);
-    juliaGrid.setHgrow(juliaToggleSwitch, Priority.ALWAYS);
+    GridPane.setHgrow(juliaToggleSwitch, Priority.ALWAYS);
     juliaGrid.add(juliaToggleSwitch, 0, 1, 4, 1);
 
     TextField realPartField = createDecimalTextField("0.0");
@@ -193,7 +194,8 @@ public class Layout {
    * @return a configured Button instance
    */
   public Button createIterativeTransformationButton() {
-    Button iterativeTransformationButton = new Button("Make fractal with Iterative Transformation mode");
+    Button iterativeTransformationButton = new Button(
+        "Make fractal with Iterative Transformation mode");
     iterativeTransformationButton.getStyleClass().add(Utility.OPTION_BUTTON);
     iterativeTransformationButton.getStyleClass().add("iterativeTransformation-button");
     return iterativeTransformationButton;
@@ -218,7 +220,8 @@ public class Layout {
    * @param leftSide   the VBox containing the left side UI elements
    * @param root       the BorderPane root layout
    */
-  public void setupLeftSideWithSeperatorLine(ScrollPane scrollPane, VBox leftSide, BorderPane root) {
+  public void setupLeftSideWithSeperatorLine(ScrollPane scrollPane, VBox leftSide,
+      BorderPane root) {
     scrollPane.setContent(leftSide);
     double screenWidth = Screen.getPrimary().getBounds().getWidth();
     scrollPane.setPrefWidth(screenWidth * 0.25);
@@ -229,7 +232,7 @@ public class Layout {
     separator.setOrientation(Orientation.VERTICAL);
 
     HBox leftLayout = new HBox(scrollPane, separator);
-    leftLayout.setHgrow(scrollPane, Priority.ALWAYS);
+    HBox.setHgrow(scrollPane, Priority.ALWAYS);
     root.setLeft(leftLayout);
   }
 
@@ -241,8 +244,11 @@ public class Layout {
    */
   public TextField createDecimalTextField(String defaultValue) {
     TextField textField = new TextField(defaultValue);
-    UnaryOperator<Change> decimalFilter = change -> change.getControlNewText().matches("-?((\\d*)|(\\d+\\.\\d*))") ? change : null;
-    textField.setTextFormatter(new TextFormatter<>(new DoubleStringConverter(), Double.parseDouble(defaultValue), decimalFilter));
+    UnaryOperator<Change> decimalFilter = change ->
+        change.getControlNewText().matches("-?((\\d*)|(\\d+\\.\\d*))") ? change : null;
+    textField.setTextFormatter(
+        new TextFormatter<>(new DoubleStringConverter(), Double.parseDouble(defaultValue),
+            decimalFilter));
     return textField;
   }
 

@@ -19,20 +19,21 @@ import model.transformations.JuliaTransform;
 import util.UIHelper;
 
 /**
- * This class implements the ChaosGameObserver interface to handle various events
- * and actions related to the Chaos Game application. It manages the UI components
- * and interactions to facilitate the drawing and transformation of fractals.
+ * This class implements the ChaosGameObserver interface to handle various events and actions
+ * related to the Chaos Game application. It manages the UI components and interactions to
+ * facilitate the drawing and transformation of fractals.
+ *
  * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0
  */
 public class EventHandler implements ChaosGameObserver {
 
-  private FractalDrawer fractalDrawer;
+  private final FractalDrawer fractalDrawer;
 
   /**
    * Constructor for the EventHandler class.
    */
-  public EventHandler(){
+  public EventHandler() {
     fractalDrawer = new FractalDrawer();
   }
 
@@ -49,7 +50,8 @@ public class EventHandler implements ChaosGameObserver {
     ToggleButton toggleSwitch = (ToggleButton) UIHelper.getNodeFromGridPane(juliaGrid, 0, 1);
     GridPane coordGrid = (GridPane) leftside.getChildren().get(2);
     VBox stepsBox = (VBox) leftside.getChildren().get(1);
-    Button iterativeTransformationButton = (Button) ((HBox) leftside.getChildren().get(6)).getChildren().get(0);
+    Button iterativeTransformationButton = (Button) ((HBox) leftside.getChildren()
+        .get(6)).getChildren().get(0);
 
     switch (transformation) {
       case "Affine":
@@ -62,6 +64,7 @@ public class EventHandler implements ChaosGameObserver {
       case "Julia":
         juliaGrid.setDisable(false);
         affineBox.setDisable(true);
+        assert toggleSwitch != null;
         if (toggleSwitch.isSelected()) {
           stepsBox.setDisable(true);
           coordGrid.setDisable(true);
@@ -92,12 +95,13 @@ public class EventHandler implements ChaosGameObserver {
   /**
    * Handles changes to the size of the canvas.
    *
-   * @param fractalCanvas      the canvas on which the fractal is drawn
-   * @param currentChaosGame   the current chaos game instance
-   * @param colorModeCheckbox  the checkbox indicating whether color mode is enabled
+   * @param fractalCanvas     the canvas on which the fractal is drawn
+   * @param currentChaosGame  the current chaos game instance
+   * @param colorModeCheckbox the checkbox indicating whether color mode is enabled
    */
   @Override
-  public void onCanvasSizeChanged(Canvas fractalCanvas, ChaosGame currentChaosGame, CheckBox colorModeCheckbox) {
+  public void onCanvasSizeChanged(Canvas fractalCanvas, ChaosGame currentChaosGame,
+      CheckBox colorModeCheckbox) {
     if (currentChaosGame != null) {
       fractalDrawer.drawFractal(fractalCanvas, currentChaosGame, colorModeCheckbox);
     }
@@ -130,13 +134,14 @@ public class EventHandler implements ChaosGameObserver {
   /**
    * Handles the switching of the Julia mode toggle button.
    *
-   * @param juliaToggle                    the toggle button for switching Julia mode
-   * @param coordGrid                      the grid containing coordinate-related UI elements
-   * @param stepsBox                       the VBox containing step-related UI elements
-   * @param iterativeTransformationButton  the button for iterative transformation
+   * @param juliaToggle                   the toggle button for switching Julia mode
+   * @param coordGrid                     the grid containing coordinate-related UI elements
+   * @param stepsBox                      the VBox containing step-related UI elements
+   * @param iterativeTransformationButton the button for iterative transformation
    */
   @Override
-  public void onJuliaToggleSwitched(ToggleButton juliaToggle, GridPane coordGrid, VBox stepsBox, Button iterativeTransformationButton) {
+  public void onJuliaToggleSwitched(ToggleButton juliaToggle, GridPane coordGrid, VBox stepsBox,
+      Button iterativeTransformationButton) {
     if (juliaToggle.isSelected()) {
       juliaToggle.setText("Use Convergence Iteration mode (click to change)");
       stepsBox.setDisable(true);
@@ -153,9 +158,9 @@ public class EventHandler implements ChaosGameObserver {
   /**
    * Adds a new row for matrix-vector transformation inputs.
    *
-   * @param row         the index of the row to be added
-   * @param affineGrid  the grid containing affine transformation inputs
-   * @param layout      the layout manager for arranging UI elements
+   * @param row        the index of the row to be added
+   * @param affineGrid the grid containing affine transformation inputs
+   * @param layout     the layout manager for arranging UI elements
    */
   @Override
   public void addMatrixVectorRow(int row, GridPane affineGrid, Layout layout) {
@@ -204,9 +209,9 @@ public class EventHandler implements ChaosGameObserver {
   /**
    * Resets input fields to their default style.
    *
-   * @param affineGrid  the grid containing affine transformation inputs
-   * @param juliaGrid   the grid containing Julia set inputs
-   * @param affineBox   the VBox containing affine transformation UI elements
+   * @param affineGrid the grid containing affine transformation inputs
+   * @param juliaGrid  the grid containing Julia set inputs
+   * @param affineBox  the VBox containing affine transformation UI elements
    */
   @Override
   public void resetFieldsToDefaultStyle(GridPane affineGrid, GridPane juliaGrid, VBox affineBox) {
@@ -229,16 +234,18 @@ public class EventHandler implements ChaosGameObserver {
   /**
    * Copies the last transformation to a new one.
    *
-   * @param lastDescription          the description of the current chaos game
-   * @param transformationsGroup     the group of toggle buttons representing transformations
-   * @param coordGrid                the grid containing coordinate-related UI elements
-   * @param affineGrid               the grid containing affine transformation inputs
-   * @param juliaGrid                the grid containing Julia set inputs
-   * @param juliaToggleSwitch        the toggle button for switching Julia mode
-   * @param layout                   the layout manager for arranging UI elements
-   * @param transformationType       the type of transformation to copy
+   * @param lastDescription      the description of the current chaos game
+   * @param transformationsGroup the group of toggle buttons representing transformations
+   * @param coordGrid            the grid containing coordinate-related UI elements
+   * @param affineGrid           the grid containing affine transformation inputs
+   * @param juliaGrid            the grid containing Julia set inputs
+   * @param juliaToggleSwitch    the toggle button for switching Julia mode
+   * @param layout               the layout manager for arranging UI elements
+   * @param transformationType   the type of transformation to copy
    */
-  public void copyLastTransformation(ChaosGameDescription lastDescription, ToggleGroup transformationsGroup, GridPane coordGrid, GridPane affineGrid, GridPane juliaGrid, ToggleButton juliaToggleSwitch, Layout layout, String transformationType) {
+  public void copyLastTransformation(ChaosGameDescription lastDescription,
+      ToggleGroup transformationsGroup, GridPane coordGrid, GridPane affineGrid, GridPane juliaGrid,
+      ToggleButton juliaToggleSwitch, Layout layout, String transformationType) {
     TextField[] coordinateFields = UIHelper.getCoordinateTextFields(coordGrid);
     coordinateFields[0].setText(String.valueOf(lastDescription.getMinCoords().getX0()));
     coordinateFields[1].setText(String.valueOf(lastDescription.getMinCoords().getX1()));
@@ -259,6 +266,8 @@ public class EventHandler implements ChaosGameObserver {
           break;
         case "mapleTree":
           transformationsGroup.selectToggle(transformationsGroup.getToggles().get(5));
+          break;
+        default:
           break;
       }
     } else {
@@ -288,7 +297,8 @@ public class EventHandler implements ChaosGameObserver {
    * @param affineGrid      the grid containing affine transformation inputs
    * @param layout          the layout manager for arranging UI elements
    */
-  public void copyLastAffineTransformation(ChaosGameDescription lastDescription, GridPane affineGrid, Layout layout) {
+  public void copyLastAffineTransformation(ChaosGameDescription lastDescription,
+      GridPane affineGrid, Layout layout) {
     while (affineGrid.getRowCount() != 1) {
       removeMatrixVectorRow(affineGrid);
     }
@@ -300,14 +310,20 @@ public class EventHandler implements ChaosGameObserver {
       TextField a00 = (TextField) UIHelper.getNodeFromGridPane(affineGrid, 0, i);
       TextField a01 = (TextField) UIHelper.getNodeFromGridPane(affineGrid, 1, i);
       TextField a10 = (TextField) UIHelper.getNodeFromGridPane(affineGrid, 2, i);
-      TextField a11 = (TextField) UIHelper.getNodeFromGridPane(affineGrid, 3, i);
-      TextField x0 = (TextField) UIHelper.getNodeFromGridPane(affineGrid, 5, i);
-      TextField x1 = (TextField) UIHelper.getNodeFromGridPane(affineGrid, 6, i);
+      final TextField a11 = (TextField) UIHelper.getNodeFromGridPane(affineGrid, 3, i);
+      final TextField x0 = (TextField) UIHelper.getNodeFromGridPane(affineGrid, 5, i);
+      final TextField x1 = (TextField) UIHelper.getNodeFromGridPane(affineGrid, 6, i);
+      assert a00 != null;
       a00.setText(String.valueOf(affine.getMatrix().geta00()));
+      assert a01 != null;
       a01.setText(String.valueOf(affine.getMatrix().geta01()));
+      assert a10 != null;
       a10.setText(String.valueOf(affine.getMatrix().geta10()));
+      assert a11 != null;
       a11.setText(String.valueOf(affine.getMatrix().geta11()));
+      assert x0 != null;
       x0.setText(String.valueOf(affine.getVector().getX0()));
+      assert x1 != null;
       x1.setText(String.valueOf(affine.getVector().getX1()));
     }
   }
