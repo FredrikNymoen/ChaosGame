@@ -9,7 +9,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckBox;
 import javafx.scene.paint.Color;
-import model.chaosGame.ChaosGame;
+import model.chaosgame.ChaosGame;
 
 /**
  * This class handles the drawing of fractals on a canvas.
@@ -35,7 +35,7 @@ public class FractalDrawer {
     Set<Integer> valueSet = new HashSet<>();
     for (int[] row : canvasArray) {
       for (int value : row) {
-        if (value > 0) { // assuming value 0 means no data
+        if (value > 0) {
           valueSet.add(value);
         }
       }
@@ -47,7 +47,6 @@ public class FractalDrawer {
     double centerX = fractalCanvas.getWidth() / 2;
     double centerY = fractalCanvas.getHeight() / 2;
 
-    // Assuming the fractal drawing's size for positioning
     double fractalWidth = canvasArray[0].length;
     double fractalHeight = canvasArray.length;
 
@@ -68,7 +67,7 @@ public class FractalDrawer {
             Color color = getColorForValue(intensity);
             gc.setFill(color);
           }
-        } else if (value > 0) { // assuming value 0 means no data
+        } else if (value > 0) {
           gc.setFill(Color.BLACK);
         } else {
           gc.setFill(Color.WHITE); // Background color

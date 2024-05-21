@@ -1,8 +1,8 @@
 package model.factory;
 
-import model.chaosGame.ChaosCanvas;
-import model.chaosGame.ChaosGame;
-import model.chaosGame.ChaosGameDescription;
+import model.chaosgame.ChaosCanvas;
+import model.chaosgame.ChaosGame;
+import model.chaosgame.ChaosGameDescription;
 import model.mathcore.Complex;
 import model.mathcore.Vector2D;
 import util.Utility;
@@ -45,11 +45,9 @@ public class ChaosGameFactory {
    */
   public ChaosGame createJuliaChaosGameWithConvergenceMode(Complex c) {
     double r = 2;
-
     ChaosGame chaosGame = new ChaosGame(Utility.CHAOS_GAME_WIDTH, Utility.CHAOS_GAME_HEIGHT);
     ChaosCanvas canvas = chaosGame.getCanvas();
 
-    // Assuming the fractal drawing's size for positioning
     double width = canvas.getCanvasArray()[0].length;
     double height = canvas.getCanvasArray().length;
 
@@ -73,15 +71,12 @@ public class ChaosGameFactory {
         }
 
         if (iteration == maxIterations) {
-          if(canvas.getPixel(vector) == 1){
-          }
-          else {
+          if(canvas.getPixel(vector) != 1){
             canvas.putPixel(vector);
           }
         }
       }
     }
-
     return chaosGame;
   }
 
@@ -119,11 +114,10 @@ public class ChaosGameFactory {
 
         // Mark the pixel based on whether it escaped or not
         if (iteration < maxIterations) {
-          canvas.putPixel(vector); // Assuming this method marks the pixel based on iteration or color
+          canvas.putPixel(vector);
         }
       }
     }
-
     return chaosGame;
   }
 

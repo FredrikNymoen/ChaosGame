@@ -1,4 +1,4 @@
-package model.chaosGame;
+package model.chaosgame;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,9 @@ import model.transformations.Transform2D;
 
 /**
  * The ChaosGame class is used to represent a chaos game.
- * The chaos game is a mathematical game that generates a fractal using a set of rules and transformations.
+ * The chaos game is a mathematical game that generates a fractal using a set of rules and
+ * transformations.
+ *
  * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0
  */
@@ -23,13 +25,15 @@ public class ChaosGame {
 
   /**
    * Constructor for ChaosGame.
+   *
    * @param description the description of the chaos game
    * @param width the width of the canvas
    * @param height the height of the canvas
    */
   public ChaosGame(ChaosGameDescription description, int width, int height) {
     this.description = description;
-    this.canvas = new ChaosCanvas(width, height, description.getMinCoords(), description.getMaxCoords());
+    this.canvas = new ChaosCanvas(width, height, description.getMinCoords(),
+        description.getMaxCoords());
     this.currentPoint = new Vector2D(0, 0);
     this.random = new Random();
     this.pointStack = new Stack<>();
@@ -38,6 +42,7 @@ public class ChaosGame {
 
   /**
    * Constructor for ChaosGame.
+   *
    * @param width the width of the canvas
    * @param height the height of the canvas
    */
@@ -51,6 +56,7 @@ public class ChaosGame {
 
   /**
    * Gets the canvas of the chaos game.
+   *
    * @return the canvas of the chaos game
    */
   public ChaosCanvas getCanvas() {
@@ -58,7 +64,8 @@ public class ChaosGame {
   }
 
   /**
-   * Runs a specified number of steps in the Chaos Game. Each step a random transformation is selected and applied
+   * Runs a specified number of steps in the Chaos Game. Each step a random
+   *transformation is selected and applied
    * to the current point, where the result is plotted on the canvas.
    *
    * @param steps the number of steps to run the chaos game
@@ -130,5 +137,4 @@ public class ChaosGame {
     } while (!pointStack.isEmpty());
     pointStack.push(new Vector2D(0, 0));
   }
-
 }

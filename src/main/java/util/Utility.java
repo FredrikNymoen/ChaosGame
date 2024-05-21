@@ -65,4 +65,9 @@ public class Utility {
    * The CSS style string for a red border.
    */
   public static final String RED_BORDER = "-fx-border-color: red;";
+
+  public static final String FILE_NOT_FOUND = "File not found.";
+  public static final String ERROR_READING_FILE = "Error reading file.";
+  public static final String ERROR_WRITING_TO_FILE = "Error writing to file.";
+
 }

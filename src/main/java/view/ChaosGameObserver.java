@@ -7,8 +7,8 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import model.chaosGame.ChaosGame;
-import model.chaosGame.ChaosGameDescription;
+import model.chaosgame.ChaosGame;
+import model.chaosgame.ChaosGameDescription;
 
 /**
  * This interface defines the observer for the Chaos Game application. It contains methods that

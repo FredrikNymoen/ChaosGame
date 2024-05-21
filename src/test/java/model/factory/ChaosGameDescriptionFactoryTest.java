@@ -2,11 +2,10 @@ package model.factory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import model.chaosGame.ChaosGameDescription;
+import model.chaosgame.ChaosGameDescription;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import model.factory.ChaosGameDescriptionFactory;
 import model.mathcore.Complex;
 import model.mathcore.Matrix2x2;
 import model.mathcore.Vector2D;
@@ -41,10 +40,7 @@ private Vector2D maxCoordsVector;
     List<Transform2D> actualTransformations = description.getTransforms();
     assertNotNull(actualTransformations);
     assertEquals(expectedTransformations.size(), actualTransformations.size());
-    System.out.println(expectedTransformations.get(0).toString());
-    System.out.println(actualTransformations.get(0).toString());
-    System.out.println(expectedTransformations.stream().filter(actualTransformations::contains).count());
-  }
+    }
 
     @Test
     public void testBarnsley() {

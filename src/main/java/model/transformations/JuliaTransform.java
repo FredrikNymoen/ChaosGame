@@ -37,18 +37,16 @@ public class JuliaTransform implements Transform2D {
   public Vector2D transform(Vector2D point) {
     Complex z = new Complex(point.getX0(), point.getX1());
 
-    // Beregn z - c
+    // calculate z - c
     Complex diff = z.subtract(this.point);
 
-    // Få alle fire fjerderøtter
+    // get all the fourth roots of the difference
     List<Complex> roots = diff.getFourthRoots();
 
-    // Velg en rot basert på et kriterium
-    int index = Math.abs(sign); // Sign bestemme hvilken rot som velges
+    // choose the root based on the sign
+    int index = Math.abs(sign);
+    Complex selectedRoot = roots.get(index);
 
-    Complex selectedRoot = roots.get(index); // Velg rot basert på indeksen
-
-    // Returner Vector2D som representerer den valgte roten
     return new Vector2D(selectedRoot.getX0(), selectedRoot.getX1());
   }
 

@@ -1,7 +1,5 @@
-package model.chaosGame;
+package model.chaosgame;
 
-import model.chaosGame.ChaosGame;
-import model.chaosGame.ChaosGameDescription;
 import model.mathcore.Matrix2x2;
 import model.mathcore.Vector2D;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,8 +13,8 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * Test class for the model.chaosGame.ChaosGame class.
- * This class tests the creation of a model.chaosGame.ChaosGame and the runSteps method.
+ * Test class for the model.chaosgame.ChaosGame class.
+ * This class tests the creation of a model.chaosgame.ChaosGame and the runSteps method.
  */
 
 class ChaosGameTest {
@@ -30,7 +28,7 @@ class ChaosGameTest {
     private Vector2D maxCoords;
 
     /**
-     * Sets up the model.chaosGame.ChaosGame with a width, height, min and max coordinates and a list of transformations.
+     * Sets up the model.chaosgame.ChaosGame with a width, height, min and max coordinates and a list of transformations.
      * This method is called before each test.
      */
 
@@ -50,7 +48,7 @@ class ChaosGameTest {
     }
 
     /**
-     * Tests the model.chaosGame.ChaosGame creation with a positive test case.
+     * Tests the model.chaosgame.ChaosGame creation with a positive test case.
      * It checks if the canvas, transforms, minCoords and maxCoords are not null.
      * It also checks if the width and height of the canvas are 100.
      */
@@ -66,7 +64,7 @@ class ChaosGameTest {
     }
 
     /**
-     * Tests the runSteps method of the model.chaosGame.ChaosGame class with a positive test case.
+     * Tests the runSteps method of the model.chaosgame.ChaosGame class with a positive test case.
      * It checks if at least one pixel is set on the canvas after running the game for 100 steps.
      */
 
@@ -86,7 +84,7 @@ class ChaosGameTest {
     }
 
     /**
-     * Tests the runSteps method of the model.chaosGame.ChaosGame class with a negative test case.
+     * Tests the runSteps method of the model.chaosgame.ChaosGame class with a negative test case.
      * It checks if no pixel is set on the canvas after running the game for 0 steps.
      */
 

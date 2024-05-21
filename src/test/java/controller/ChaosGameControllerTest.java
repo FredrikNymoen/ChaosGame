@@ -2,10 +2,7 @@ package controller;
 
 import java.util.List;
 import java.util.Properties;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.GridPane;
-import model.chaosGame.ChaosGame;
-import model.chaosGame.ChaosGameDescription;
+import model.chaosgame.ChaosGameDescription;
 import model.factory.ChaosGameDescriptionFactory;
 import model.filehandling.SettingsHandler;
 import model.mathcore.Matrix2x2;

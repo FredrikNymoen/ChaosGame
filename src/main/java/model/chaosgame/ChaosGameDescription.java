@@ -1,4 +1,4 @@
-package model.chaosGame;
+package model.chaosgame;
 
 import java.util.List;
 import model.mathcore.Vector2D;

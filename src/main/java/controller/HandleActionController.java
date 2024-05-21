@@ -10,8 +10,8 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import model.chaosGame.ChaosGame;
-import model.chaosGame.ChaosGameDescription;
+import model.chaosgame.ChaosGame;
+import model.chaosgame.ChaosGameDescription;
 import util.ErrorHandling;
 import view.ChaosGameObserver;
 import view.Layout;
@@ -20,16 +20,18 @@ import view.Layout;
  * This class is responsible for handling actions and events in the Chaos Game application.
  * It acts as a controller between the UI components and the model classes.
  * It delegates the actual work to the observer and handles any exceptions that may occur.
+ *
  * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0
  */
 public class HandleActionController {
-  private ChaosGameObserver observer;
-  private ErrorHandling errorHandling;
-  private ChaosGameController chaosGameController;
+  private final ChaosGameObserver observer;
+  private final ErrorHandling errorHandling;
+  private final ChaosGameController chaosGameController;
 
   /**
    * Constructs a new HandleActionController with the specified observer.
+   *
    * @param observer the observer for the Chaos Game application
    */
   public HandleActionController(ChaosGameObserver observer) {
@@ -45,19 +47,20 @@ public class HandleActionController {
    * @param transformationsGroup the toggle group containing the transformation options
    * @param affineGrid           the grid containing the affine transformation inputs
    * @param juliaGrid            the grid containing the Julia transformation inputs
-   * @param coordGrid            the grid containing the coordinate inputs
+   * @param cordGrid            the grid containing the coordinate inputs
    * @param steps                the number of steps for the fractal generation
    * @param fractalCanvas        the canvas on which to draw the fractal
    * @param colorModeCheckbox    the checkbox indicating whether color mode is enabled
    */
-  public void handleIterativeTransformation(ToggleGroup transformationsGroup, GridPane affineGrid, GridPane juliaGrid,
-      GridPane coordGrid, double steps, Canvas fractalCanvas, CheckBox colorModeCheckbox) {
+  public void handleIterativeTransformation(ToggleGroup transformationsGroup, GridPane affineGrid,
+      GridPane juliaGrid, GridPane cordGrid, double steps, Canvas fractalCanvas,
+      CheckBox colorModeCheckbox) {
     try {
-      ChaosGame currentChaosGame = chaosGameController.handleTransformationSelection(transformationsGroup, affineGrid, juliaGrid, coordGrid, (int) steps);
+      ChaosGame currentChaosGame = chaosGameController.handleTransformationSelection(
+          transformationsGroup, affineGrid, juliaGrid, cordGrid, (int) steps);
       currentChaosGame.fractalWithIterationTransformation();
       observer.drawFractal(fractalCanvas, currentChaosGame, colorModeCheckbox);
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       errorHandling.failedToMakeFractalWithIterativeTransformation(e);
     }
   }
@@ -67,22 +70,24 @@ public class HandleActionController {
    * This method delegates the work to the ChaosGameController and the observer.
    *
    * @param transformationsGroup the toggle group containing the transformation options
-   * @param coordGrid            the grid containing the coordinate inputs
+   * @param cordGrid            the grid containing the coordinate inputs
    * @param affineGrid           the grid containing the affine transformation inputs
    * @param juliaGrid            the grid containing the Julia transformation inputs
    * @param juliaToggleSwitch    the toggle button for switching Julia mode
    * @param layout               the layout of the UI components
    */
-  public void handleCopyLastTransformation(ToggleGroup transformationsGroup, GridPane coordGrid, GridPane affineGrid, GridPane juliaGrid, ToggleButton juliaToggleSwitch, Layout layout){
+  public void handleCopyLastTransformation(ToggleGroup transformationsGroup, GridPane cordGrid,
+      GridPane affineGrid, GridPane juliaGrid, ToggleButton juliaToggleSwitch, Layout layout) {
     try {
       if (chaosGameController.checkForMandelbrot()) {
         transformationsGroup.selectToggle(transformationsGroup.getToggles().get(4));
       } else {
         ChaosGameDescription lastDescription = chaosGameController.readFromFile();
-        observer.copyLastTransformation(lastDescription, transformationsGroup, coordGrid, affineGrid, juliaGrid, juliaToggleSwitch, layout, chaosGameController.readTransformationType());
+        observer.copyLastTransformation(lastDescription, transformationsGroup, cordGrid,
+            affineGrid, juliaGrid, juliaToggleSwitch, layout,
+            chaosGameController.readTransformationType());
       }
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       errorHandling.failedToCopyLastTransformation(e);
     }
   }
@@ -94,11 +99,10 @@ public class HandleActionController {
    * @param leftSide           the VBox containing the UI elements related to transformations
    * @param chosenTransformation the name of the selected transformation
    */
-  public void handleTransformationSelected(VBox leftSide, String chosenTransformation){
+  public void handleTransformationSelected(VBox leftSide, String chosenTransformation) {
     try {
       observer.onTransformationSelected(leftSide, chosenTransformation);
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       errorHandling.failedToSelectTransformation(e);
     }
   }
@@ -110,24 +114,21 @@ public class HandleActionController {
    * @param transformationsGroup the toggle group containing the transformation options
    * @param affineGrid           the grid containing the affine transformation inputs
    * @param juliaGrid            the grid containing the Julia transformation inputs
-   * @param coordGrid            the grid containing the coordinate inputs
+   * @param cordGrid            the grid containing the coordinate inputs
    * @param steps                the number of steps for the fractal generation
    * @return the ChaosGame instance created from the selected transformation
    */
-  public ChaosGame showButtonClicked(ToggleGroup transformationsGroup, GridPane affineGrid, GridPane juliaGrid,
-      GridPane coordGrid, int steps){
+  public ChaosGame showButtonClicked(ToggleGroup transformationsGroup, GridPane affineGrid,
+      GridPane juliaGrid, GridPane cordGrid, int steps) {
     ChaosGame chaosGame = null;
     try {
       chaosGame = chaosGameController.handleTransformationSelection(transformationsGroup,
-          affineGrid, juliaGrid, coordGrid, steps);
-    }
-    catch (IOException e) {
+          affineGrid, juliaGrid, cordGrid, steps);
+    } catch (IOException e) {
       errorHandling.fileNotFound(e);
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       errorHandling.error(e);
     }
-
     return chaosGame;
   }
 
@@ -139,11 +140,9 @@ public class HandleActionController {
   public void saveSettings(Properties appSettings) {
     try {
       chaosGameController.saveSettings(appSettings);
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       errorHandling.fileNotFound(e);
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       errorHandling.error(e);
     }
   }
@@ -157,21 +156,18 @@ public class HandleActionController {
     Properties appSettings = null;
     try {
       appSettings = chaosGameController.loadSettings();
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       errorHandling.fileNotFound(e);
-    }
-    catch (FileEmptyException e) {
+    } catch (FileEmptyException e) {
       errorHandling.fileIsEmpty(e);
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       errorHandling.error(e);
     }
     return appSettings;
   }
 
   /**
-   * Handles the event when the user changes the value of the steps slider.
+   * Handles the event when the user changes the value of the steps-slider.
    * This method delegates the work to the observer.
    *
    * @param stepsBox the VBox containing the steps slider and label
@@ -186,12 +182,14 @@ public class HandleActionController {
    * This method delegates the work to the observer.
    *
    * @param juliaToggleSwitch the toggle button for switching Julia mode
-   * @param coordGrid         the grid containing coordinate-related UI elements
+   * @param cordGrid         the grid containing coordinate-related UI elements
    * @param stepsBox          the VBox containing step-related UI elements
    * @param iterativeTransformationButton the button for iterative transformation
    */
-  public void onJuliaToggleSwitched(ToggleButton juliaToggleSwitch, GridPane coordGrid, VBox stepsBox, Button iterativeTransformationButton) {
-    observer.onJuliaToggleSwitched(juliaToggleSwitch, coordGrid, stepsBox, iterativeTransformationButton);
+  public void onJuliaToggleSwitched(ToggleButton juliaToggleSwitch, GridPane cordGrid,
+      VBox stepsBox, Button iterativeTransformationButton) {
+    observer.onJuliaToggleSwitched(juliaToggleSwitch, cordGrid, stepsBox,
+        iterativeTransformationButton);
   }
 
   /**
@@ -236,7 +234,8 @@ public class HandleActionController {
    * @param currentChaosGame the chaos game instance to use for drawing the fractal
    * @param colorModeCheckbox the checkbox indicating whether color mode is enabled
    */
-  public void drawFractal(Canvas fractalCanvas, ChaosGame currentChaosGame, CheckBox colorModeCheckbox) {
+  public void drawFractal(Canvas fractalCanvas, ChaosGame currentChaosGame,
+      CheckBox colorModeCheckbox) {
     observer.drawFractal(fractalCanvas, currentChaosGame, colorModeCheckbox);
   }
 
@@ -248,7 +247,8 @@ public class HandleActionController {
    * @param currentChaosGame the current chaos game instance
    * @param colorModeCheckbox the checkbox indicating whether color mode is enabled
    */
-  public void onCanvasSizeChanged(Canvas fractalCanvas, ChaosGame currentChaosGame, CheckBox colorModeCheckbox) {
+  public void onCanvasSizeChanged(Canvas fractalCanvas, ChaosGame currentChaosGame,
+      CheckBox colorModeCheckbox) {
     observer.onCanvasSizeChanged(fractalCanvas, currentChaosGame, colorModeCheckbox);
   }
 }
