@@ -26,11 +26,11 @@ public class UIHelper {
    * @return an array of TextField objects representing the coordinate fields
    */
   public static TextField[] getCoordinateTextFields(GridPane coordGrid) {
-    TextField minXField = ((TextField) getNodeFromGridPane(coordGrid, 0, 1));
-    TextField minYField = ((TextField) getNodeFromGridPane(coordGrid, 1, 1));
-    TextField maxXField = ((TextField) getNodeFromGridPane(coordGrid, 2, 1));
-    TextField maxYField = ((TextField) getNodeFromGridPane(coordGrid, 3, 1));
-    return new TextField[]{minXField, minYField, maxXField, maxYField};
+    TextField minX = ((TextField) getNodeFromGridPane(coordGrid, 0, 1));
+    TextField minY = ((TextField) getNodeFromGridPane(coordGrid, 1, 1));
+    TextField maxX = ((TextField) getNodeFromGridPane(coordGrid, 2, 1));
+    TextField maxY = ((TextField) getNodeFromGridPane(coordGrid, 3, 1));
+    return new TextField[]{minX, minY, maxX, maxY};
   }
 
   /**
