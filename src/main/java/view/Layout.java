@@ -125,12 +125,12 @@ public class Layout {
     coordGrid.add(minCoordLabel, 0, 0);
     coordGrid.add(maxCoordLabel, 2, 0);
 
-    TextField minXField = createDecimalTextField("-4");
-    TextField minYField = createDecimalTextField("-1");
-    TextField maxXField = createDecimalTextField("4");
-    TextField maxYField = createDecimalTextField("10");
+    TextField minX = createDecimalTextField("-4");
+    TextField minY = createDecimalTextField("-1");
+    TextField maxX = createDecimalTextField("4");
+    TextField maxY = createDecimalTextField("10");
 
-    coordGrid.addRow(1, minXField, minYField, maxXField, maxYField);
+    coordGrid.addRow(1, minX, minY, maxX, maxY);
     return coordGrid;
   }
 

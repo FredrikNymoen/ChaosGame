@@ -35,9 +35,9 @@ public class Matrix2x2 {
    * @return Vector2D the result of the multiplication
    */
   public Vector2D multiply(Vector2D vector) {
-    double newX = a00 * vector.getX0() + a01 * vector.getX1();
-    double newY = a10 * vector.getX0() + a11 * vector.getX1();
-    return new Vector2D(newX, newY);
+    double x0 = a00 * vector.getX0() + a01 * vector.getX1();
+    double x1 = a10 * vector.getX0() + a11 * vector.getX1();
+    return new Vector2D(x0, x1);
   }
 
   /**
