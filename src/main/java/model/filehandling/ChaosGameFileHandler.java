@@ -20,11 +20,18 @@ import model.transformations.Transform2D;
 /**
  * The ChaosGameFileHandler class is used to read and write Chaos Game configurations to and from
  * files.
- *
- * @author Fredrik Nymoen & Amund Larsen
- * @version v1.0.0
+ * author Fredrik Nymoen & Amund Larsen
+ * version v1.0.0
  */
 public class ChaosGameFileHandler {
+
+  private static final String FILE_NOT_FOUND_MESSAGE = "File not found.";
+  private static final String FILE_EMPTY_MESSAGE = "Chaos game file is empty.";
+  private static final String ERROR_READING_FILE_MESSAGE = "Error reading file.";
+  private static final String ERROR_WRITING_FILE_MESSAGE = "Error writing to file.";
+  private static final String AFFINE2D = "Affine2D";
+  private static final String JULIA = "Julia";
+  private static final String MANDELBROT = "Mandelbrot";
 
   private final String fileName;
 
@@ -43,8 +50,8 @@ public class ChaosGameFileHandler {
    * object.
    *
    * @return a ChaosGameDescription object representing the Chaos Game configuration
-   * @throws Exception if the file is not found, empty, or if an error occurs while reading the
-   *                   file
+   * @throws IOException if an I/O error occurs while reading the file
+   * @throws FileEmptyException if the file is empty
    */
   public ChaosGameDescription readFromFile() throws Exception {
     File file = new File(fileName);
@@ -55,24 +62,21 @@ public class ChaosGameFileHandler {
     try (BufferedReader reader = Files.newBufferedReader(Paths.get(file.getAbsolutePath()))) {
       String line = reader.readLine();
       if (line == null) {
-        throw new FileEmptyException("Chaos game file is empty.");
+        throw new FileEmptyException(FILE_EMPTY_MESSAGE);
       }
 
       String typeOfTransformation;
       int commaIndex = line.indexOf(",");
       if (commaIndex != -1) {
-        // If a comma is found, extract the substring before the comma
         typeOfTransformation = line.substring(0, commaIndex);
       } else {
-        // If no comma is found, use the entire line
         typeOfTransformation = line;
       }
 
-      if ("Affine2D".equals(typeOfTransformation)) {
+      if (AFFINE2D.equals(typeOfTransformation)) {
         String[] minCoordsLine = reader.readLine().split(", ");
         String[] maxCoordsLine = reader.readLine().split(", ");
 
-        // Parsing the values to their respective types
         double minX0 = Double.parseDouble(minCoordsLine[0]);
         double minX1 = Double.parseDouble(minCoordsLine[1]);
         double maxX0 = Double.parseDouble(maxCoordsLine[0]);
@@ -93,14 +97,12 @@ public class ChaosGameFileHandler {
           transforms.add(new AffineTransform2D(matrix, vector));
         }
 
-        description = new ChaosGameDescription(transforms, minCoordsVector,
-            maxCoordsVector);
+        description = new ChaosGameDescription(transforms, minCoordsVector, maxCoordsVector);
 
-      } else {
+      } else if (JULIA.equals(typeOfTransformation)) {
         String[] minCoordsLine = reader.readLine().split(", ");
         String[] maxCoordsLine = reader.readLine().split(", ");
 
-        // Parsing the values to their respective types
         double minX0 = Double.parseDouble(minCoordsLine[0]);
         double minX1 = Double.parseDouble(minCoordsLine[1]);
         double maxX0 = Double.parseDouble(maxCoordsLine[0]);
@@ -118,23 +120,22 @@ public class ChaosGameFileHandler {
         description = new ChaosGameDescription(transforms, minCoordsVector, maxCoordsVector);
       }
     } catch (IOException e) {
-      throw new IOException("File not found.");
+      throw new IOException(FILE_NOT_FOUND_MESSAGE, e);
     } catch (FileEmptyException e) {
-      throw new FileEmptyException("File is empty.");
+      throw new FileEmptyException(FILE_EMPTY_MESSAGE);
     } catch (Exception e) {
-      throw new Exception("Error reading file.");
+      throw new Exception(ERROR_READING_FILE_MESSAGE, e);
     }
 
     return description;
   }
-
 
   /**
    * Writes a Chaos Game configuration to a specified file.
    *
    * @param description        the ChaosGameDescription object to be written to the file.
    * @param transformationtype the type of transformation.
-   * @throws Exception if the file is not found or an error occurs while writing to the file.
+   * @throws IOException if an I/O error occurs while writing to the file
    */
   public void writeToFile(ChaosGameDescription description, String transformationtype)
       throws Exception {
@@ -142,7 +143,7 @@ public class ChaosGameFileHandler {
 
     try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(file.getAbsolutePath()))) {
       if (description.getTransforms().get(0) instanceof AffineTransform2D) {
-        writer.write("Affine2D, " + transformationtype + "\n");
+        writer.write(AFFINE2D + ", " + transformationtype + "\n");
         writer.write(
             description.getMinCoords().getX0() + ", " + description.getMinCoords().getX1() + "\n");
         writer.write(
@@ -155,9 +156,9 @@ public class ChaosGameFileHandler {
               + ", " + ((AffineTransform2D) transformation).getVector().getX0()
               + ", " + ((AffineTransform2D) transformation).getVector().getX1() + "\n");
         }
-      } else {
+      } else if (description.getTransforms().get(0) instanceof JuliaTransform) {
         JuliaTransform transformation = (JuliaTransform) description.getTransforms().get(0);
-        writer.write("Julia, " + transformationtype + "\n");
+        writer.write(JULIA + ", " + transformationtype + "\n");
         writer.write(
             description.getMinCoords().getX0() + ", " + description.getMinCoords().getX1() + "\n");
         writer.write(
@@ -166,9 +167,9 @@ public class ChaosGameFileHandler {
             + transformation.getPoint().getX1() + "\n");
       }
     } catch (IOException e) {
-      throw new IOException("File not found.");
+      throw new IOException(FILE_NOT_FOUND_MESSAGE, e);
     } catch (Exception e) {
-      throw new Exception("Error writing to file.");
+      throw new Exception(ERROR_WRITING_FILE_MESSAGE, e);
     }
   }
 
@@ -176,20 +177,20 @@ public class ChaosGameFileHandler {
    * Reads the transformation type from a specified file.
    *
    * @return the transformation type
-   * @throws Exception if the file is not found or an error occurs while reading the file.
+   * @throws IOException if an I/O error occurs while reading the file
    */
   public String readTransformationType() throws Exception {
     File file = new File(fileName);
-    String transformationType = null;
+    String transformationType;
 
     try (BufferedReader reader = Files.newBufferedReader(Paths.get(file.getAbsolutePath()))) {
       String line = reader.readLine();
       int commaIndex = line.indexOf(",");
       transformationType = line.substring(commaIndex + 2);
     } catch (IOException e) {
-      throw new IOException("File not found.");
+      throw new IOException(FILE_NOT_FOUND_MESSAGE, e);
     } catch (Exception e) {
-      throw new Exception("Error reading file.");
+      throw new Exception(ERROR_READING_FILE_MESSAGE, e);
     }
 
     return transformationType;
@@ -199,16 +200,16 @@ public class ChaosGameFileHandler {
    * Writes a line to a specified file.
    *
    * @param line the line to be written to the file
-   * @throws Exception if the file is not found or an error occurs while writing to the file.
+   * @throws IOException if an I/O error occurs while writing to the file
    */
   public void writeLineToFile(String line) throws Exception {
     File file = new File(fileName);
     try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(file.getAbsolutePath()))) {
       writer.write(line);
     } catch (IOException e) {
-      throw new IOException("File not found.");
+      throw new IOException(FILE_NOT_FOUND_MESSAGE, e);
     } catch (Exception e) {
-      throw new Exception("Error writing to file.");
+      throw new Exception(ERROR_WRITING_FILE_MESSAGE, e);
     }
   }
 
@@ -216,21 +217,20 @@ public class ChaosGameFileHandler {
    * Checks if the file contains a Mandelbrot configuration.
    *
    * @return true if the file contains a Mandelbrot configuration, false otherwise
-   * @throws Exception if the file is not found or an error occurs while reading the file.
+   * @throws IOException if an I/O error occurs while reading the file
    */
   public boolean checkForMandelbrot() throws Exception {
     boolean flag = false;
     File file = new File(fileName);
-    String line = null;
     try (BufferedReader reader = Files.newBufferedReader(Paths.get(file.getAbsolutePath()))) {
-      line = reader.readLine();
-      if (line.equals("Mandelbrot")) {
+      String line = reader.readLine();
+      if (MANDELBROT.equals(line)) {
         flag = true;
       }
     } catch (IOException e) {
-      throw new IOException("File not found.");
+      throw new IOException(FILE_NOT_FOUND_MESSAGE, e);
     } catch (Exception e) {
-      throw new Exception("Error reading file.");
+      throw new Exception(ERROR_READING_FILE_MESSAGE, e);
     }
 
     return flag;

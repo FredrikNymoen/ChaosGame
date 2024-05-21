@@ -15,8 +15,8 @@ import org.junit.jupiter.api.Test;
 /**
  * Test class for the SettingsHandler class.
  * This class tests the loadSettings and saveSettings methods of the SettingsHandler class.
- * @author Fredrik Nymoen & Amund Larsen
- * @version v1.0.0
+ * author Fredrik Nymoen & Amund Larsen
+ * version v1.0.0
  */
 class SettingsHandlerTest {
   private SettingsHandler settingsHandler;
@@ -46,7 +46,7 @@ class SettingsHandlerTest {
    * It verifies that the settings are loaded correctly.
    */
   @Test
-  void testLoadSettings() throws Exception{
+  void testLoadSettings() throws Exception {
     Properties expectedProperties = new Properties();
     expectedProperties.setProperty("key1", "value1");
     expectedProperties.setProperty("key2", "value2");
@@ -81,7 +81,7 @@ class SettingsHandlerTest {
    * It verifies that the settings are saved correctly.
    */
   @Test
-  void testSaveSettings() throws Exception{
+  void testSaveSettings() throws Exception {
     Properties propertiesToSave = new Properties();
     propertiesToSave.setProperty("key1", "value1");
     propertiesToSave.setProperty("key2", "value2");
@@ -111,7 +111,7 @@ class SettingsHandlerTest {
       invalidSettingsHandler.saveSettings(propertiesToSave);
     });
 
-    String expectedMessage = "File not found.";
+    String expectedMessage = "Error writing to file:";
     String actualMessage = exception.getMessage();
 
     assertTrue(actualMessage.contains(expectedMessage));

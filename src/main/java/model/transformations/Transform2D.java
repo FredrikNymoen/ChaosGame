@@ -7,7 +7,6 @@ import model.mathcore.Vector2D;
  *
  * @author Amund Larsen & Fredrik Nymoen
  * @version v.1.0.0
- *
  */
 public interface Transform2D {
 

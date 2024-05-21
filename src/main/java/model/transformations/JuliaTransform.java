@@ -5,14 +5,16 @@ import model.mathcore.Complex;
 import model.mathcore.Vector2D;
 
 /**
- * model.transformations.JuliaTransform class is responsible for transforming a model.mathcore.Vector2D point on the form z -> ±sqrt(z - c).
+ * model.transformations.JuliaTransform class is responsible for transforming a
+ * model.mathcore.Vector2D point on the form z -> ±sqrt(z - c).
  *
  * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0
  */
 public class JuliaTransform implements Transform2D {
-  private Complex point;
-  private int sign;
+
+  private final Complex point;
+  private final int sign;
 
   /**
    * Constructor for JuliaTransform.

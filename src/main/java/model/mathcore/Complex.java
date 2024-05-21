@@ -36,10 +36,6 @@ public class Complex extends Vector2D {
     return new Complex(realPart, imaginaryPart);
   }
 
-  public Complex multiply(int sign) {
-    return new Complex(sign * getX0(), sign * getX1());
-  }
-
   /**
    * Subtract the complex number c from another complex number.
    *
