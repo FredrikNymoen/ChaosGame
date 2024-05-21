@@ -103,7 +103,8 @@ public class MainGUI extends Application {
     loadSettings();
 
     Scene scene = new Scene(root);
-    scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/chaosgame.css")).toExternalForm());
+    scene.getStylesheets()
+        .add(Objects.requireNonNull(getClass().getResource("/chaosgame.css")).toExternalForm());
     primaryStage.setTitle(Utility.APPLICATION_NAME);
     primaryStage.setScene(scene);
     primaryStage.setFullScreen(true); // Set the stage to full screen
