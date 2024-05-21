@@ -9,7 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import model.chaosGame.ChaosGameDescription;
+import model.chaosgame.ChaosGameDescription;
 import model.mathcore.Complex;
 import model.mathcore.Matrix2x2;
 import model.mathcore.Vector2D;

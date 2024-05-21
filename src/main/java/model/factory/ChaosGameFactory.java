@@ -9,6 +9,7 @@ import util.Utility;
 
 /**
  * The ChaosGameFactory class is used to create ChaosGame objects with specified parameters.
+ *
  * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0
  */
@@ -19,10 +20,10 @@ public class ChaosGameFactory {
    * method creates a ChaosGame object with the specified parameters and runs the chaos game for the
    * specified number of steps.
    *
-   * @param description the description of the chaos game
-   * @param width       the width of the canvas
-   * @param height      the height of the canvas
-   * @param steps       the number of steps to run the chaos game
+   * @param description              the description of the chaos game
+   * @param width                    the width of the canvas
+   * @param height                   the height of the canvas
+   * @param steps                    the number of steps to run the chaos game
    * @param isBarnsleyTransformation whether to use Barnsley transformation or not
    * @return ChaosGame the created chaos game
    */
@@ -38,8 +39,9 @@ public class ChaosGameFactory {
   }
 
   /**
-   * Creates a julia chaos game with convergence mode.
-   * Convergence mode checks if the coordinates to the pixel converges. If it does, the pixel is included in the fractal.
+   * Creates a julia chaos game with convergence mode. Convergence mode checks if the coordinates to
+   * the pixel converges. If it does, the pixel is included in the fractal.
+   *
    * @param c the complex number c
    * @return ChaosGame the created chaos game
    */
@@ -60,20 +62,18 @@ public class ChaosGameFactory {
 
         int iteration = 0;
         int maxIterations = 40; // Maximum iterations for convergence check
-        double xtemp = 0;
+        double xtemp;
 
         // Iterative escape test(r*r)
-        while ((x * x + y * y) < (r*r) && iteration < maxIterations) {
+        while ((x * x + y * y) < (r * r) && iteration < maxIterations) {
           xtemp = x * x - y * y;
           y = 2 * x * y + c.getX1();
           x = xtemp + c.getX0();
           iteration++;
         }
 
-        if (iteration == maxIterations) {
-          if(canvas.getPixel(vector) != 1){
-            canvas.putPixel(vector);
-          }
+        if (iteration == maxIterations && (canvas.getPixel(vector) != 1)) {
+          canvas.putPixel(vector);
         }
       }
     }
@@ -81,11 +81,12 @@ public class ChaosGameFactory {
   }
 
   /**
-   * Creates a mandelbrot chaos game.
-   * Checks if the coordinates to the pixel converges. If it does, the pixel is included in the fractal.
+   * Creates a mandelbrot chaos game. Checks if the coordinates to the pixel converges. If it does,
+   * the pixel is included in the fractal.
+   *
    * @return ChaosGame the created chaos game
    */
-  public ChaosGame createMandelbrotChaosGame(){
+  public ChaosGame createMandelbrotChaosGame() {
     double r = 2; // Escape radius
 
     ChaosGame chaosGame = new ChaosGame(Utility.CHAOS_GAME_WIDTH, Utility.CHAOS_GAME_HEIGHT);
@@ -101,7 +102,8 @@ public class ChaosGameFactory {
         double cx = vector.getX0();
         double cy = vector.getX1();
 
-        double x = 0, y = 0;
+        double x = 0;
+        double y = 0;
         int iteration = 0;
         int maxIterations = 40; // Maximum iterations for convergence check
 
