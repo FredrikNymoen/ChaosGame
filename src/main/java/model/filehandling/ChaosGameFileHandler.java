@@ -55,123 +55,117 @@ public class ChaosGameFileHandler {
    * @throws FileEmptyException if the file is empty
    */
   public ChaosGameDescription readFromFile() throws Exception {
-    File file = new File(fileName);
-    ChaosGameDescription description = null;
-    String[] transformationValues;
-    List<Transform2D> transforms = new ArrayList<>();
-
-    try (BufferedReader reader = Files.newBufferedReader(Paths.get(file.getAbsolutePath()))) {
+    try (BufferedReader reader = Files.newBufferedReader(Paths.get(new File(fileName).getAbsolutePath()))) {
       String line = reader.readLine();
       if (line == null) {
         throw new FileEmptyException(FILE_EMPTY_MESSAGE);
       }
 
-      String typeOfTransformation;
-      int commaIndex = line.indexOf(",");
-      if (commaIndex != -1) {
-        typeOfTransformation = line.substring(0, commaIndex);
-      } else {
-        typeOfTransformation = line;
-      }
+      String typeOfTransformation = getTypeOfTransformation(line);
+      Vector2D minCoordsVector = parseVector2D(reader.readLine());
+      Vector2D maxCoordsVector = parseVector2D(reader.readLine());
 
+      List<Transform2D> transforms = new ArrayList<>();
       if (AFFINE2D.equals(typeOfTransformation)) {
-        String[] minCoordsLine = reader.readLine().split(", ");
-        String[] maxCoordsLine = reader.readLine().split(", ");
-
-        double minX0 = Double.parseDouble(minCoordsLine[0]);
-        double minX1 = Double.parseDouble(minCoordsLine[1]);
-        double maxX0 = Double.parseDouble(maxCoordsLine[0]);
-        double maxX1 = Double.parseDouble(maxCoordsLine[1]);
-        Vector2D minCoordsVector = new Vector2D(minX0, minX1);
-        Vector2D maxCoordsVector = new Vector2D(maxX0, maxX1);
-
-        while ((line = reader.readLine()) != null) {
-          transformationValues = line.split(", ");
-          double a00 = Double.parseDouble(transformationValues[0]);
-          double a01 = Double.parseDouble(transformationValues[1]);
-          double a10 = Double.parseDouble(transformationValues[2]);
-          double a11 = Double.parseDouble(transformationValues[3]);
-          double b0 = Double.parseDouble(transformationValues[4]);
-          double b1 = Double.parseDouble(transformationValues[5]);
-          Matrix2x2 matrix = new Matrix2x2(a00, a01, a10, a11);
-          Vector2D vector = new Vector2D(b0, b1);
-          transforms.add(new AffineTransform2D(matrix, vector));
-        }
-
-        description = new ChaosGameDescription(transforms, minCoordsVector, maxCoordsVector);
-
+        parseAffine2DTransforms(reader, transforms);
+        return new ChaosGameDescription(transforms, minCoordsVector, maxCoordsVector);
       } else if (JULIA.equals(typeOfTransformation)) {
-        String[] minCoordsLine = reader.readLine().split(", ");
-        String[] maxCoordsLine = reader.readLine().split(", ");
-
-        double minX0 = Double.parseDouble(minCoordsLine[0]);
-        double minX1 = Double.parseDouble(minCoordsLine[1]);
-        double maxX0 = Double.parseDouble(maxCoordsLine[0]);
-        double maxX1 = Double.parseDouble(maxCoordsLine[1]);
-        Vector2D minCoordsVector = new Vector2D(minX0, minX1);
-        Vector2D maxCoordsVector = new Vector2D(maxX0, maxX1);
-
-        line = reader.readLine();
-        String[] pointValues = line.split(", ");
-        Complex point = new Complex(
-            Double.parseDouble(pointValues[0]),
-            Double.parseDouble(pointValues[1])
-        );
-        transforms.add(new JuliaTransform(point, 1));
-        description = new ChaosGameDescription(transforms, minCoordsVector, maxCoordsVector);
+        parseJuliaTransform(reader, transforms);
+        return new ChaosGameDescription(transforms, minCoordsVector, maxCoordsVector);
+      } else {
+        throw new UnexpectedException("Unsupported transformation type: " + typeOfTransformation);
       }
     } catch (IOException e) {
       throw new IOException(FILE_NOT_FOUND_MESSAGE, e);
     } catch (FileEmptyException e) {
       throw new FileEmptyException(FILE_EMPTY_MESSAGE);
-    } catch (UnexpectedException e) {
+    } catch (Exception e) {
       throw new UnexpectedException(ERROR_READING_FILE_MESSAGE);
     }
+  }
 
-    return description;
+  private void parseAffine2DTransforms(BufferedReader reader, List<Transform2D> transforms) throws IOException {
+    String line;
+    while ((line = reader.readLine()) != null) {
+      String[] transformationValues = line.split(", ");
+      Matrix2x2 matrix = new Matrix2x2(
+          Double.parseDouble(transformationValues[0]),
+          Double.parseDouble(transformationValues[1]),
+          Double.parseDouble(transformationValues[2]),
+          Double.parseDouble(transformationValues[3])
+      );
+      Vector2D vector = new Vector2D(
+          Double.parseDouble(transformationValues[4]),
+          Double.parseDouble(transformationValues[5])
+      );
+      transforms.add(new AffineTransform2D(matrix, vector));
+    }
+  }
+
+  private void parseJuliaTransform(BufferedReader reader, List<Transform2D> transforms) throws IOException {
+    String line = reader.readLine();
+    String[] pointValues = line.split(", ");
+    Complex point = new Complex(
+        Double.parseDouble(pointValues[0]),
+        Double.parseDouble(pointValues[1])
+    );
+    transforms.add(new JuliaTransform(point, 1));
+  }
+
+  private String getTypeOfTransformation(String line) {
+    int commaIndex = line.indexOf(",");
+    return (commaIndex != -1) ? line.substring(0, commaIndex) : line;
+  }
+
+  private Vector2D parseVector2D(String coordsLine) {
+    String[] coords = coordsLine.split(", ");
+    return new Vector2D(Double.parseDouble(coords[0]), Double.parseDouble(coords[1]));
   }
 
   /**
    * Writes a Chaos Game configuration to a specified file.
    *
    * @param description        the ChaosGameDescription object to be written to the file.
-   * @param transformationtype the type of transformation.
+   * @param transformationType the type of transformation.
    * @throws IOException if an I/O error occurs while writing to the file
    */
-  public void writeToFile(ChaosGameDescription description, String transformationtype)
+  public void writeToFile(ChaosGameDescription description, String transformationType)
       throws Exception {
-    File file = new File(fileName);
-
-    try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(file.getAbsolutePath()))) {
+    try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(new File(fileName).getAbsolutePath()))) {
       if (description.getTransforms().get(0) instanceof AffineTransform2D) {
-        writer.write(AFFINE2D + ", " + transformationtype + "\n");
-        writer.write(
-            description.getMinCoords().getX0() + ", " + description.getMinCoords().getX1() + "\n");
-        writer.write(
-            description.getMaxCoords().getX0() + ", " + description.getMaxCoords().getX1() + "\n");
-
-        for (Transform2D transformation : description.getTransforms()) {
-          Matrix2x2 matrix = ((AffineTransform2D) transformation).getMatrix();
-          writer.write(matrix.geta00() + ", " + matrix.geta01() + ", " + matrix.geta10() + ", "
-              + matrix.geta11()
-              + ", " + ((AffineTransform2D) transformation).getVector().getX0()
-              + ", " + ((AffineTransform2D) transformation).getVector().getX1() + "\n");
-        }
+        writeAffine2DConfiguration(writer, description, transformationType);
       } else if (description.getTransforms().get(0) instanceof JuliaTransform) {
-        JuliaTransform transformation = (JuliaTransform) description.getTransforms().get(0);
-        writer.write(JULIA + ", " + transformationtype + "\n");
-        writer.write(
-            description.getMinCoords().getX0() + ", " + description.getMinCoords().getX1() + "\n");
-        writer.write(
-            description.getMaxCoords().getX0() + ", " + description.getMaxCoords().getX1() + "\n");
-        writer.write(transformation.getPoint().getX0() + ", "
-            + transformation.getPoint().getX1() + "\n");
+        writeJuliaConfiguration(writer, description, transformationType);
       }
     } catch (IOException e) {
       throw new IOException(FILE_NOT_FOUND_MESSAGE, e);
-    } catch (UnexpectedException e) {
+    } catch (Exception e) {
       throw new UnexpectedException(ERROR_WRITING_FILE_MESSAGE);
     }
+  }
+
+  private void writeAffine2DConfiguration(BufferedWriter writer, ChaosGameDescription description, String transformationType) throws IOException {
+    writer.write(AFFINE2D + ", " + transformationType + "\n");
+    writeCoords(writer, description);
+    for (Transform2D transformation : description.getTransforms()) {
+      Matrix2x2 matrix = ((AffineTransform2D) transformation).getMatrix();
+      Vector2D vector = ((AffineTransform2D) transformation).getVector();
+      writer.write(matrix.geta00() + ", " + matrix.geta01() + ", " + matrix.geta10() + ", "
+          + matrix.geta11() + ", " + vector.getX0() + ", " + vector.getX1() + "\n");
+    }
+  }
+
+  private void writeJuliaConfiguration(BufferedWriter writer, ChaosGameDescription description, String transformationType) throws IOException {
+    JuliaTransform transformation = (JuliaTransform) description.getTransforms().get(0);
+    writer.write(JULIA + ", " + transformationType + "\n");
+    writeCoords(writer, description);
+    Complex point = transformation.getPoint();
+    writer.write(point.getX0() + ", " + point.getX1() + "\n");
+  }
+
+  private void writeCoords(BufferedWriter writer, ChaosGameDescription description) throws IOException {
+    writer.write(description.getMinCoords().getX0() + ", " + description.getMinCoords().getX1() + "\n");
+    writer.write(description.getMaxCoords().getX0() + ", " + description.getMaxCoords().getX1() + "\n");
   }
 
   /**
@@ -181,20 +175,14 @@ public class ChaosGameFileHandler {
    * @throws IOException if an I/O error occurs while reading the file
    */
   public String readTransformationType() throws Exception {
-    File file = new File(fileName);
-    String transformationType;
-
-    try (BufferedReader reader = Files.newBufferedReader(Paths.get(file.getAbsolutePath()))) {
+    try (BufferedReader reader = Files.newBufferedReader(Paths.get(new File(fileName).getAbsolutePath()))) {
       String line = reader.readLine();
-      int commaIndex = line.indexOf(",");
-      transformationType = line.substring(commaIndex + 2);
+      return line.substring(line.indexOf(",") + 2);
     } catch (IOException e) {
       throw new IOException(FILE_NOT_FOUND_MESSAGE, e);
-    } catch (UnexpectedException e) {
+    } catch (Exception e) {
       throw new UnexpectedException(ERROR_READING_FILE_MESSAGE);
     }
-
-    return transformationType;
   }
 
   /**
@@ -204,12 +192,11 @@ public class ChaosGameFileHandler {
    * @throws IOException if an I/O error occurs while writing to the file
    */
   public void writeLineToFile(String line) throws Exception {
-    File file = new File(fileName);
-    try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(file.getAbsolutePath()))) {
+    try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(new File(fileName).getAbsolutePath()))) {
       writer.write(line);
     } catch (IOException e) {
       throw new IOException(FILE_NOT_FOUND_MESSAGE, e);
-    } catch (UnexpectedException e) {
+    } catch (Exception e) {
       throw new UnexpectedException(ERROR_WRITING_FILE_MESSAGE);
     }
   }
@@ -221,19 +208,13 @@ public class ChaosGameFileHandler {
    * @throws IOException if an I/O error occurs while reading the file
    */
   public boolean checkForMandelbrot() throws Exception {
-    boolean flag = false;
-    File file = new File(fileName);
-    try (BufferedReader reader = Files.newBufferedReader(Paths.get(file.getAbsolutePath()))) {
+    try (BufferedReader reader = Files.newBufferedReader(Paths.get(new File(fileName).getAbsolutePath()))) {
       String line = reader.readLine();
-      if (MANDELBROT.equals(line)) {
-        flag = true;
-      }
+      return MANDELBROT.equals(line);
     } catch (IOException e) {
       throw new IOException(FILE_NOT_FOUND_MESSAGE, e);
-    } catch (UnexpectedException e) {
+    } catch (Exception e) {
       throw new UnexpectedException(ERROR_READING_FILE_MESSAGE);
     }
-
-    return flag;
   }
 }
