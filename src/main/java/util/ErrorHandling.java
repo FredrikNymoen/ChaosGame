@@ -4,11 +4,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This class handles logging various types of errors and warnings.
- * It provides methods for logging specific error messages related to file operations,
- * transformation selection, copying transformations, and iterative transformations.
- * @author Fredrik Nymoen & Amund Larsen
- * @version v1.0.0
+ * This class handles logging various types of errors and warnings. It provides methods for logging
+ * specific error messages related to file operations, transformation selection, copying
+ * transformations, and iterative transformations.
+ * author Fredrik Nymoen & Amund Larsen
+ * version v1.0.0
  */
 public class ErrorHandling {
 
@@ -23,7 +23,7 @@ public class ErrorHandling {
    * @param e the exception that was thrown
    */
   public void fileNotFound(Exception e) {
-    logger.log(Level.SEVERE, "File not found or IO error: " + e.getMessage());
+    logger.log(Level.SEVERE, () -> String.format("File not found or IO error: %s", e.getMessage()));
   }
 
   /**
@@ -32,7 +32,7 @@ public class ErrorHandling {
    * @param e the exception that was thrown
    */
   public void fileIsEmpty(Exception e) {
-    logger.log(Level.WARNING, "File is empty or malformed: " + e.getMessage());
+    logger.log(Level.WARNING, () -> String.format("File is empty or malformed: %s", e.getMessage()));
   }
 
   /**
@@ -41,7 +41,7 @@ public class ErrorHandling {
    * @param e the exception that was thrown
    */
   public void error(Exception e) {
-    logger.log(Level.SEVERE, "An unexpected error occurred: " + e.getMessage());
+    logger.log(Level.SEVERE, () -> String.format("An unexpected error occurred: %s", e.getMessage()));
   }
 
   /**
@@ -50,7 +50,7 @@ public class ErrorHandling {
    * @param e the exception that was thrown
    */
   public void failedToSelectTransformation(Exception e) {
-    logger.log(Level.WARNING, "Failed to select transformation: " + e.getMessage());
+    logger.log(Level.WARNING, () -> String.format("Failed to select transformation: %s", e.getMessage()));
   }
 
   /**
@@ -59,7 +59,7 @@ public class ErrorHandling {
    * @param e the exception that was thrown
    */
   public void failedToCopyLastTransformation(Exception e) {
-    logger.log(Level.WARNING, "Failed to copy last transformation: " + e.getMessage());
+    logger.log(Level.WARNING, () -> String.format("Failed to copy last transformation: %s", e.getMessage()));
   }
 
   /**
@@ -68,6 +68,6 @@ public class ErrorHandling {
    * @param e the exception that was thrown
    */
   public void failedToMakeFractalWithIterativeTransformation(Exception e) {
-    logger.log(Level.WARNING, "Failed to make fractal with iterative transformation: " + e.getMessage());
+    logger.log(Level.WARNING, () -> String.format("Failed to make fractal with iterative transformation: %s", e.getMessage()));
   }
 }

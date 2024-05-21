@@ -7,12 +7,17 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
 /**
- * A utility class that provides helper methods for UI-related tasks,
- * specifically for interacting with GridPane and TextField elements.
+ * A utility class that provides helper methods for UI-related tasks, specifically for interacting
+ * with GridPane and TextField elements.
+ *
  * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0
  */
 public class UIHelper {
+
+  private UIHelper() {
+    // Private constructor to prevent instantiation
+  }
 
   /**
    * Retrieves the coordinate text fields from the specified GridPane.
@@ -47,7 +52,8 @@ public class UIHelper {
    * @param juliaGrid the GridPane containing the Julia set text fields
    * @return a map of TextField objects with keys representing field names
    */
-  public static Map<String, TextField> getTextFieldsCoordAndJuliaMap(GridPane coordGrid, GridPane juliaGrid) {
+  public static Map<String, TextField> getTextFieldsCoordAndJuliaMap(GridPane coordGrid,
+      GridPane juliaGrid) {
     Map<String, TextField> fields = new HashMap<>();
 
     TextField[] coordinateFields = getCoordinateTextFields(coordGrid);
@@ -64,9 +70,9 @@ public class UIHelper {
   }
 
   /**
-   * Gets a node from a GridPane at a specified column and row.
-   * The method iterates through the children of the GridPane and returns the node at the specified column and row.
-   * If no node is found, the method returns null.
+   * Gets a node from a GridPane at a specified column and row. The method iterates through the
+   * children of the GridPane and returns the node at the specified column and row. If no node is
+   * found, the method returns null.
    *
    * @param gridPane the GridPane to get the node from
    * @param col      the column of the node

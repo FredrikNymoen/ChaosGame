@@ -13,6 +13,7 @@ import model.chaosGame.ChaosGame;
 
 /**
  * This class handles the drawing of fractals on a canvas.
+ *
  * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0
  */
@@ -21,9 +22,9 @@ public class FractalDrawer {
   /**
    * Draws the fractal on the specified canvas based on the ChaosGame data.
    *
-   * @param fractalCanvas      the canvas on which the fractal is drawn
-   * @param chaosGame          the current chaos game instance containing fractal data
-   * @param colorModeCheckbox  the checkbox indicating whether color mode is enabled
+   * @param fractalCanvas     the canvas on which the fractal is drawn
+   * @param chaosGame         the current chaos game instance containing fractal data
+   * @param colorModeCheckbox the checkbox indicating whether color mode is enabled
    */
   public void drawFractal(Canvas fractalCanvas, ChaosGame chaosGame, CheckBox colorModeCheckbox) {
     GraphicsContext gc = fractalCanvas.getGraphicsContext2D();
@@ -78,8 +79,8 @@ public class FractalDrawer {
   }
 
   /**
-   * Returns a color for a given intensity value.
-   * The color transitions through blue, green, yellow, orange, and red based on the intensity.
+   * Returns a color for a given intensity value. The color transitions through blue, green, yellow,
+   * orange, and red based on the intensity.
    *
    * @param intensity a double value representing the intensity (ranging from 0.0 to 1.0)
    * @return a Color object representing the interpolated color
