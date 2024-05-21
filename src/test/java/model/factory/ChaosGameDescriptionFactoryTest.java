@@ -75,7 +75,4 @@ private Vector2D maxCoordsVector;
     }
 
 
-    @Test
-    public void
-
   }

@@ -76,7 +76,7 @@ public class ChaosGameFileHandler {
         throw new UnexpectedException("Unsupported transformation type: " + typeOfTransformation);
       }
     } catch (IOException e) {
-      throw new IOException(FILE_NOT_FOUND_MESSAGE, e);
+      throw new IOException(FILE_NOT_FOUND_MESSAGE);
     } catch (FileEmptyException e) {
       throw new FileEmptyException(FILE_EMPTY_MESSAGE);
     } catch (Exception e) {
@@ -179,7 +179,7 @@ public class ChaosGameFileHandler {
       String line = reader.readLine();
       return line.substring(line.indexOf(",") + 2);
     } catch (IOException e) {
-      throw new IOException(FILE_NOT_FOUND_MESSAGE, e);
+      throw new IOException(FILE_NOT_FOUND_MESSAGE);
     } catch (Exception e) {
       throw new UnexpectedException(ERROR_READING_FILE_MESSAGE);
     }
@@ -195,7 +195,7 @@ public class ChaosGameFileHandler {
     try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(new File(fileName).getAbsolutePath()))) {
       writer.write(line);
     } catch (IOException e) {
-      throw new IOException(FILE_NOT_FOUND_MESSAGE, e);
+      throw new IOException(FILE_NOT_FOUND_MESSAGE);
     } catch (Exception e) {
       throw new UnexpectedException(ERROR_WRITING_FILE_MESSAGE);
     }
@@ -212,7 +212,7 @@ public class ChaosGameFileHandler {
       String line = reader.readLine();
       return MANDELBROT.equals(line);
     } catch (IOException e) {
-      throw new IOException(FILE_NOT_FOUND_MESSAGE, e);
+      throw new IOException(FILE_NOT_FOUND_MESSAGE);
     } catch (Exception e) {
       throw new UnexpectedException(ERROR_READING_FILE_MESSAGE);
     }
