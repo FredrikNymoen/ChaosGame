@@ -222,8 +222,8 @@ public class EventHandler implements ChaosGameObserver {
       }
     }
     TextField[] coordinateFieldsJulia = UIHelper.getJuliaTextFields(juliaGrid);
-    TextField realPartField = coordinateFieldsJulia[0];
-    TextField imaginaryPartField = coordinateFieldsJulia[1];
+    final TextField realPartField = coordinateFieldsJulia[0];
+    final TextField imaginaryPartField = coordinateFieldsJulia[1];
 
     affineGrid.setStyle("");
     affineBox.setStyle("");
@@ -309,7 +309,7 @@ public class EventHandler implements ChaosGameObserver {
       AffineTransform2D affine = (AffineTransform2D) lastDescription.getTransforms().get(i);
       TextField a00 = (TextField) UIHelper.getNodeFromGridPane(affineGrid, 0, i);
       TextField a01 = (TextField) UIHelper.getNodeFromGridPane(affineGrid, 1, i);
-      TextField a10 = (TextField) UIHelper.getNodeFromGridPane(affineGrid, 2, i);
+      final TextField a10 = (TextField) UIHelper.getNodeFromGridPane(affineGrid, 2, i);
       final TextField a11 = (TextField) UIHelper.getNodeFromGridPane(affineGrid, 3, i);
       final TextField x0 = (TextField) UIHelper.getNodeFromGridPane(affineGrid, 5, i);
       final TextField x1 = (TextField) UIHelper.getNodeFromGridPane(affineGrid, 6, i);
