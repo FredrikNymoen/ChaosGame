@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.IntStream;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
@@ -63,19 +64,20 @@ public class ChaosGameController {
       double[] matrixValues = new double[4]; // To store a00, a01, a10, a11
       double[] vectorValues = new double[2]; // To store x0, y0
 
+      int finalRow = row;
       // Retrieve matrix values
-      for (int i = 0; i < 4; i++) { // matrixValues indexes are 0 to 3
-        TextField textField = (TextField) UIHelper.getNodeFromGridPane(affineGrid, i, row);
+      IntStream.range(0, 4).forEach(i -> {
+        TextField textField = (TextField) UIHelper.getNodeFromGridPane(affineGrid, i, finalRow);
         assert textField != null;
         matrixValues[i] = Double.parseDouble(textField.getText());
-      }
+      });
 
       // Retrieve vector values
-      for (int i = 0; i < 2; i++) { // vectorValues indexes are 0 to 1, grid positions are 5 and 6
-        TextField textField = (TextField) UIHelper.getNodeFromGridPane(affineGrid, i + 5, row);
+      IntStream.range(0, 2).forEach(i -> {
+        TextField textField = (TextField) UIHelper.getNodeFromGridPane(affineGrid, i + 5, finalRow);
         assert textField != null;
         vectorValues[i] = Double.parseDouble(textField.getText());
-      }
+      });
 
       Matrix2x2 matrix = new Matrix2x2(matrixValues[0], matrixValues[1], matrixValues[2],
           matrixValues[3]);

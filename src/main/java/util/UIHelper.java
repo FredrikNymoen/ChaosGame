@@ -80,11 +80,9 @@ public class UIHelper {
    * @return the node at the specified column and row, or null if not found
    */
   public static Node getNodeFromGridPane(GridPane gridPane, int col, int row) {
-    for (Node node : gridPane.getChildren()) {
-      if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
-        return node;
-      }
-    }
-    return null;
+    return gridPane.getChildren().stream()
+        .filter(node -> GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row)
+        .findFirst()
+        .orElse(null);
   }
 }

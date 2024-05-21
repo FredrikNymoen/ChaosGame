@@ -138,7 +138,7 @@ public class ChaosGameFileHandler {
         writeJuliaConfiguration(writer, description, transformationType);
       }
     } catch (IOException e) {
-      throw new IOException(FILE_NOT_FOUND_MESSAGE, e);
+      throw new IOException(FILE_NOT_FOUND_MESSAGE);
     } catch (Exception e) {
       throw new UnexpectedException(ERROR_WRITING_FILE_MESSAGE);
     }

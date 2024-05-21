@@ -28,7 +28,7 @@ private Vector2D maxCoordsVector;
     }
 
   @Test
-  public void testSierpinskiCreatesCorrectTransformations() {
+  public void testSierpinski() {
     ChaosGameDescription description = factory.sierpinski(minCoordsVector, maxCoordsVector);
     assertNotNull(description);
 
@@ -50,6 +50,11 @@ private Vector2D maxCoordsVector;
     }
 
     @Test
+    public void testMapleTree(){
+
+    }
+
+    @Test
     public void testJulia() {
       Complex c = new Complex(0.285, 0.01);
       ChaosGameDescription description = factory.julia(minCoordsVector, maxCoordsVector, c);
@@ -68,4 +73,9 @@ private Vector2D maxCoordsVector;
       assertNotNull(description);
       // Further assertions depend on the behavior of your ChaosGameDescription class
     }
+
+
+    @Test
+    public void
+
   }
