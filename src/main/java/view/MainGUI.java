@@ -24,7 +24,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import model.chaosGame.ChaosGame;
+import model.chaosgame.ChaosGame;
 import util.UIHelper;
 import util.Utility;
 

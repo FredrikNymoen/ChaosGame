@@ -8,27 +8,27 @@ import model.mathcore.Vector2D;
 import model.transformations.Transform2D;
 
 /**
- * The ChaosGame class is used to represent a chaos game.
- * The chaos game is a mathematical game that generates a fractal using a set of rules and
- * transformations.
+ * The ChaosGame class is used to represent a chaos game. The chaos game is a mathematical game that
+ * generates a fractal using a set of rules and transformations.
  *
  * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0
  */
 public class ChaosGame {
-  private ChaosCanvas canvas;
+
+  private final ChaosCanvas canvas;
   private ChaosGameDescription description;
   private Vector2D currentPoint;
-  private Random random;
-  private Stack<Vector2D> pointStack;
+  private final Random random;
+  private final Stack<Vector2D> pointStack;
 
 
   /**
    * Constructor for ChaosGame.
    *
    * @param description the description of the chaos game
-   * @param width the width of the canvas
-   * @param height the height of the canvas
+   * @param width       the width of the canvas
+   * @param height      the height of the canvas
    */
   public ChaosGame(ChaosGameDescription description, int width, int height) {
     this.description = description;
@@ -43,7 +43,7 @@ public class ChaosGame {
   /**
    * Constructor for ChaosGame.
    *
-   * @param width the width of the canvas
+   * @param width  the width of the canvas
    * @param height the height of the canvas
    */
   public ChaosGame(int width, int height) {
@@ -64,29 +64,28 @@ public class ChaosGame {
   }
 
   /**
-   * Runs a specified number of steps in the Chaos Game. Each step a random
-   *transformation is selected and applied
-   * to the current point, where the result is plotted on the canvas.
+   * Runs a specified number of steps in the Chaos Game. Each step a random transformation is
+   * selected and applied to the current point, where the result is plotted on the canvas.
    *
    * @param steps the number of steps to run the chaos game
    */
   public void runSteps(int steps) {
-      canvas.clear();
-      for (int i = 0; i < steps; i++) {
-        int transformIndex = random.nextInt(description.getTransforms().size());
-        Transform2D transform = description.getTransforms().get(transformIndex);
-        currentPoint = transform.transform(currentPoint);
-        canvas.putPixel(currentPoint);
-      }
+    canvas.clear();
+    for (int i = 0; i < steps; i++) {
+      int transformIndex = random.nextInt(description.getTransforms().size());
+      Transform2D transform = description.getTransforms().get(transformIndex);
+      currentPoint = transform.transform(currentPoint);
+      canvas.putPixel(currentPoint);
+    }
   }
 
   /**
-   * Runs a specified number of steps in the Barnsley Fern Chaos Game.
-   * Each step a transformation is selected based on a probability distribution and applied to the current point,
+   * Runs a specified number of steps in the Barnsley Fern Chaos Game. Each step a transformation is
+   * selected based on a probability distribution and applied to the current point,
    *
    * @param steps the number of steps to run the chaos game
    */
-  public void runStepsForBarnsley(int steps){
+  public void runStepsForBarnsley(int steps) {
     canvas.clear();
     for (int i = 0; i < steps; i++) {
       List<Double> probabilities = new ArrayList<>();
@@ -97,7 +96,6 @@ public class ChaosGame {
 
       // Get a random value between 0 and 100
       double randomValue = 100 * random.nextDouble();
-
 
       int transformIndex = 0;
       for (int j = 0; j < probabilities.size(); j++) {
@@ -115,8 +113,8 @@ public class ChaosGame {
   }
 
   /**
-   * Runs the chaos game with iterative transformation.
-   * The chaos game is run by applying all transformations to the current point and plotting the result on the canvas.
+   * Runs the chaos game with iterative transformation. The chaos game is run by applying all
+   * transformations to the current point and plotting the result on the canvas.
    */
   public void fractalWithIterationTransformation() {
     canvas.clear();
@@ -127,7 +125,8 @@ public class ChaosGame {
         Transform2D transform = description.getTransforms().get(j);
         Vector2D newPoint = transform.transform(currentPoint);
 
-        if(canvas.checkIfCoordAsPixelIsOutsideCanvas(newPoint) || canvas.getPixel(newPoint) >= 20){
+        if (canvas.checkIfCoordAsPixelIsOutsideCanvas(newPoint)
+            || canvas.getPixel(newPoint) >= 20) {
           continue;
         }
 
