@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Test class for {@link UIHelper}.
  * This class tests the utility methods for interacting with GridPane and TextField elements.
  */
-public class UIHelperTest extends ApplicationTest {
+class UIHelperTest extends ApplicationTest {
 
   private GridPane coordGrid;
   private GridPane juliaGrid;
@@ -24,7 +24,7 @@ public class UIHelperTest extends ApplicationTest {
    * Sets up the test environment by initializing the GridPanes and adding TextFields.
    */
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     coordGrid = new GridPane();
     juliaGrid = new GridPane();
 
@@ -50,7 +50,7 @@ public class UIHelperTest extends ApplicationTest {
    * Verifies that the correct TextField instances are retrieved from the coordGrid.
    */
   @Test
-  public void testGetCoordinateTextFields() {
+  void testGetCoordinateTextFields() {
     TextField[] fields = UIHelper.getCoordinateTextFields(coordGrid);
 
     assertEquals(4, fields.length);
@@ -65,7 +65,7 @@ public class UIHelperTest extends ApplicationTest {
    * Verifies that the correct TextField instances are retrieved from the juliaGrid.
    */
   @Test
-  public void testGetJuliaTextFields() {
+  void testGetJuliaTextFields() {
     TextField[] fields = UIHelper.getJuliaTextFields(juliaGrid);
 
     assertEquals(2, fields.length);
@@ -78,7 +78,7 @@ public class UIHelperTest extends ApplicationTest {
    * Verifies that the correct TextField instances are retrieved and mapped from both coordGrid and juliaGrid.
    */
   @Test
-  public void testGetTextFieldsCoordAndJuliaMap() {
+  void testGetTextFieldsCoordAndJuliaMap() {
     Map<String, TextField> fieldsMap = UIHelper.getTextFieldsCoordAndJuliaMap(coordGrid, juliaGrid);
 
     assertEquals(6, fieldsMap.size());
@@ -95,7 +95,7 @@ public class UIHelperTest extends ApplicationTest {
    * Verifies that the correct Node instances are retrieved from the coordGrid and that null is returned when no node is found.
    */
   @Test
-  public void testGetNodeFromGridPane() {
+  void testGetNodeFromGridPane() {
     Node minXField = coordGrid.getChildren().get(0);
     Node minYField = coordGrid.getChildren().get(1);
     Node maxXField = coordGrid.getChildren().get(2);

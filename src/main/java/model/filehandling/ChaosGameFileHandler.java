@@ -54,7 +54,7 @@ public class ChaosGameFileHandler {
    * @throws IOException if an I/O error occurs while reading the file
    * @throws FileEmptyException if the file is empty
    */
-  public ChaosGameDescription readFromFile() throws Exception {
+  public ChaosGameDescription readFromFile() throws IOException, UnexpectedException, FileEmptyException {
     try (BufferedReader reader = Files.newBufferedReader(Paths.get(new File(fileName).getAbsolutePath()))) {
       String line = reader.readLine();
       if (line == null) {
@@ -130,7 +130,7 @@ public class ChaosGameFileHandler {
    * @throws IOException if an I/O error occurs while writing to the file
    */
   public void writeToFile(ChaosGameDescription description, String transformationType)
-      throws Exception {
+      throws IOException, UnexpectedException {
     try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(new File(fileName).getAbsolutePath()))) {
       if (description.getTransforms().get(0) instanceof AffineTransform2D) {
         writeAffine2DConfiguration(writer, description, transformationType);
@@ -174,7 +174,7 @@ public class ChaosGameFileHandler {
    * @return the transformation type
    * @throws IOException if an I/O error occurs while reading the file
    */
-  public String readTransformationType() throws Exception {
+  public String readTransformationType() throws IOException, UnexpectedException {
     try (BufferedReader reader = Files.newBufferedReader(Paths.get(new File(fileName).getAbsolutePath()))) {
       String line = reader.readLine();
       return line.substring(line.indexOf(",") + 2);
@@ -191,7 +191,7 @@ public class ChaosGameFileHandler {
    * @param line the line to be written to the file
    * @throws IOException if an I/O error occurs while writing to the file
    */
-  public void writeLineToFile(String line) throws Exception {
+  public void writeLineToFile(String line) throws IOException, UnexpectedException {
     try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(new File(fileName).getAbsolutePath()))) {
       writer.write(line);
     } catch (IOException e) {
@@ -207,7 +207,7 @@ public class ChaosGameFileHandler {
    * @return true if the file contains a Mandelbrot configuration, false otherwise
    * @throws IOException if an I/O error occurs while reading the file
    */
-  public boolean checkForMandelbrot() throws Exception {
+  public boolean checkForMandelbrot() throws IOException, UnexpectedException {
     try (BufferedReader reader = Files.newBufferedReader(Paths.get(new File(fileName).getAbsolutePath()))) {
       String line = reader.readLine();
       return MANDELBROT.equals(line);

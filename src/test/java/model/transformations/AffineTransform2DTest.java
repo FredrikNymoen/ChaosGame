@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import model.mathcore.Matrix2x2;
 import model.mathcore.Vector2D;
-import model.transformations.AffineTransform2D;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

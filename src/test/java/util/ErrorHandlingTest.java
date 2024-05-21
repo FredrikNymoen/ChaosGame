@@ -9,16 +9,15 @@ import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test class for {@link ErrorHandling}.
  * This class tests the logging functionality of the {@link ErrorHandling} class.
  */
-public class ErrorHandlingTest {
+class ErrorHandlingTest {
 
   private ErrorHandling errorHandling;
-  private Logger logger;
   private TestHandler testHandler;
 
   /**
@@ -26,9 +25,9 @@ public class ErrorHandlingTest {
    * Initializes the {@link ErrorHandling} instance and configures the logger to use a custom {@link TestHandler}.
    */
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     errorHandling = new ErrorHandling();
-    logger = Logger.getLogger(ErrorHandling.class.getName());
+    Logger logger = Logger.getLogger(ErrorHandling.class.getName());
 
     // Remove all handlers to avoid duplicate logs
     LogManager.getLogManager().reset();
@@ -43,7 +42,7 @@ public class ErrorHandlingTest {
    * Verifies that a severe log message is produced when a file not found error occurs.
    */
   @Test
-  public void testFileNotFound() {
+  void testFileNotFound() {
     Exception e = new Exception("File not found");
     errorHandling.fileNotFound(e);
     assertLog(Level.SEVERE, "File not found or IO error: File not found");
@@ -54,7 +53,7 @@ public class ErrorHandlingTest {
    * Verifies that a warning log message is produced when a file is empty or malformed.
    */
   @Test
-  public void testFileIsEmpty() {
+  void testFileIsEmpty() {
     Exception e = new Exception("File is empty");
     errorHandling.fileIsEmpty(e);
     assertLog(Level.WARNING, "File is empty or malformed: File is empty");
@@ -65,7 +64,7 @@ public class ErrorHandlingTest {
    * Verifies that a severe log message is produced when an unexpected error occurs.
    */
   @Test
-  public void testError() {
+  void testError() {
     Exception e = new Exception("Unexpected error");
     errorHandling.error(e);
     assertLog(Level.SEVERE, "An unexpected error occurred: Unexpected error");
@@ -76,7 +75,7 @@ public class ErrorHandlingTest {
    * Verifies that a warning log message is produced when transformation selection fails.
    */
   @Test
-  public void testFailedToSelectTransformation() {
+  void testFailedToSelectTransformation() {
     Exception e = new Exception("Transformation failed");
     errorHandling.failedToSelectTransformation(e);
     assertLog(Level.WARNING, "Failed to select transformation: Transformation failed");
@@ -87,7 +86,7 @@ public class ErrorHandlingTest {
    * Verifies that a warning log message is produced when copying the last transformation fails.
    */
   @Test
-  public void testFailedToCopyLastTransformation() {
+  void testFailedToCopyLastTransformation() {
     Exception e = new Exception("Copy failed");
     errorHandling.failedToCopyLastTransformation(e);
     assertLog(Level.WARNING, "Failed to copy last transformation: Copy failed");
@@ -98,7 +97,7 @@ public class ErrorHandlingTest {
    * Verifies that a warning log message is produced when making a fractal with iterative transformation fails.
    */
   @Test
-  public void testFailedToMakeFractalWithIterativeTransformation() {
+  void testFailedToMakeFractalWithIterativeTransformation() {
     Exception e = new Exception("Iterative transformation failed");
     errorHandling.failedToMakeFractalWithIterativeTransformation(e);
     assertLog(Level.WARNING, "Failed to make fractal with iterative transformation: Iterative transformation failed");
@@ -110,16 +109,18 @@ public class ErrorHandlingTest {
    * @param level   the expected log level
    * @param message the expected log message
    */
-  private void assertLog(Level level, String message) {
+  void assertLog(Level level, String message) {
     LogRecord record = testHandler.getLastLogRecord();
-    assertTrue(record.getLevel().equals(level), "Expected log level: " + level + ", but got: " + record.getLevel());
-    assertTrue(record.getMessage().equals(message), "Expected log message: \"" + message + "\", but got: \"" + record.getMessage() + "\"");
+    assertEquals(record.getLevel(), level,
+        "Expected log level: " + level + ", but got: " + record.getLevel());
+    assertEquals(record.getMessage(), message,
+        "Expected log message: \"" + message + "\", but got: \"" + record.getMessage() + "\"");
   }
 
   /**
    * A custom log handler that captures the last log record for testing purposes.
    */
-  private class TestHandler extends ConsoleHandler {
+  private static class TestHandler extends ConsoleHandler {
     private LogRecord lastLogRecord;
 
     @Override

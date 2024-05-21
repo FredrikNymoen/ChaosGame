@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import model.mathcore.Complex;
 import model.mathcore.Vector2D;
-import model.transformations.JuliaTransform;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +17,6 @@ import org.junit.jupiter.api.Test;
  */
 class JuliaTransformTest {
   private JuliaTransform juliaTransform;
-  private Complex complex;
 
   /**
    * Sets up a complex number and a JuliaTransform for testing, before each test.
@@ -26,7 +24,7 @@ class JuliaTransformTest {
 
   @BeforeEach
   void setUp() {
-    complex = new Complex(1, 2);
+    Complex complex = new Complex(1, 2);
     juliaTransform = new JuliaTransform(complex, 1);
   }
 
