@@ -1,6 +1,7 @@
 package model.filehandling;
 
 import exception.FileEmptyException;
+import exception.UnexpectedException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -9,7 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import model.chaosGame.ChaosGameDescription;
+import model.chaosgame.ChaosGameDescription;
 import model.mathcore.Complex;
 import model.mathcore.Matrix2x2;
 import model.mathcore.Vector2D;
@@ -123,8 +124,8 @@ public class ChaosGameFileHandler {
       throw new IOException(FILE_NOT_FOUND_MESSAGE, e);
     } catch (FileEmptyException e) {
       throw new FileEmptyException(FILE_EMPTY_MESSAGE);
-    } catch (Exception e) {
-      throw new Exception(ERROR_READING_FILE_MESSAGE, e);
+    } catch (UnexpectedException e) {
+      throw new UnexpectedException(ERROR_READING_FILE_MESSAGE);
     }
 
     return description;
@@ -168,8 +169,8 @@ public class ChaosGameFileHandler {
       }
     } catch (IOException e) {
       throw new IOException(FILE_NOT_FOUND_MESSAGE, e);
-    } catch (Exception e) {
-      throw new Exception(ERROR_WRITING_FILE_MESSAGE, e);
+    } catch (UnexpectedException e) {
+      throw new UnexpectedException(ERROR_WRITING_FILE_MESSAGE);
     }
   }
 
@@ -189,8 +190,8 @@ public class ChaosGameFileHandler {
       transformationType = line.substring(commaIndex + 2);
     } catch (IOException e) {
       throw new IOException(FILE_NOT_FOUND_MESSAGE, e);
-    } catch (Exception e) {
-      throw new Exception(ERROR_READING_FILE_MESSAGE, e);
+    } catch (UnexpectedException e) {
+      throw new UnexpectedException(ERROR_READING_FILE_MESSAGE);
     }
 
     return transformationType;
@@ -208,8 +209,8 @@ public class ChaosGameFileHandler {
       writer.write(line);
     } catch (IOException e) {
       throw new IOException(FILE_NOT_FOUND_MESSAGE, e);
-    } catch (Exception e) {
-      throw new Exception(ERROR_WRITING_FILE_MESSAGE, e);
+    } catch (UnexpectedException e) {
+      throw new UnexpectedException(ERROR_WRITING_FILE_MESSAGE);
     }
   }
 
@@ -229,8 +230,8 @@ public class ChaosGameFileHandler {
       }
     } catch (IOException e) {
       throw new IOException(FILE_NOT_FOUND_MESSAGE, e);
-    } catch (Exception e) {
-      throw new Exception(ERROR_READING_FILE_MESSAGE, e);
+    } catch (UnexpectedException e) {
+      throw new UnexpectedException(ERROR_READING_FILE_MESSAGE);
     }
 
     return flag;
