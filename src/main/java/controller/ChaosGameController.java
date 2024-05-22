@@ -98,10 +98,11 @@ public class ChaosGameController {
    * @param coordGrid            the GridPane containing the coordinate values
    * @param steps                the number of steps to run the chaos game
    * @return ChaosGame the ChaosGame object created based on the selected transformation
-   * @throws Exception if an error occurs
+   * @throws IOException if an error occurs
+   * @throws UnexpectedException if an unexpected error occurs
    */
   public ChaosGame handleTransformationSelection(ToggleGroup transformationsGroup,
-      GridPane affineGrid, GridPane juliaGrid, GridPane coordGrid, int steps) throws Exception {
+      GridPane affineGrid, GridPane juliaGrid, GridPane coordGrid, int steps) throws IOException, UnexpectedException {
     ChaosGame chaosGame;
     ChaosGameDescription description = null;
 
@@ -155,10 +156,11 @@ public class ChaosGameController {
    * @param minCoords the minimum coordinates of the chaos game
    * @param maxCoords the maximum coordinates of the chaos game
    * @return the ChaosGameDescription object created based on the selected transformation
-   * @throws Exception if an error occurs
+   * @throws IOException if an error occurs
+   * @throws UnexpectedException if an unexpected error occurs
    */
   private ChaosGameDescription createChaosGameDescription(RadioButton selectedButton, GridPane
-      affineGrid, GridPane juliaGrid, Vector2D minCoords, Vector2D maxCoords) throws Exception {
+      affineGrid, GridPane juliaGrid, Vector2D minCoords, Vector2D maxCoords) throws IOException {
     ChaosGameDescription description = null;
     Complex c;
 
@@ -204,10 +206,11 @@ public class ChaosGameController {
    * @param juliaGrid the GridPane containing the Julia transformation values
    * @param steps the number of steps to run the chaos game
    * @return ChaosGame the ChaosGame object created based on the selected transformation
-   * @throws Exception if an error occurs
+   * @throws IOException if an error occurs
+   * @throws UnexpectedException if an unexpected error occurs
    */
   private ChaosGame createChaosGame(RadioButton selectedButton, ChaosGameDescription description,
-      GridPane juliaGrid, int steps) throws Exception {
+      GridPane juliaGrid, int steps) throws IOException, UnexpectedException {
     ChaosGame chaosGame;
     String transformation = selectedButton.getText();
     boolean isBarnsley = transformation.equals("Barnsley");
@@ -245,9 +248,10 @@ public class ChaosGameController {
    * Checks if the file contains a Mandelbrot description.
    *
    * @return boolean true if the file contains a Mandelbrot description, false otherwise
-   * @throws Exception if an error occurs
+   * @throws IOException if an error occurs
+   * @throws UnexpectedException if an unexpected error occurs
    */
-  public boolean checkForMandelbrot() throws Exception {
+  public boolean checkForMandelbrot() throws IOException, UnexpectedException {
     boolean flag;
     try {
       flag = fileHandler.checkForMandelbrot();
@@ -263,9 +267,10 @@ public class ChaosGameController {
    * Reads a ChaosGameDescription object from a file.
    *
    * @return ChaosGameDescription the ChaosGameDescription object read from the file
-   * @throws Exception if an error occurs
+   * @throws IOException if an error occurs
+   * @throws UnexpectedException if an unexpected error occurs
    */
-  public ChaosGameDescription readFromFile() throws Exception {
+  public ChaosGameDescription readFromFile() throws IOException, FileEmptyException, UnexpectedException {
     ChaosGameDescription chaosGameDescription;
     try {
       chaosGameDescription = fileHandler.readFromFile();
@@ -283,9 +288,10 @@ public class ChaosGameController {
    * Reads the transformation type from a file.
    *
    * @return String the transformation type read from the file
-   * @throws Exception if an error occurs
+   * @throws IOException if an error occurs
+   * @throws UnexpectedException if an unexpected error occurs
    */
-  public String readTransformationType() throws Exception {
+  public String readTransformationType() throws IOException, UnexpectedException {
     String transformationType;
     try {
       transformationType = fileHandler.readTransformationType();
@@ -302,10 +308,11 @@ public class ChaosGameController {
    *
    * @param description the ChaosGameDescription object to write to the file
    * @param transformationType the transformation type to write to the file
-   * @throws Exception if an error occurs
+   * @throws IOException if an error occurs
+   * @throws UnexpectedException if an unexpected error occurs
    */
   public void writeToFile(ChaosGameDescription description,
-      String transformationType) throws Exception {
+      String transformationType) throws IOException, UnexpectedException {
     try {
       fileHandler.writeToFile(description, transformationType);
     } catch (IOException e) {
@@ -319,9 +326,10 @@ public class ChaosGameController {
    * Writes a line to a file.
    *
    * @param line the line to write to the file
-   * @throws Exception if an error occurs
+   * @throws IOException if an error occurs
+   * @throws UnexpectedException if an unexpected error occurs
    */
-  public void writeLineToFile(String line) throws Exception {
+  public void writeLineToFile(String line) throws IOException, UnexpectedException {
     try {
       fileHandler.writeLineToFile(line);
     } catch (IOException e) {
@@ -336,9 +344,10 @@ public class ChaosGameController {
    * Saves the application settings to a file.
    *
    * @param appSettings the application settings to save
-   * @throws Exception if an error occurs
+   * @throws IOException if an error occurs
+   * @throws UnexpectedException if an unexpected error occurs
    */
-  public void saveSettings(Properties appSettings) throws Exception {
+  public void saveSettings(Properties appSettings) throws IOException, UnexpectedException {
     try {
       settingsHandler.saveSettings(appSettings);
     } catch (IOException e) {
@@ -352,9 +361,11 @@ public class ChaosGameController {
    * Loads the application settings from a file.
    *
    * @return Properties the application settings loaded from the file
-   * @throws Exception if an error occurs
+   * @throws IOException if an error occurs
+   * @throws FileEmptyException if the file is empty
+   * @throws UnexpectedException if an unexpected error occurs
    */
-  public Properties loadSettings() throws Exception {
+  public Properties loadSettings() throws IOException, FileEmptyException, UnexpectedException {
     Properties appProperties;
     try {
       appProperties = settingsHandler.loadSettings();
