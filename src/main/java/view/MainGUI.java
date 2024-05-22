@@ -208,9 +208,20 @@ public class MainGUI extends Application {
    */
   public void configureIterativeTransformationButton() {
     iterativeTransformationButton = layout.createIterativeTransformationButton();
-    iterativeTransformationButton.setOnAction(event
-        -> handleActionController.handleIterativeTransformation(transformationsGroup, affineGrid,
-        juliaGrid, coordGrid, stepsSlider.getValue(), fractalCanvas, colorModeCheckbox));
+    iterativeTransformationButton.setOnAction(event -> {
+      handleActionController.resetFieldsToDefaultStyle(affineGrid, juliaGrid,
+          affineBox);  // Reset all fields to default style
+      boolean allFieldsValid = validationController.isAllFieldsValid(juliaGrid,
+          transformationsGroup, affineGrid, coordGrid);
+      missingInputMessage.setVisible(!allFieldsValid);
+
+      // Proceed only if all fields are valid
+      if (allFieldsValid) {
+        handleActionController.resetFieldsToDefaultStyle(affineGrid, juliaGrid, affineBox);
+        handleActionController.handleIterativeTransformation(transformationsGroup, affineGrid,
+            juliaGrid, coordGrid, stepsSlider.getValue(), fractalCanvas, colorModeCheckbox);
+      }
+    });
   }
 
   /**
