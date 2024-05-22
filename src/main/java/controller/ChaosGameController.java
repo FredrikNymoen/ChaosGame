@@ -162,7 +162,8 @@ public class ChaosGameController {
    * @throws UnexpectedException if an unexpected error occurs
    */
   private ChaosGameDescription createChaosGameDescription(RadioButton selectedButton, GridPane
-      affineGrid, GridPane juliaGrid, Vector2D minCoords, Vector2D maxCoords) throws IOException {
+      affineGrid, GridPane juliaGrid, Vector2D minCoords, Vector2D maxCoords)
+      throws IOException, UnexpectedException {
     ChaosGameDescription description = null;
     Complex c;
 

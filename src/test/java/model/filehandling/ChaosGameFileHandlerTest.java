@@ -1,6 +1,9 @@
 package model.filehandling;
 
 import exception.UnexpectedException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.chaosgame.ChaosGameDescription;
 import model.mathcore.Complex;
 import model.mathcore.Matrix2x2;
@@ -8,6 +11,7 @@ import model.mathcore.Vector2D;
 import model.transformations.AffineTransform2D;
 import model.transformations.JuliaTransform;
 import model.transformations.Transform2D;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -30,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class ChaosGameFileHandlerTest {
 
+    private final Logger logger = Logger.getLogger(SettingsHandlerTest.class.getName());
     private ChaosGameFileHandler fileHandler;
     private ChaosGameDescription description;
     private Path tempFile;
@@ -55,6 +60,18 @@ class ChaosGameFileHandlerTest {
         transforms.add(new AffineTransform2D(matrix, vector));
 
         description = new ChaosGameDescription(transforms, minCoords, maxCoords);
+    }
+
+    /**
+        * Deletes the temporary file after each test.
+     */
+    @AfterEach
+    void tearDown() {
+        try {
+            Files.deleteIfExists(tempFile);
+        } catch (IOException e) {
+            logger.log(Level.WARNING, "Failed to delete temporary file: " + tempFile.toString(), e);
+        }
     }
 
     /**

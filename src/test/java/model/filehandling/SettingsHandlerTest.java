@@ -8,6 +8,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +24,8 @@ import org.junit.jupiter.api.Test;
 class SettingsHandlerTest {
   private SettingsHandler settingsHandler;
   private File tempFile;
+  private final Logger logger = Logger.getLogger(SettingsHandlerTest.class.getName());
+
 
   /**
    * Sets up a temporary file for testing, before each test.
@@ -37,7 +41,11 @@ class SettingsHandlerTest {
    */
   @AfterEach
   void tearDown() {
-
+    if (tempFile != null && tempFile.exists()) {
+      if (!tempFile.delete()) {
+        logger.log(Level.WARNING, "Failed to delete temporary file: " + tempFile.getAbsolutePath());
+      }
+    }
   }
 
   /**
