@@ -1,9 +1,12 @@
 package model.filehandling;
 
+import exception.UnexpectedException;
 import model.chaosgame.ChaosGameDescription;
+import model.mathcore.Complex;
 import model.mathcore.Matrix2x2;
 import model.mathcore.Vector2D;
 import model.transformations.AffineTransform2D;
+import model.transformations.JuliaTransform;
 import model.transformations.Transform2D;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -97,5 +100,83 @@ class ChaosGameFileHandlerTest {
         assertEquals(description.getMaxCoords().getX1(), readDescription.getMaxCoords().getX1(), "MaxCoords X1 should be equal");
 
         assertEquals(description.getTransforms().size(), readDescription.getTransforms().size(), "Number of transforms should be equal");
+    }
+
+    /**
+     * Tests handling of an unsupported transformation type.
+     */
+    @Test
+    void testReadUnsupportedTransformationType() throws Exception {
+        Files.write(tempFile, "Unsupported, Type\n0, 0\n10, 10\n".getBytes());
+
+        ChaosGameFileHandler readFileHandler = new ChaosGameFileHandler(tempFile.toString());
+
+        assertThrows(UnexpectedException.class, readFileHandler::readFromFile);
+    }
+
+    /**
+     * Tests writing and reading a Julia transformation.
+     */
+    @Test
+    void testWriteAndReadJuliaTransformation() throws Exception {
+        List<Transform2D> transforms = new ArrayList<>();
+        transforms.add(new JuliaTransform(new Complex(0.355, 0.355), 1));
+        ChaosGameDescription juliaDescription = new ChaosGameDescription(transforms, new Vector2D(0, 0), new Vector2D(10, 10));
+
+        fileHandler.writeToFile(juliaDescription, "Julia");
+
+        ChaosGameFileHandler readFileHandler = new ChaosGameFileHandler(tempFile.toString());
+        ChaosGameDescription readDescription = readFileHandler.readFromFile();
+        assertNotNull(readDescription, "readFromFile should return a non-null description");
+
+        assertEquals(juliaDescription.getTransforms().size(), readDescription.getTransforms().size(), "Number of transforms should be equal");
+    }
+
+    /**
+     * Tests the readTransformationType method of the model.filehandling.ChaosGameFileHandler class.
+     * It writes a transformation type to a file and then reads it back.
+     */
+    @Test
+    void testReadTransformationType() throws Exception {
+        Files.write(tempFile, "Affine2D, TransformationType\n0, 0\n10, 10\n".getBytes());
+
+        ChaosGameFileHandler readFileHandler = new ChaosGameFileHandler(tempFile.toString());
+        String transformationType = readFileHandler.readTransformationType();
+        assertEquals("TransformationType", transformationType, "Transformation type should be 'TransformationType'");
+    }
+
+    /**
+     * Tests the writeLineToFile method of the model.filehandling.ChaosGameFileHandler class.
+     * It writes a line to a file and then checks if the line is present in the file.
+     */
+    @Test
+    void testWriteLineToFile() throws Exception {
+        fileHandler.writeLineToFile("Test Line");
+
+        List<String> lines = Files.readAllLines(tempFile);
+        assertTrue(lines.contains("Test Line"), "File should contain 'Test Line'");
+    }
+
+    /**
+     * Tests the checkForMandelbrot method of the model.filehandling.ChaosGameFileHandler class.
+     * It writes a Mandelbrot configuration to a file and then checks if the file contains a Mandelbrot configuration.
+     */
+    @Test
+    void testCheckForMandelbrot() throws Exception {
+        Files.write(tempFile, "Mandelbrot\n".getBytes());
+
+        ChaosGameFileHandler readFileHandler = new ChaosGameFileHandler(tempFile.toString());
+        assertTrue(readFileHandler.checkForMandelbrot(), "File should contain 'Mandelbrot'");
+    }
+
+    /**
+     * Tests checkForMandelbrot method with a file that does not contain a Mandelbrot configuration.
+     */
+    @Test
+    void testCheckForMandelbrotFalse() throws Exception {
+        Files.write(tempFile, "Affine2D\n0, 0\n10, 10\n".getBytes());
+
+        ChaosGameFileHandler readFileHandler = new ChaosGameFileHandler(tempFile.toString());
+        assertFalse(readFileHandler.checkForMandelbrot(), "File should not contain 'Mandelbrot'");
     }
 }

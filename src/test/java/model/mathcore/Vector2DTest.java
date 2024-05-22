@@ -2,15 +2,17 @@ package model.mathcore;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 /**
  * Test class for model.mathcore.Vector2D
  *
- * @author Amund Larsen & Fredrik Nymoen
- *
  * @version v.1.0.0
  *
+ * @author Amund Larsen & Fredrik Nymoen
+ *
  */
-
 class Vector2DTest {
 
   private Vector2D vector;
@@ -18,8 +20,7 @@ class Vector2DTest {
   /**
    * Sets up a vector for testing, before each test.
    */
-
-  @org.junit.jupiter.api.BeforeEach
+  @BeforeEach
   void setUp() {
     vector = new Vector2D(1, 2);
   }
@@ -27,8 +28,7 @@ class Vector2DTest {
   /**
    * Tests the getX0 method in the model.mathcore.Vector2D class.
    */
-
-  @org.junit.jupiter.api.Test
+  @Test
   void getX0Positive() {
     assertEquals(1, vector.getX0(), 0.0001, "The result should be 1");
   }
@@ -36,8 +36,7 @@ class Vector2DTest {
   /**
    * Tests the getX1 method in the model.mathcore.Vector2D class.
    */
-
-  @org.junit.jupiter.api.Test
+  @Test
   void getX1Positive() {
     assertEquals(2, vector.getX1(), 0.0001, "The result should be 2");
   }
@@ -47,8 +46,7 @@ class Vector2DTest {
    * The test makes an additional vector and adds it to the original vector.
    * Then it checks if the result is as expected. For both X0 and X1.
    */
-
-  @org.junit.jupiter.api.Test
+  @Test
   void addPositive() {
     Vector2D other = new Vector2D(3, 4);
     Vector2D result = vector.add(other);
@@ -61,13 +59,12 @@ class Vector2DTest {
    * The test makes an additional vector and adds it to the original vector.
    * Then it checks if the result is not as expected. For both X0 and X1.
    */
-
-  @org.junit.jupiter.api.Test
+  @Test
   void addNegative() {
     Vector2D other = new Vector2D(1, 2);
     Vector2D result = vector.add(other);
-    assertNotEquals(4, result.getX0(),0.0001, "The result should not be 4");
-    assertNotEquals(6, result.getX1(),0.0001, "The result should not be 6");
+    assertNotEquals(4, result.getX0(), 0.0001, "The result should not be 4");
+    assertNotEquals(6, result.getX1(), 0.0001, "The result should not be 6");
   }
 
   /**
@@ -75,8 +72,7 @@ class Vector2DTest {
    * The test makes an additional vector and subtracts it from the original vector.
    * Then it checks if the result is as expected. For both X0 and X1.
    */
-
-  @org.junit.jupiter.api.Test
+  @Test
   void subtractPositive() {
     Vector2D other = new Vector2D(3, 4);
     Vector2D result = vector.subtract(other);
@@ -89,12 +85,22 @@ class Vector2DTest {
    * The test makes an additional vector and subtracts it from the original vector.
    * Then it checks if the result is not as expected. For both X0 and X1.
    */
-
-  @org.junit.jupiter.api.Test
+  @Test
   void subtractNegative() {
     Vector2D other = new Vector2D(1, 2);
     Vector2D result = vector.subtract(other);
     assertNotEquals(-2, result.getX0(), 0.0001, "The result should not be -2");
     assertNotEquals(-2, result.getX1(), 0.0001, "The result should not be -2");
+  }
+
+  /**
+   * Tests the constructor of the model.mathcore.Vector2D class.
+   * The test creates a new vector and checks if the coordinates are as expected.
+   */
+  @Test
+  void testConstructor() {
+    Vector2D vector = new Vector2D(5, 6);
+    assertEquals(5, vector.getX0(), 0.0001, "The x0 value should be 5");
+    assertEquals(6, vector.getX1(), 0.0001, "The x1 value should be 6");
   }
 }
