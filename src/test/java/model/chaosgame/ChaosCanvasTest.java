@@ -9,6 +9,9 @@ import org.junit.jupiter.api.Test;
  * Test class for the ChaosCanvas class.
  * This class tests the various methods of the ChaosCanvas class.
  * It also tests the clear method and the boundaries of the canvas.
+ *
+ * @author Fredrik Nymoen & Amund Larsen
+ * @version v1.0.0
  */
 class ChaosCanvasTest {
 

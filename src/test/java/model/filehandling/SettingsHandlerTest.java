@@ -15,8 +15,9 @@ import org.junit.jupiter.api.Test;
 /**
  * Test class for the SettingsHandler class.
  * This class tests the loadSettings and saveSettings methods of the SettingsHandler class.
- * author Fredrik Nymoen & Amund Larsen
- * version v1.0.0
+ *
+ * @author Fredrik Nymoen & Amund Larsen
+ * @version v1.0.0
  */
 class SettingsHandlerTest {
   private SettingsHandler settingsHandler;

@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * Test class for ErrorHandling.
  * This class tests the logging functionality of the ErrorHandling class.
+ *
  * @author Amund Larsen & Fredrik Nymoen
  * @version v1.0.0
  */

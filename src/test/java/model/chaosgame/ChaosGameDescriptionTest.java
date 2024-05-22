@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test class for the ChaosGameDescription class.
- * This class tests the getTransforms, getMinCoords and getMaxCoords methods of the ChaosGameDescription class.
  *
  * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0

@@ -8,10 +8,8 @@ import org.junit.jupiter.api.Test;
 /**
  * Test class for Vector2D
  *
- * @version v.1.0.0
- *
  * @author Amund Larsen & Fredrik Nymoen
- *
+ * @version v.1.0.0
  */
 class Vector2DTest {
 

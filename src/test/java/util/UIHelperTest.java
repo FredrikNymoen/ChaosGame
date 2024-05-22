@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Test class for UIHelper.
  * This class tests the utility methods for interacting with GridPane and TextField elements.
+ *
  * @author Amund Larsen & Fredrik Nymoen
  * @version v1.0.0
  */

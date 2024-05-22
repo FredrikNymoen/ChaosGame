@@ -8,10 +8,8 @@ import org.junit.jupiter.api.Test;
 /**
  * Test class for Matrix2x2
  *
- * @version v.1.0.0
- *
  * @author Amund Larsen & Fredrik Nymoen
- *
+ * @version v1.0.0
  */
 class Matrix2x2Test {
 

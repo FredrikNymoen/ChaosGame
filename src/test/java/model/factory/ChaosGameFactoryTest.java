@@ -12,6 +12,7 @@ import util.Utility;
 import static org.junit.jupiter.api.Assertions.*;
 /**
  * Test class for the ChaosGameFactoryTest class.
+ *
  * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0
  */

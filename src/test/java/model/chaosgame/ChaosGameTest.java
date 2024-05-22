@@ -13,6 +13,9 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Test class for the ChaosGame class.
  * This class tests the creation of a ChaosGame and the runSteps method.
+ *
+ * @author Fredrik Nymoen & Amund Larsen
+ * @version v1.0.0
  */
 class ChaosGameTest {
 

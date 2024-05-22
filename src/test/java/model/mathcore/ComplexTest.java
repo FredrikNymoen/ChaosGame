@@ -10,9 +10,8 @@ import java.util.List;
 /**
  * Test class for Complex
  *
- * @version v.1.0.0
- *
  * @author Amund Larsen & Fredrik Nymoen
+ * @version v1.0.0
  */
 class ComplexTest {
 

@@ -16,6 +16,7 @@ import model.transformations.Transform2D;
 /**
  * Test class for the ChaosGameDescriptionFactory class.
  * This class tests the methods of the ChaosGameDescriptionFactory class.
+ *
  * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0
  */
