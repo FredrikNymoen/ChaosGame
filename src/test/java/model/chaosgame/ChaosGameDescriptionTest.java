@@ -23,7 +23,7 @@ class ChaosGameDescriptionTest {
     private Vector2D maxCoords;
 
     /**
-     * Sets up the model.chaosgame.ChaosGameDescription with a list of transformations, min and max coordinates.
+     * Sets up the ChaosGameDescription with a list of transformations, min and max coordinates.
      * This method is called before each test.
      */
 
@@ -37,7 +37,7 @@ class ChaosGameDescriptionTest {
         description = new ChaosGameDescription(transforms, minCoords, maxCoords);
     }
     /**
-     * Tests the model.chaosgame.ChaosGameDescription creation with a positive test case.
+     * Tests the ChaosGameDescription creation with a positive test case.
      * It checks if the transforms returns the correct list of transformations.
      */
 

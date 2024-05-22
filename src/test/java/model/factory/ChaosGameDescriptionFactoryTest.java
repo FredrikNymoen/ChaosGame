@@ -13,11 +13,22 @@ import org.junit.jupiter.api.Test;
 import model.transformations.AffineTransform2D;
 import model.transformations.Transform2D;
 
+/**
+ * Test class for the ChaosGameDescriptionFactory class.
+ * This class tests the methods of the ChaosGameDescriptionFactory class.
+ * @author Fredrik Nymoen & Amund Larsen
+ * @version v1.0.0
+ */
+
 class ChaosGameDescriptionFactoryTest {
 
 private ChaosGameDescriptionFactory factory;
 private Vector2D minCoordsVector;
 private Vector2D maxCoordsVector;
+
+  /**
+   * Sets up the ChaosGameDescriptionFactory and the min and max coordinates vectors before each test.
+   */
 
     @BeforeEach
     public void setUp() {
@@ -26,6 +37,10 @@ private Vector2D maxCoordsVector;
       maxCoordsVector = new Vector2D(1, 1);
     }
 
+  /**
+   * Tests the sierpinski method in the ChaosGameDescriptionFactory class.
+   * Verifies that the ChaosGameDescription object is not null and that the transformations are as expected.
+   */
   @Test
   void testSierpinski() {
     ChaosGameDescription description = factory.sierpinski(minCoordsVector, maxCoordsVector);
@@ -41,29 +56,43 @@ private Vector2D maxCoordsVector;
     assertEquals(expectedTransformations.size(), actualTransformations.size());
     }
 
-    @Test
+  /**
+   * Tests the barnsley method in the ChaosGameDescriptionFactory class.
+   * Verifies that the ChaosGameDescription object is not null.
+   */
+
+  @Test
     void testBarnsley() {
       ChaosGameDescription description = factory.barnsley(minCoordsVector, maxCoordsVector);
       assertNotNull(description);
-      // Further assertions depend on the behavior of your ChaosGameDescription class
     }
 
-    @Test
+  /**
+   * Tests the mapleTree method in the ChaosGameDescriptionFactory class.
+   * Verifies that the ChaosGameDescription object is not null.
+   */
+  @Test
     void testMapleTree(){
       ChaosGameDescription description = factory.mapleTree(minCoordsVector, maxCoordsVector);
       assertNotNull(description);
-      // Further assertions depend on the behavior of your ChaosGameDescription class
     }
 
-    @Test
+  /**
+   * Tests the julia method in the ChaosGameDescriptionFactory class.
+   * Verifies that the ChaosGameDescription object is not null.
+   */
+  @Test
     void testJulia() {
       Complex c = new Complex(0.285, 0.01);
       ChaosGameDescription description = factory.julia(minCoordsVector, maxCoordsVector, c);
       assertNotNull(description);
-      // Further assertions depend on the behavior of your ChaosGameDescription class
     }
 
-    @Test
+  /**
+   * Tests the affine method in the ChaosGameDescriptionFactory class.
+   */
+
+  @Test
     void testAffine() {
       Matrix2x2 matrix = new Matrix2x2(1, 2, 3, 4);
       Vector2D vector = new Vector2D(5, 6);
@@ -72,7 +101,6 @@ private Vector2D maxCoordsVector;
       ChaosGameDescription description = factory.affine(matrices, vectors, minCoordsVector,
           maxCoordsVector);
       assertNotNull(description);
-      // Further assertions depend on the behavior of your ChaosGameDescription class
     }
 
   }

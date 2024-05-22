@@ -22,8 +22,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test class for the model.filehandling.ChaosGameFileHandler class.
- * This class tests the writeToFile and readFromFile methods of the model.filehandling.ChaosGameFileHandler class.
+ * Test class for the ChaosGameFileHandler class.
+ * This class tests the writeToFile and readFromFile methods of the ChaosGameFileHandler class.
  * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0
  */
@@ -34,7 +34,7 @@ class ChaosGameFileHandlerTest {
     private Path tempFile;
 
     /**
-     * Sets up the model.filehandling.ChaosGameFileHandler with a temporary directory.
+     * Sets up the ChaosGameFileHandler with a temporary directory.
      * It writes an affine transformation to a file and then reads it back from the file.
      * This method is called before each test.
      *
@@ -57,8 +57,8 @@ class ChaosGameFileHandlerTest {
     }
 
     /**
-     * Tests the writeToFile and readFromFile methods of the model.filehandling.ChaosGameFileHandler class with a positive test case.
-     * It writes a model.chaosgame.ChaosGameDescription to a file and then reads it back from the file.
+     * Tests the writeToFile and readFromFile methods of the ChaosGameFileHandler class with a positive test case.
+     * It writes a ChaosGameDescription to a file and then reads it back from the file.
      */
     @Test
     void testWriteAndReadNotNull() throws Exception {
@@ -79,8 +79,8 @@ class ChaosGameFileHandlerTest {
     }
 
     /**
-     * Tests the writeToFile and readFromFile methods of the model.filehandling.ChaosGameFileHandler class.
-     * It writes a model.chaosgame.ChaosGameDescription to a file and then reads it back from the file.
+     * Tests the writeToFile and readFromFile methods of the ChaosGameFileHandler class.
+     * It writes a ChaosGameDescription to a file and then reads it back from the file.
      * It then checks if the minCoords, maxCoords and transforms are equal.
      */
     @Test
@@ -133,7 +133,7 @@ class ChaosGameFileHandlerTest {
     }
 
     /**
-     * Tests the readTransformationType method of the model.filehandling.ChaosGameFileHandler class.
+     * Tests the readTransformationType method of the ChaosGameFileHandler class.
      * It writes a transformation type to a file and then reads it back.
      */
     @Test
@@ -146,7 +146,7 @@ class ChaosGameFileHandlerTest {
     }
 
     /**
-     * Tests the writeLineToFile method of the model.filehandling.ChaosGameFileHandler class.
+     * Tests the writeLineToFile method of the ChaosGameFileHandler class.
      * It writes a line to a file and then checks if the line is present in the file.
      */
     @Test
@@ -158,7 +158,7 @@ class ChaosGameFileHandlerTest {
     }
 
     /**
-     * Tests the checkForMandelbrot method of the model.filehandling.ChaosGameFileHandler class.
+     * Tests the checkForMandelbrot method of the ChaosGameFileHandler class.
      * It writes a Mandelbrot configuration to a file and then checks if the file contains a Mandelbrot configuration.
      */
     @Test

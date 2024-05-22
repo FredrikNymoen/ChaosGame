@@ -10,17 +10,33 @@ import org.junit.jupiter.api.Test;
 import util.Utility;
 
 import static org.junit.jupiter.api.Assertions.*;
+/**
+ * Test class for the ChaosGameFactoryTest class.
+ * @author Fredrik Nymoen & Amund Larsen
+ * @version v1.0.0
+ */
 
 class ChaosGameFactoryTest {
 
   private ChaosGameFactory chaosGameFactory;
   ChaosGameDescriptionFactory chaosGameDescriptionFactory;
 
+  /**
+   * Sets up the ChaosGameFactory and the ChaosGameDescriptionFactory before each test.
+   * This method is run before each test.
+   */
+
   @BeforeEach
   public void setUp() {
     chaosGameFactory = new ChaosGameFactory();
     chaosGameDescriptionFactory = new ChaosGameDescriptionFactory();
   }
+
+  /**
+   * Tests the createChaosGame method in the ChaosGameFactory class.
+   * Verifies that the ChaosGame object is not null and that the canvas is as expected.
+   * This method tests the creation of a Sierpinski triangle.
+   */
 
   @Test
   void testCreateChaosGame() {
@@ -36,8 +52,13 @@ class ChaosGameFactoryTest {
 
     assertEquals(width, chaosGame.getCanvas().getCanvasArray()[0].length);
     assertEquals(height, chaosGame.getCanvas().getCanvasArray().length);
-    // Additional assertions based on the expected state of chaosGame after creation
   }
+
+  /**
+   * Tests the createJuliaChaosGame method in the ChaosGameFactory class.
+   * Verifies that the ChaosGame object is not null and that the canvas is as expected.
+   * This method tests the creation of a Julia set.
+   */
 
   @Test
   void testCreateJuliaChaosGameWithConvergenceMode() {
@@ -50,8 +71,13 @@ class ChaosGameFactoryTest {
     assertNotNull(canvas);
     assertEquals(Utility.CHAOS_GAME_WIDTH, canvas.getCanvasArray()[0].length);
     assertEquals(Utility.CHAOS_GAME_HEIGHT, canvas.getCanvasArray().length);
-    // Additional assertions based on the expected state of canvas after creation
   }
+
+  /**
+   * Tests the createJuliaChaosGame method in the ChaosGameFactory class.
+   * Verifies that the ChaosGame object is not null and that the canvas is as expected.
+   * This method tests the creation of a Julia set.
+   */
 
   @Test
   void testCreateMandelbrotChaosGame() {
