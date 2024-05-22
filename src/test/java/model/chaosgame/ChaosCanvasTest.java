@@ -29,7 +29,7 @@ class ChaosCanvasTest {
     }
 
     /**
-     * Tests the putPixel and getPixel methods of the model.chaosgame.ChaosCanvas class with a positive test
+     * Tests the putPixel and getPixel methods of the ChaosCanvas class with a positive test
      * case. It creates a point within the canvas, puts a pixel on that point and then checks if the
      * pixel is set to 1.
      */
@@ -42,7 +42,7 @@ class ChaosCanvasTest {
     }
 
     /**
-     * Tests the putPixel and getPixel methods of the model.chaosgame.ChaosCanvas class with a negative test
+     * Tests the putPixel and getPixel methods of the ChaosCanvas class with a negative test
      * case. It creates a point within the canvas, puts a pixel on that point and then checks if the
      * pixel is set to 0.
      */
@@ -55,7 +55,7 @@ class ChaosCanvasTest {
     }
 
     /**
-     * Tests the clear method of the model.chaosgame.ChaosCanvas class with a positive test case. It creates
+     * Tests the clear method of the ChaosCanvas class with a positive test case. It creates
      * a point within the canvas, puts a pixel on that point and then clears the canvas. It then
      * checks if all the pixels are set to 0.
      */
@@ -73,7 +73,7 @@ class ChaosCanvasTest {
     }
 
     /**
-     * Tests the clear method of the model.chaosgame.ChaosCanvas class with a negative test case. It creates
+     * Tests the clear method of the ChaosCanvas class with a negative test case. It creates
      * a point within the canvas, puts a pixel on that point and then clears the canvas. It then
      * checks if all the pixels are set to 0.
      */
@@ -107,7 +107,7 @@ class ChaosCanvasTest {
 
 
     /**
-     * Tests the checkIfCoordAsPixelIsOutsideCanvas method of the model.chaosgame.ChaosCanvas class
+     * Tests the checkIfCoordAsPixelIsOutsideCanvas method of the ChaosCanvas class
      * with a point that is outside the canvas.
      */
     @Test
@@ -118,7 +118,7 @@ class ChaosCanvasTest {
     }
 
     /**
-     * Tests the checkIfCoordAsPixelIsOutsideCanvas method of the model.chaosgame.ChaosCanvas class
+     * Tests the checkIfCoordAsPixelIsOutsideCanvas method of the ChaosCanvas class
      * with a point that is inside the canvas.
      */
     @Test

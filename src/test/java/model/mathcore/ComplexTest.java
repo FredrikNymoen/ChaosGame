@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 /**
- * Test class for model.mathcore.Complex
+ * Test class for Complex
  *
  * @version v.1.0.0
  *

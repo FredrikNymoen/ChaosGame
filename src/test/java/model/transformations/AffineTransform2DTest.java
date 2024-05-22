@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test class for the model.transformations.AffineTransform2D class.
- * This class tests the constructor, transform method, and the getters of the model.transformations.AffineTransform2D class.
+ * Test class for the AffineTransform2D class.
+ * This class tests the constructor, transform method, and the getters of the AffineTransform2D class.
  * @author Amund Larsen & Fredrik Nymoen
  * @version v1.0.0
  */

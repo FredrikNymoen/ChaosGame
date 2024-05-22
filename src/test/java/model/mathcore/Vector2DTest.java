@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Test class for model.mathcore.Vector2D
+ * Test class for Vector2D
  *
  * @version v.1.0.0
  *
