@@ -115,7 +115,7 @@ class ChaosGameTest {
         ChaosGameDescription barnsleyDescription = new ChaosGameDescription(barnsleyTransforms, minCoords, maxCoords);
         game = new ChaosGame(barnsleyDescription, width, height);
 
-        game.runStepsForBarnsley(100);
+        game.runStepsForBarnsley(100000);
         int[][] canvasArray = game.getCanvas().getCanvasArray();
         boolean pixelSet = false;
         for (int[] row : canvasArray) {
