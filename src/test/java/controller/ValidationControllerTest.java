@@ -21,9 +21,10 @@ import static org.junit.jupiter.api.Assertions.*;
  * This class contains unit tests for the ValidationController class methods.
  * It verifies the functionality of validating user input in the Chaos Game application.
  *
+ * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0
  */
-public class ValidationControllerTest {
+class ValidationControllerTest {
 
   private ValidationController validationController;
 
@@ -297,10 +298,6 @@ public class ValidationControllerTest {
     RadioButton juliaButton = new RadioButton("Julia");
     transformationsGroup.getToggles().addAll(affineButton, juliaButton);
 
-    if ("Affine".equals("Affine")) {
-      transformationsGroup.selectToggle(affineButton);
-    } else if ("Julia".equals("Affine")) {
-      transformationsGroup.selectToggle(juliaButton);
-    }
+    transformationsGroup.selectToggle(affineButton);
   }
 }

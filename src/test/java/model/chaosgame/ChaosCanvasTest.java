@@ -6,8 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Test class for the model.chaosgame.ChaosCanvas class.
- * This class tests the various methods of the model.chaosgame.ChaosCanvas class.
+ * Test class for the ChaosCanvas class.
+ * This class tests the various methods of the ChaosCanvas class.
  * It also tests the clear method and the boundaries of the canvas.
  */
 class ChaosCanvasTest {

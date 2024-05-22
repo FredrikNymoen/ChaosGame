@@ -11,8 +11,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test class for the model.chaosgame.ChaosGameDescription class.
- * This class tests the getTransforms, getMinCoords and getMaxCoords methods of the model.chaosgame.ChaosGameDescription class.
+ * Test class for the ChaosGameDescription class.
+ * This class tests the getTransforms, getMinCoords and getMaxCoords methods of the ChaosGameDescription class.
+ *
+ * @author Fredrik Nymoen & Amund Larsen
+ * @version v1.0.0
  */
 
 class ChaosGameDescriptionTest {

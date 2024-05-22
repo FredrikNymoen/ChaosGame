@@ -21,9 +21,10 @@ import static org.junit.jupiter.api.Assertions.*;
  * It verifies the functionality of creating and managing Chaos Game objects,
  * handling settings, and reading and writing to files.
  *
+ * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0
  */
-public class ChaosGameControllerTest {
+class ChaosGameControllerTest {
 
   private ChaosGameController chaosGameController;
 
@@ -42,7 +43,7 @@ public class ChaosGameControllerTest {
    * It verifies that the settings are loaded correctly.
    */
   @Test
-  public void testLoadSettings() throws Exception {
+  void testLoadSettings() throws Exception {
     Properties expectedProperties = new Properties();
     expectedProperties.setProperty("key1", "value1");
     expectedProperties.setProperty("key2", "value2");
@@ -61,7 +62,7 @@ public class ChaosGameControllerTest {
    * It verifies that the settings are saved correctly.
    */
   @Test
-  public void testSaveSettings() throws Exception {
+  void testSaveSettings() throws Exception {
     Properties propertiesToSave = new Properties();
     propertiesToSave.setProperty("key1", "value1");
     propertiesToSave.setProperty("key2", "value2");
@@ -81,7 +82,7 @@ public class ChaosGameControllerTest {
    * It verifies that the ChaosGameDescription object is read correctly.
    */
   @Test
-  public void testReadFromFile() throws Exception {
+  void testReadFromFile() throws Exception {
     ChaosGameDescriptionFactory chaosGameDescriptionFactory = new ChaosGameDescriptionFactory();
     ChaosGameDescription expectedDescription = chaosGameDescriptionFactory.mapleTree(new Vector2D(0, 0), new Vector2D(1, 1));
 
@@ -120,7 +121,7 @@ public class ChaosGameControllerTest {
    * It verifies that the transformation type is read correctly.
    */
   @Test
-  public void testReadTransformationType() throws Exception {
+  void testReadTransformationType() throws Exception {
     String expectedType = "barnsley";
     String line = "Affine2d, " + expectedType;
 
@@ -136,7 +137,7 @@ public class ChaosGameControllerTest {
    * It verifies that the ChaosGameDescription is written correctly.
    */
   @Test
-  public void testWriteToFile() throws Exception {
+  void testWriteToFile() throws Exception {
     ChaosGameDescriptionFactory chaosGameDescriptionFactory = new ChaosGameDescriptionFactory();
     ChaosGameDescription description = chaosGameDescriptionFactory.mapleTree(new Vector2D(0, 0), new Vector2D(1, 1));
     String transformationType = "maple-tree";
@@ -153,7 +154,7 @@ public class ChaosGameControllerTest {
    * It verifies that the line is written correctly.
    */
   @Test
-  public void testWriteLineToFile() throws Exception {
+  void testWriteLineToFile() throws Exception {
     String line = "Mandelbrot";
 
     chaosGameController.writeLineToFile(line);
@@ -167,7 +168,7 @@ public class ChaosGameControllerTest {
    * It verifies that the Mandelbrot check is performed correctly.
    */
   @Test
-  public void testCheckForMandelbrot() throws Exception {
+  void testCheckForMandelbrot() throws Exception {
     String line = "Mandelbrot";
 
     chaosGameController.writeLineToFile(line);

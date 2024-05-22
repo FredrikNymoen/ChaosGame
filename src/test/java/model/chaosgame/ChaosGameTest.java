@@ -11,8 +11,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test class for the model.chaosgame.ChaosGame class.
- * This class tests the creation of a model.chaosgame.ChaosGame and the runSteps method.
+ * Test class for the ChaosGame class.
+ * This class tests the creation of a ChaosGame and the runSteps method.
+ *
+ * @author Fredrik Nymoen & Amund Larsen
+ * @version v1.0.0
  */
 class ChaosGameTest {
 
@@ -112,7 +115,7 @@ class ChaosGameTest {
         ChaosGameDescription barnsleyDescription = new ChaosGameDescription(barnsleyTransforms, minCoords, maxCoords);
         game = new ChaosGame(barnsleyDescription, width, height);
 
-        game.runStepsForBarnsley(100);
+        game.runStepsForBarnsley(10000);
         int[][] canvasArray = game.getCanvas().getCanvasArray();
         boolean pixelSet = false;
         for (int[] row : canvasArray) {
