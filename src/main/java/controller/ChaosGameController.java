@@ -26,14 +26,15 @@ import util.UIHelper;
 import util.Utility;
 
 /**
- * ChaosGameController class is used to control the chaos game GUI.
- * The class contains methods to create a chaos game and read- and write to file.
+ * ChaosGameController class is used to control the chaos game GUI. The class contains methods to
+ * create a chaos game and read- and write to file.
  *
  * @author Fredrik Nymoen & Amund Larsen
  * @version v1.0.0
  */
 
 public class ChaosGameController {
+
   private final ChaosGameFactory chaosGameFactory;
   private final ChaosGameDescriptionFactory factory;
   private final SettingsHandler settingsHandler;
@@ -98,11 +99,12 @@ public class ChaosGameController {
    * @param coordGrid            the GridPane containing the coordinate values
    * @param steps                the number of steps to run the chaos game
    * @return ChaosGame the ChaosGame object created based on the selected transformation
-   * @throws IOException if an error occurs
+   * @throws IOException         if an error occurs
    * @throws UnexpectedException if an unexpected error occurs
    */
   public ChaosGame handleTransformationSelection(ToggleGroup transformationsGroup,
-      GridPane affineGrid, GridPane juliaGrid, GridPane coordGrid, int steps) throws IOException, UnexpectedException {
+      GridPane affineGrid, GridPane juliaGrid, GridPane coordGrid, int steps)
+      throws IOException, UnexpectedException {
     ChaosGame chaosGame;
     ChaosGameDescription description = null;
 
@@ -151,12 +153,12 @@ public class ChaosGameController {
    * Creates a ChaosGameDescription object based on the selected transformation.
    *
    * @param selectedButton the selected transformation
-   * @param affineGrid the GridPane containing the affine transformation values
-   * @param juliaGrid the GridPane containing the Julia transformation values
-   * @param minCoords the minimum coordinates of the chaos game
-   * @param maxCoords the maximum coordinates of the chaos game
+   * @param affineGrid     the GridPane containing the affine transformation values
+   * @param juliaGrid      the GridPane containing the Julia transformation values
+   * @param minCoords      the minimum coordinates of the chaos game
+   * @param maxCoords      the maximum coordinates of the chaos game
    * @return the ChaosGameDescription object created based on the selected transformation
-   * @throws IOException if an error occurs
+   * @throws IOException         if an error occurs
    * @throws UnexpectedException if an unexpected error occurs
    */
   private ChaosGameDescription createChaosGameDescription(RadioButton selectedButton, GridPane
@@ -202,11 +204,11 @@ public class ChaosGameController {
    * Creates a ChaosGame object based on the selected transformation.
    *
    * @param selectedButton the selected transformation
-   * @param description the ChaosGameDescription object
-   * @param juliaGrid the GridPane containing the Julia transformation values
-   * @param steps the number of steps to run the chaos game
+   * @param description    the ChaosGameDescription object
+   * @param juliaGrid      the GridPane containing the Julia transformation values
+   * @param steps          the number of steps to run the chaos game
    * @return ChaosGame the ChaosGame object created based on the selected transformation
-   * @throws IOException if an error occurs
+   * @throws IOException         if an error occurs
    * @throws UnexpectedException if an unexpected error occurs
    */
   private ChaosGame createChaosGame(RadioButton selectedButton, ChaosGameDescription description,
@@ -248,7 +250,7 @@ public class ChaosGameController {
    * Checks if the file contains a Mandelbrot description.
    *
    * @return boolean true if the file contains a Mandelbrot description, false otherwise
-   * @throws IOException if an error occurs
+   * @throws IOException         if an error occurs
    * @throws UnexpectedException if an unexpected error occurs
    */
   public boolean checkForMandelbrot() throws IOException, UnexpectedException {
@@ -267,10 +269,11 @@ public class ChaosGameController {
    * Reads a ChaosGameDescription object from a file.
    *
    * @return ChaosGameDescription the ChaosGameDescription object read from the file
-   * @throws IOException if an error occurs
+   * @throws IOException         if an error occurs
    * @throws UnexpectedException if an unexpected error occurs
    */
-  public ChaosGameDescription readFromFile() throws IOException, FileEmptyException, UnexpectedException {
+  public ChaosGameDescription readFromFile()
+      throws IOException, FileEmptyException, UnexpectedException {
     ChaosGameDescription chaosGameDescription;
     try {
       chaosGameDescription = fileHandler.readFromFile();
@@ -288,7 +291,7 @@ public class ChaosGameController {
    * Reads the transformation type from a file.
    *
    * @return String the transformation type read from the file
-   * @throws IOException if an error occurs
+   * @throws IOException         if an error occurs
    * @throws UnexpectedException if an unexpected error occurs
    */
   public String readTransformationType() throws IOException, UnexpectedException {
@@ -306,9 +309,9 @@ public class ChaosGameController {
   /**
    * Writes a ChaosGameDescription object to a file.
    *
-   * @param description the ChaosGameDescription object to write to the file
+   * @param description        the ChaosGameDescription object to write to the file
    * @param transformationType the transformation type to write to the file
-   * @throws IOException if an error occurs
+   * @throws IOException         if an error occurs
    * @throws UnexpectedException if an unexpected error occurs
    */
   public void writeToFile(ChaosGameDescription description,
@@ -326,7 +329,7 @@ public class ChaosGameController {
    * Writes a line to a file.
    *
    * @param line the line to write to the file
-   * @throws IOException if an error occurs
+   * @throws IOException         if an error occurs
    * @throws UnexpectedException if an unexpected error occurs
    */
   public void writeLineToFile(String line) throws IOException, UnexpectedException {
@@ -344,7 +347,7 @@ public class ChaosGameController {
    * Saves the application settings to a file.
    *
    * @param appSettings the application settings to save
-   * @throws IOException if an error occurs
+   * @throws IOException         if an error occurs
    * @throws UnexpectedException if an unexpected error occurs
    */
   public void saveSettings(Properties appSettings) throws IOException, UnexpectedException {
@@ -361,8 +364,8 @@ public class ChaosGameController {
    * Loads the application settings from a file.
    *
    * @return Properties the application settings loaded from the file
-   * @throws IOException if an error occurs
-   * @throws FileEmptyException if the file is empty
+   * @throws IOException         if an error occurs
+   * @throws FileEmptyException  if the file is empty
    * @throws UnexpectedException if an unexpected error occurs
    */
   public Properties loadSettings() throws IOException, FileEmptyException, UnexpectedException {

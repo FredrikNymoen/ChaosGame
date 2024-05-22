@@ -20,9 +20,7 @@ import model.transformations.Transform2D;
 
 /**
  * The ChaosGameFileHandler class is used to read and write Chaos Game configurations to and from
- * files.
- * author Fredrik Nymoen & Amund Larsen
- * version v1.0.0
+ * files. author Fredrik Nymoen & Amund Larsen version v1.0.0
  */
 public class ChaosGameFileHandler {
 
@@ -51,11 +49,13 @@ public class ChaosGameFileHandler {
    * object.
    *
    * @return a ChaosGameDescription object representing the Chaos Game configuration
-   * @throws IOException if an I/O error occurs while reading the file
+   * @throws IOException        if an I/O error occurs while reading the file
    * @throws FileEmptyException if the file is empty
    */
-  public ChaosGameDescription readFromFile() throws IOException, UnexpectedException, FileEmptyException {
-    try (BufferedReader reader = Files.newBufferedReader(Paths.get(new File(fileName).getAbsolutePath()))) {
+  public ChaosGameDescription readFromFile()
+      throws IOException, UnexpectedException, FileEmptyException {
+    try (BufferedReader reader = Files.newBufferedReader(
+        Paths.get(new File(fileName).getAbsolutePath()))) {
       String line = reader.readLine();
       if (line == null) {
         throw new FileEmptyException(FILE_EMPTY_MESSAGE);
@@ -84,7 +84,8 @@ public class ChaosGameFileHandler {
     }
   }
 
-  private void parseAffine2DTransforms(BufferedReader reader, List<Transform2D> transforms) throws IOException {
+  private void parseAffine2DTransforms(BufferedReader reader, List<Transform2D> transforms)
+      throws IOException {
     String line;
     while ((line = reader.readLine()) != null) {
       String[] transformationValues = line.split(", ");
@@ -102,7 +103,8 @@ public class ChaosGameFileHandler {
     }
   }
 
-  private void parseJuliaTransform(BufferedReader reader, List<Transform2D> transforms) throws IOException {
+  private void parseJuliaTransform(BufferedReader reader, List<Transform2D> transforms)
+      throws IOException {
     String line = reader.readLine();
     String[] pointValues = line.split(", ");
     Complex point = new Complex(
@@ -131,7 +133,8 @@ public class ChaosGameFileHandler {
    */
   public void writeToFile(ChaosGameDescription description, String transformationType)
       throws IOException, UnexpectedException {
-    try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(new File(fileName).getAbsolutePath()))) {
+    try (BufferedWriter writer = Files.newBufferedWriter(
+        Paths.get(new File(fileName).getAbsolutePath()))) {
       if (description.getTransforms().get(0) instanceof AffineTransform2D) {
         writeAffine2DConfiguration(writer, description, transformationType);
       } else if (description.getTransforms().get(0) instanceof JuliaTransform) {
@@ -144,7 +147,8 @@ public class ChaosGameFileHandler {
     }
   }
 
-  private void writeAffine2DConfiguration(BufferedWriter writer, ChaosGameDescription description, String transformationType) throws IOException {
+  private void writeAffine2DConfiguration(BufferedWriter writer, ChaosGameDescription description,
+      String transformationType) throws IOException {
     writer.write(AFFINE2D + ", " + transformationType + "\n");
     writeCoords(writer, description);
     for (Transform2D transformation : description.getTransforms()) {
@@ -155,7 +159,8 @@ public class ChaosGameFileHandler {
     }
   }
 
-  private void writeJuliaConfiguration(BufferedWriter writer, ChaosGameDescription description, String transformationType) throws IOException {
+  private void writeJuliaConfiguration(BufferedWriter writer, ChaosGameDescription description,
+      String transformationType) throws IOException {
     JuliaTransform transformation = (JuliaTransform) description.getTransforms().get(0);
     writer.write(JULIA + ", " + transformationType + "\n");
     writeCoords(writer, description);
@@ -163,9 +168,12 @@ public class ChaosGameFileHandler {
     writer.write(point.getX0() + ", " + point.getX1() + "\n");
   }
 
-  private void writeCoords(BufferedWriter writer, ChaosGameDescription description) throws IOException {
-    writer.write(description.getMinCoords().getX0() + ", " + description.getMinCoords().getX1() + "\n");
-    writer.write(description.getMaxCoords().getX0() + ", " + description.getMaxCoords().getX1() + "\n");
+  private void writeCoords(BufferedWriter writer, ChaosGameDescription description)
+      throws IOException {
+    writer.write(
+        description.getMinCoords().getX0() + ", " + description.getMinCoords().getX1() + "\n");
+    writer.write(
+        description.getMaxCoords().getX0() + ", " + description.getMaxCoords().getX1() + "\n");
   }
 
   /**
@@ -175,7 +183,8 @@ public class ChaosGameFileHandler {
    * @throws IOException if an I/O error occurs while reading the file
    */
   public String readTransformationType() throws IOException, UnexpectedException {
-    try (BufferedReader reader = Files.newBufferedReader(Paths.get(new File(fileName).getAbsolutePath()))) {
+    try (BufferedReader reader = Files.newBufferedReader(
+        Paths.get(new File(fileName).getAbsolutePath()))) {
       String line = reader.readLine();
       return line.substring(line.indexOf(",") + 2);
     } catch (IOException e) {
@@ -192,7 +201,8 @@ public class ChaosGameFileHandler {
    * @throws IOException if an I/O error occurs while writing to the file
    */
   public void writeLineToFile(String line) throws IOException, UnexpectedException {
-    try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(new File(fileName).getAbsolutePath()))) {
+    try (BufferedWriter writer = Files.newBufferedWriter(
+        Paths.get(new File(fileName).getAbsolutePath()))) {
       writer.write(line);
     } catch (IOException e) {
       throw new IOException(FILE_NOT_FOUND_MESSAGE);
@@ -208,7 +218,8 @@ public class ChaosGameFileHandler {
    * @throws IOException if an I/O error occurs while reading the file
    */
   public boolean checkForMandelbrot() throws IOException, UnexpectedException {
-    try (BufferedReader reader = Files.newBufferedReader(Paths.get(new File(fileName).getAbsolutePath()))) {
+    try (BufferedReader reader = Files.newBufferedReader(
+        Paths.get(new File(fileName).getAbsolutePath()))) {
       String line = reader.readLine();
       return MANDELBROT.equals(line);
     } catch (IOException e) {
