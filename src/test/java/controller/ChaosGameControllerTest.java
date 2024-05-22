@@ -36,6 +36,7 @@ public class ChaosGameControllerTest {
     chaosGameController = new ChaosGameController();
   }
 
+
   /**
    * Tests loading settings from a file.
    * It verifies that the settings are loaded correctly.
@@ -74,26 +75,6 @@ public class ChaosGameControllerTest {
     assertEquals("value2", loadedProperties.getProperty("key2"));
   }
 
-  /**
-   * Tests handling transformation selection and creating a ChaosGame object.
-   * It verifies that the ChaosGame object is created correctly based on the selected transformation.
-   */
-  @Test
-  public void testHandleTransformationSelection() throws Exception {
-    ChaosGameController chaosGameController = new ChaosGameController();
-    //ToggleGroup transformationsGroup = mock(ToggleGroup.class);
-    //GridPane affineGrid = mock(GridPane.class);
-    //GridPane juliaGrid = mock(GridPane.class);
-    //GridPane coordGrid = mock(GridPane.class);
-    int steps = 1000;
-
-    // Act
-    //ChaosGame result = chaosGameController.handleTransformationSelection(transformationsGroup, affineGrid, juliaGrid, coordGrid, steps);
-
-    // Assert
-    //assertNotNull(result, "ChaosGame object should not be null");
-
-  }
 
   /**
    * Tests reading a ChaosGameDescription from a file.
@@ -179,6 +160,7 @@ public class ChaosGameControllerTest {
 
     assertTrue(chaosGameController.checkForMandelbrot());
   }
+
 
   /**
    * Tests checking for Mandelbrot description in a file.
