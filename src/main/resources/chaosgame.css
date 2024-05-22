@@ -41,10 +41,12 @@
 
 .radio-button {
   -fx-mark-color: #E1A140; /* Golden toggle mark */
+  -fx-cursor: hand;
 }
 
 .slider .thumb {
   -fx-background-color: #E1A140; /* Slider thumb in gold */
+  -fx-cursor: hand;
 }
 .slider .track {
   -fx-background-color: #914110; /* Golden track */
@@ -104,6 +106,8 @@
   -fx-text-fill: #E1A140;
   -fx-pref-width: 320px;
   -fx-border-color: #E1A140;
+  -fx-cursor: hand;
+
 }
 .heatmap-checkbox:hover {
   -fx-background-color: #E1A140;
@@ -149,3 +153,5 @@
   -fx-pref-height: 10px;
   -fx-border-color: RED;
 }
+
+
