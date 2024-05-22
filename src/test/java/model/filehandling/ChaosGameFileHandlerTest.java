@@ -24,8 +24,8 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Test class for the model.filehandling.ChaosGameFileHandler class.
  * This class tests the writeToFile and readFromFile methods of the model.filehandling.ChaosGameFileHandler class.
- * author Fredrik Nymoen & Amund Larsen
- * version v1.0.0
+ * @author Fredrik Nymoen & Amund Larsen
+ * @version v1.0.0
  */
 class ChaosGameFileHandlerTest {
 

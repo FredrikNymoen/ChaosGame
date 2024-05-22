@@ -12,10 +12,8 @@ import java.util.List;
 /**
  * Test class for JuliaTransform
  *
- * @version v.1.0.0
- *
  * @author Amund Larsen & Fredrik Nymoen
- *
+ * @version v1.0.0
  */
 class JuliaTransformTest {
   private JuliaTransform juliaTransformPositive;

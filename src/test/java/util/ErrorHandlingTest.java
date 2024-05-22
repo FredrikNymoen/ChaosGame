@@ -12,8 +12,10 @@ import java.util.logging.Logger;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Test class for {@link ErrorHandling}.
- * This class tests the logging functionality of the {@link ErrorHandling} class.
+ * Test class for ErrorHandling.
+ * This class tests the logging functionality of the ErrorHandling class.
+ * @author Amund Larsen & Fredrik Nymoen
+ * @version v1.0.0
  */
 class ErrorHandlingTest {
 
